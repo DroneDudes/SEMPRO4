@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: { 
+      fontFamily: {
+        'orbitron':['Orbitron', 'sans-serif'],
+      }
+    },
   },
   plugins: [require("daisyui")],
 }
