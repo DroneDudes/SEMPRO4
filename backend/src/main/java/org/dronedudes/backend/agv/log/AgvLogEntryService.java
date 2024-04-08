@@ -1,4 +1,4 @@
-package org.dronedudes.backend.agv;
+package org.dronedudes.backend.agv.log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.dronedudes.backend.agv.Agv;
+import org.dronedudes.backend.agv.program.AgvProgramEnum;
+import org.dronedudes.backend.agv.AgvRepository;
+import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

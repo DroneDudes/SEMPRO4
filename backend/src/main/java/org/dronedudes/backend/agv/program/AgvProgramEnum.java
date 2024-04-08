@@ -1,7 +1,4 @@
-package org.dronedudes.backend.agv;
-
-import java.util.Arrays;
-import java.util.Optional;
+package org.dronedudes.backend.agv.program;
 
 public enum AgvProgramEnum {
     NO_PROGRAM_LOADED("no program loaded", "No current program is loaded"),

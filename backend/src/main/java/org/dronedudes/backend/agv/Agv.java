@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.dronedudes.backend.agv.log.AgvLogEntry;
 
 import java.util.List;
 

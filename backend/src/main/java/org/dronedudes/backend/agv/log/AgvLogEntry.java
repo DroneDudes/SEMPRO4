@@ -1,9 +1,10 @@
-package org.dronedudes.backend.agv;
+package org.dronedudes.backend.agv.log;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dronedudes.backend.agv.Agv;
 
 @Data
 @NoArgsConstructor

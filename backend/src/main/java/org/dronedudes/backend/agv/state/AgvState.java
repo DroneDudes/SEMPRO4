@@ -3,7 +3,7 @@
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 //import jakarta.persistence.*;
 //import lombok.*;
-//import org.dronedudes.backend.agv.AgvLogEntry;
+//import org.dronedudes.backend.agv.log.AgvLogEntry;
 //
 //import java.util.List;
 //

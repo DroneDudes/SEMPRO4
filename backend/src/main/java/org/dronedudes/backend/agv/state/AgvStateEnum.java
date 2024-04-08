@@ -1,7 +1,4 @@
-package org.dronedudes.backend.agv;
-
-import java.util.Arrays;
-import java.util.Optional;
+package org.dronedudes.backend.agv.state;
 
 public enum AgvStateEnum {
     IDLE_STATE(1, "Idle"),
