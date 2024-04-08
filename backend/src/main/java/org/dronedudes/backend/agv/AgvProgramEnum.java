@@ -1,6 +1,10 @@
-package org.dronedudes.backend.agv.program;
+package org.dronedudes.backend.agv;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public enum AgvProgramEnum {
+    NO_PROGRAM_LOADED("no program loaded", "No current program is loaded"),
     MOVE_TO_CHARGE("MoveToChargerOperation", "Move the AGV to the charging station"),
     MOVE_TO_ASSEMBLY("MoveToAssemblyOperation","Move the AGV to the assembly station"),
     MOVE_TO_STORAGE("MoveToStorageOperation", "Move the AGV to the warehouse"),
@@ -17,10 +21,19 @@ public enum AgvProgramEnum {
         this.name = name;
      }
 
+    public static Optional<AgvProgramEnum> getAgvProgramByValue(String value) {
+        return Arrays.stream(AgvProgramEnum.values())
+                .filter(program -> program.name.equals(value)
+                        || program.description.equals(value))
+                .findFirst();
+    }
+
     public String getDescription() {
          return this.description;
     }
     public String getName() {
          return this.name;
     }
+
+
 }

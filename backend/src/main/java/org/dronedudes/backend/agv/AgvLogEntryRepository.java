@@ -1,4 +1,4 @@
-package org.dronedudes.backend.agv.log;
+package org.dronedudes.backend.agv;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
