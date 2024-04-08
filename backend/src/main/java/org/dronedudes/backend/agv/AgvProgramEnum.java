@@ -12,27 +12,31 @@ public enum AgvProgramEnum {
     PICK_FROM_ASSEMBLY("PickAssemblyOperation", "Activate the robot arm to pick payload at the assembly station and place it on the AGV"),
     PICK_FROM_WAREHOUSE("PickWarehouseOperation", "Activate the robot arm to pick payload from the warehouse outlet"),
     PUT_IN_WAREHOUSE("PutWarehouseOperation", "Activate the robot arm to place an item at the warehouse inlet");
-    private final String name;
+    private final String programName;
     private final String description;
 
 
-     AgvProgramEnum(String name, String description) {
+     AgvProgramEnum(String programName, String description) {
         this.description = description;
-        this.name = name;
+        this.programName = programName;
      }
 
-    public static Optional<AgvProgramEnum> getAgvProgramByValue(String value) {
-        return Arrays.stream(AgvProgramEnum.values())
-                .filter(program -> program.name.equals(value)
-                        || program.description.equals(value))
-                .findFirst();
+    public static AgvProgramEnum find(String value) {
+        AgvProgramEnum result = null;
+        for (AgvProgramEnum agvProgramEnum : values()) {
+            if (agvProgramEnum.programName.equalsIgnoreCase(value)) {
+                result = agvProgramEnum;
+                break;
+            }
+        }
+        return result;
     }
 
     public String getDescription() {
          return this.description;
     }
-    public String getName() {
-         return this.name;
+    public String getProgramName() {
+         return this.programName;
     }
 
 

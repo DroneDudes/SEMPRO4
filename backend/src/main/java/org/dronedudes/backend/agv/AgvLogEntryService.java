@@ -19,29 +19,29 @@ import java.util.Optional;
 @Transactional
 public class AgvLogEntryService {
     private final AgvLogEntryRepository agvLogEntryRepository;
+    private final AgvRepository agvRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 60000)
     public void scheduledAGVLog() {
         String agvJson = restTemplate.getForEntity("http://localhost:8082/v1/status/", String.class).getBody();
         try {
             JsonNode agvNode = new ObjectMapper().readTree(agvJson);
             int battery = agvNode.get("battery").intValue();
             String programName = agvNode.get("program name").textValue();
-            System.out.println(programName);
-            String state = agvNode.get("state").textValue();
+            int state = agvNode.get("state").intValue();
             Agv fetchedAGV = new Agv("Warehouse AGV");
-            Optional<AgvProgramEnum> agvProgram = AgvProgramEnum.getAgvProgramByValue(programName);
-            Optional<AgvStateEnum> agvState = AgvStateEnum.getAgvStateByValue(state);
-            System.out.println(battery);
-            if (agvProgram.isEmpty()) {
-                System.out.println(agvProgram);
+            agvRepository.save(fetchedAGV);
+            AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
+            System.out.println("State: " + state);
+            AgvStateEnum agvState = AgvStateEnum.find(state);
+            if (agvProgram == null) {
                 throw new Exception("No program was found by that name");
             }
-            if (agvState.isEmpty()) {
-                throw new Exception("No program was found by that name");
+            if (agvState == null) {
+                throw new Exception("No state was found by that name");
             }
-            agvLogEntryRepository.save(new AgvLogEntry(battery, agvProgram.get(), agvState.get(), fetchedAGV));
+            agvLogEntryRepository.save(new AgvLogEntry(battery, agvProgram.getProgramName(), agvState.getState(), fetchedAGV));
 
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
