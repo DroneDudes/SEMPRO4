@@ -11,8 +11,6 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class BackendApplication {
-	@Autowired
-	AgvRepository agvRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);

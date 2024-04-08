@@ -1,11 +1,8 @@
-package org.dronedudes.backend.agv;
+package org.dronedudes.backend.agv.program;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.dronedudes.backend.agv.log.AgvLogEntry;
 
 import java.util.List;
@@ -13,20 +10,25 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "agv")
-public class Agv {
+@Entity(name = "agv_program")
+public class AgvProgram {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "agv", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "agv_program", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<AgvLogEntry> agvLogsEntries;
+
     @Column(nullable = false)
     private String name;
 
-    public Agv(String name) {
+    @Column(nullable = false)
+    private String description;
+
+    public AgvProgram(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 }
