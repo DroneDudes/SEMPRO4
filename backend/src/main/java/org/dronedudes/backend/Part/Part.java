@@ -1,6 +1,8 @@
 package org.dronedudes.backend.Part;
 
-public class Part {
+import org.dronedudes.backend.item.Item;
+
+public class Part implements Item {
 
     String partTitle;
     String description;
