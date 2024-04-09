@@ -1,5 +1,6 @@
 package org.dronedudes.backend.agv.log;
 
+import ch.qos.logback.core.util.FixedDelay;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,18 +25,17 @@ public class AgvLogEntryService {
     private final AgvRepository agvRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Scheduled(fixedDelay = 60000)
-    public void scheduledAGVLog() {
+    @Scheduled(fixedDelay = 1000)
+    public void logAgvStatus(Agv agv) {
         String agvJson = restTemplate.getForEntity("http://localhost:8082/v1/status/", String.class).getBody();
         try {
             JsonNode agvNode = new ObjectMapper().readTree(agvJson);
             int battery = agvNode.get("battery").intValue();
             String programName = agvNode.get("program name").textValue();
             int state = agvNode.get("state").intValue();
-            Agv fetchedAGV = new Agv("Warehouse AGV");
+            Agv fetchedAGV = new Agv("Warehouse AGV"); //TODO: Move out of scheduled, or move to DB query
             agvRepository.save(fetchedAGV);
             AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
-            System.out.println("State: " + state);
             AgvStateEnum agvState = AgvStateEnum.find(state);
             if (agvProgram == null) {
                 throw new Exception("No program was found by that name");
@@ -43,7 +43,7 @@ public class AgvLogEntryService {
             if (agvState == null) {
                 throw new Exception("No state was found by that name");
             }
-            agvLogEntryRepository.save(new AgvLogEntry(battery, agvProgram.getProgramName(), agvState.getState(), fetchedAGV));
+            agvLogEntryRepository.save(new AgvLogEntry(battery, agvProgram, agvState, agv));
 
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);

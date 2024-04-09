@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.agv.Agv;
+import org.dronedudes.backend.agv.program.AgvProgramEnum;
+import org.dronedudes.backend.agv.state.AgvStateEnum;
 
 @Data
 @NoArgsConstructor
@@ -18,20 +20,14 @@ public class AgvLogEntry {
     @Column(nullable = false)
     private int battery;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "agv_program", nullable = false)
-    private String agvProgram;
+    private AgvProgramEnum agvProgram;
 
-
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "agv_state", nullable = false)
-    private int agvState;
+    private AgvStateEnum agvState;
 
-//    @ManyToOne()
-//    @JoinColumn(name = "agv_program_id")
-//    private AgvProgram agv_program;
-
-//    @ManyToOne()
-//    @JoinColumn(name = "agv_state_id")
-//    private AgvState agv_state;
 
     @ManyToOne()
     @JoinColumn(name = "agv")
@@ -40,7 +36,7 @@ public class AgvLogEntry {
     private int userId = 1;
     private int carriedPartId = 100;
 
-    public AgvLogEntry(int battery, String agvProgram, int agvState, Agv agv) {
+    public AgvLogEntry(int battery, AgvProgramEnum agvProgram, AgvStateEnum agvState, Agv agv) {
         this.battery = battery;
         this.agvProgram = agvProgram;
         this.agvState = agvState;

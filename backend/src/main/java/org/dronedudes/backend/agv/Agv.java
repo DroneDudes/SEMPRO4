@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.dronedudes.backend.agv.log.AgvLogEntry;
+import org.dronedudes.backend.agv.program.AgvProgramEnum;
+import org.dronedudes.backend.agv.state.AgvStateEnum;
 
 import java.util.List;
 
@@ -18,6 +20,15 @@ public class Agv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Transient
+    private int battery;
+
+    @Transient
+    private AgvProgramEnum agvProgram;
+
+    @Transient
+    private AgvStateEnum agvState;
 
     @JsonIgnore
     @ToString.Exclude
