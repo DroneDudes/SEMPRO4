@@ -13,7 +13,7 @@ public class SoapService {
     }
 
     public String pickItem(Warehouse warehouse, int trayId) {
-        PickItemRequest pickItemRequest = new PickItemRequest();
+        PickItem pickItemRequest = new PickItem();
         pickItemRequest.setTrayId(trayId);
 
         PickItemResponse pickItemResponse = (PickItemResponse) webServiceTemplate.marshalSendAndReceive(
