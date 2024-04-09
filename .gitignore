@@ -229,4 +229,7 @@ modules.xml
 hs_err_pid*
 replay_pid*
 
+# spring application.properties file
+.backend/src/main/resources/application.properties
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,intellij+iml,angular
