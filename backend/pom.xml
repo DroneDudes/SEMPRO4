@@ -64,6 +64,11 @@
 			<artifactId>jaxws-rt</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>4.0.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -101,7 +106,57 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/jaxws-wsimport</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+						<configuration>
+							<includes>
+								<include>${project.build.directory}/generated-sources/jaxws-wsimport/org/dronedudes/backend/Warehouse/soap/*.java</include>
+							</includes>
+							<regex>false</regex>
+							<replacements>
+								<replacement>
+									<token>javax.xml.bind.</token>
+									<value>jakarta.xml.bind.</value>
+								</replacement>
+								<replacement>
+									<token>javax.xml.ws.</token>
+									<value>jakarta.xml.ws.</value>
+								</replacement>
+								<replacement>
+									<token>javax.jws.</token>
+									<value>jakarta.jws.</value>
+								</replacement>
+							</replacements>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
