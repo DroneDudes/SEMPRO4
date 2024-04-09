@@ -1,4 +1,4 @@
 package org.dronedudes.backend.Warehouse.soap;
 
-public class InsertInventoryResponse {
+public class InsertItemResponse {
 }
