@@ -1,10 +1,10 @@
 package org.dronedudes.backend.Part;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/parts")
@@ -20,6 +20,16 @@ public class PartController {
     @PostMapping("/create")
     public Part newPart(@RequestBody Part part){
         return partService.createPart(part);
+    }
+
+    @GetMapping("/allparts")
+    public List<Part> getAllParts(){
+        return partService.findAllParts();
+    }
+
+    @GetMapping("/{partId}")
+    public Optional<Part> getPart(@PathVariable("partId") Long partId){
+        return partService.getPartById(partId);
     }
 
 }

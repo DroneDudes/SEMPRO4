@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28672277-cd1d-4e66-93ad-48f425da3335" name="Changes" comment="Service, controller and repository set up for Parts.&#10;Create parts implemented.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/Part/Part.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/Part/Part.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/Part/PartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/Part/PartController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/Part/PartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/Part/PartService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="V1T28_Create_Parts" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -105,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1712749714491</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Service, controller and repository set up for Parts.&#10;Create parts implemented.">
+      <created>1712750916724</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712750916724</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
