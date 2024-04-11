@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,23 @@ public class BlueprintService {
         this.partRepository = partRepository;
     }
 
+    @Transactional
+    public Blueprint createAndSaveBlueprint(BlueprintCreateRequest createRequest) {
+        Blueprint blueprint = new Blueprint();
+        blueprint.setProductTitle(createRequest.getProductTitle());
+        blueprint.setDescription(createRequest.getDescription());
+        for (Long partID : createRequest.getPartIDs()) {
+            Optional<Part> partOpt = partRepository.findById(partID);
+            if (partOpt.isPresent()) {
+                Part part = partOpt.get();
+                blueprint.getBlueprintParts().add(part);
+            }
+        }
+        blueprintRepository.save(blueprint);
+
+        return blueprint;
+    }
+
     public Blueprint saveBlueprint(Blueprint blueprint) {
         return blueprintRepository.save(blueprint);
     }
@@ -32,6 +51,7 @@ public class BlueprintService {
         return blueprintRepository.findAll();
     }
 
+    /*
     @Transactional()
     public boolean addPartToBlueprint(long blueprint_ID,long part_ID) {
         Optional<Blueprint> blueprintOpt = blueprintRepository.findById(blueprint_ID);
@@ -48,4 +68,6 @@ public class BlueprintService {
             return false;
         }
     }
+
+     */
 }
