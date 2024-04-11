@@ -1,25 +1,18 @@
 package org.dronedudes.backend.Part;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.dronedudes.backend.item.Item;
 
 @Entity
-@Setter
+@Table(name = "parts")
+@PrimaryKeyJoinColumn(name = "item_id")
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Part extends Item {
-
-    String partTitle;
-    String description;
-    @Id
-    @GeneratedValue
-    private Long id;
+    private String description;
 
 }
