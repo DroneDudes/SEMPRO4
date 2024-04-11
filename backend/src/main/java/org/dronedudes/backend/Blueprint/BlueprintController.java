@@ -27,12 +27,15 @@ public class BlueprintController {
         return blueprintService.getAll();
     }
 
+    /*
     @PostConstruct
     public Blueprint blueprintTest(){
         Blueprint productBlueprint = new Blueprint("1","1");
         blueprintService.saveBlueprint(productBlueprint);
         return productBlueprint;
     }
+
+     */
 
     @PutMapping("/{blueprintId}/parts/{partId}")
     public ResponseEntity<?> addPartToBlueprint(@PathVariable Long blueprintId, @PathVariable Long partId) {
@@ -42,5 +45,10 @@ public class BlueprintController {
         } else {
             return ResponseEntity.badRequest().body("Failed to add part to blueprint.");
         }
+    }
+
+    @PostMapping("/create")
+    public Blueprint newBlueprint(@RequestBody Blueprint blueprint) {
+        return blueprintService.saveBlueprint(blueprint);
     }
 }

@@ -30,6 +30,9 @@ public class PartController {
     public Part testPart() {
         Part part = new Part("1","1","1","1",1);
         partService.createPart(part);
+
+        Part part1 = new Part("2","2","2","2",2);
+        partService.createPart(part1);
         return part;
     }
 }

@@ -26,7 +26,7 @@ public class Part {
    private String supplierDetails;
    private long price;
 
-   @ManyToMany(mappedBy = "blueprintParts", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @ManyToMany(mappedBy = "blueprintParts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    private Set<Blueprint> blueprints = new HashSet<>();
 
    public Part(String name, String description, String specifications, String supplierDetails, long price) {

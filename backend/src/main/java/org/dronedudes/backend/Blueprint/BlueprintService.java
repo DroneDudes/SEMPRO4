@@ -24,8 +24,8 @@ public class BlueprintService {
         this.partRepository = partRepository;
     }
 
-    public void saveBlueprint(Blueprint blueprint) {
-        blueprintRepository.save(blueprint);
+    public Blueprint saveBlueprint(Blueprint blueprint) {
+        return blueprintRepository.save(blueprint);
     }
 
     public List<Blueprint> getAll() {

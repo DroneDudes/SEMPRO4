@@ -19,7 +19,7 @@ public class Blueprint {
     private Long id;
     private String productTitle;
     private String description;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "blueprint_parts",
             joinColumns = @JoinColumn(name = "blueprint_id"),
