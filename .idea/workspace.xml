@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28672277-cd1d-4e66-93ad-48f425da3335" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/agv/log/AgvLogEntryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/dronedudes/backend/agv/log/AgvLogEntryService.java" afterDir="false" />
-    </list>
+    <list default="true" id="28672277-cd1d-4e66-93ad-48f425da3335" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,24 +44,18 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\honor\\GitHubLocalReps\\SEMPRO4\\frontend\\node_modules\\typescript\\lib",
+    "project.structure.last.edited": "Global Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="SEMPRO4" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="SEMPRO4" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -74,8 +66,8 @@
       <option name="presentableId" value="Default" />
       <updated>1712225424456</updated>
       <workItem from="1712225427476" duration="330000" />
-      <workItem from="1712306142124" duration="4884000" />
-      <workItem from="1712653807193" duration="10000" />
+      <workItem from="1712306142124" duration="670000" />
+      <workItem from="1712317001291" duration="60000" />
     </task>
     <servers />
   </component>
