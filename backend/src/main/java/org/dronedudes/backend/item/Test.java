@@ -26,16 +26,16 @@ public class Test {
     @PostConstruct
     public void test() {
         Part part = new Part();
-        part.setTitle("Part 1");
+        part.setName("Part 1");
         partRepository.save(part);
 
         Product product = new Product();
-        product.setTitle("Product 1");
+        product.setName("Product 1");
         productRepository.save(product);
 
         warehouseService.insertItem(product);
         for(Item item : (warehouseService.insertItem(part)).getItems()) {
-            System.out.println(item.getTitle());
+            System.out.println(item.getName());
         }
 
 
