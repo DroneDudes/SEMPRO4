@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-
 public class WarehouseService{
     private Map<Long, Warehouse> warehouses;
     private final WarehouseRepository warehouseRepository;

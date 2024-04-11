@@ -1,4 +1,4 @@
-package org.dronedudes.backend.Part;
+package org.dronedudes.backend.Product;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +14,7 @@ import org.dronedudes.backend.item.Item;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Part extends Item {
+public class Product extends Item {
 
     String partTitle;
     String description;
