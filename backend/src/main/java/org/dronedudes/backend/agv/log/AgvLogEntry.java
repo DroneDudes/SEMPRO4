@@ -8,6 +8,10 @@ import org.dronedudes.backend.agv.Agv;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,14 +24,13 @@ public class AgvLogEntry {
     @Column(nullable = false)
     private int battery;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "agv_program", nullable = false)
-    private AgvProgramEnum agvProgram;
+    private String agvProgram;
 
-    @Enumerated(EnumType.ORDINAL)
     @Column(name = "agv_state", nullable = false)
-    private AgvStateEnum agvState;
+    private int agvState;
 
+    private String timestamp;
 
     @ManyToOne()
     @JoinColumn(name = "agv")
@@ -36,10 +39,13 @@ public class AgvLogEntry {
     private int userId = 1;
     private int carriedPartId = 100;
 
+
     public AgvLogEntry(int battery, AgvProgramEnum agvProgram, AgvStateEnum agvState, Agv agv) {
         this.battery = battery;
-        this.agvProgram = agvProgram;
-        this.agvState = agvState;
+        this.agvProgram = agvProgram.getProgramName();
+        this.agvState = agvState.getState();
         this.agv = agv;
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.timestamp = LocalDateTime.now().format(dateTimeFormatter);
     }
 }
