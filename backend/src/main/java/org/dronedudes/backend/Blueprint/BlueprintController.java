@@ -1,9 +1,9 @@
 package org.dronedudes.backend.Blueprint;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,14 +22,25 @@ public class BlueprintController {
         this.blueprintService = blueprintService;
     }
 
-    @GetMapping
-    public List<ProductBlueprint> getAllBlueprint() {
-        /*
-        uncomment for at lave blueprints i DB
-        ProductBlueprint productBlueprint = new ProductBlueprint("1","1");
-        blueprintService.saveBlueprint(productBlueprint);
-
-         */
+    @GetMapping("/all")
+    public List<Blueprint> getAllBlueprints() {
         return blueprintService.getAll();
+    }
+
+    @PostConstruct
+    public Blueprint blueprintTest(){
+        Blueprint productBlueprint = new Blueprint("1","1");
+        blueprintService.saveBlueprint(productBlueprint);
+        return productBlueprint;
+    }
+
+    @PutMapping("/{blueprintId}/parts/{partId}")
+    public ResponseEntity<?> addPartToBlueprint(@PathVariable Long blueprintId, @PathVariable Long partId) {
+        boolean success = blueprintService.addPartToBlueprint(blueprintId, partId);
+        if (success) {
+            return ResponseEntity.ok().body("Part added to blueprint successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to add part to blueprint.");
+        }
     }
 }

@@ -20,7 +20,7 @@ public class PartService {
         return part;
     }
 
-    public List<Part> findAllParts() {
+    public List<Part> getAll() {
         return partRepository.findAll();
     }
 }

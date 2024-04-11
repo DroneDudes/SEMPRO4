@@ -17,13 +17,5 @@ public class BackendApplication {
 		Username = BlueprintDB
 		Password = Intet password
 
-<<<<<<< HEAD
-		Gå til BlueprintController og uncomment for at generere entries i DB
 	 */
-=======
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
->>>>>>> Sprint-1
 }
