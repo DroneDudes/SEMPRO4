@@ -1,33 +1,22 @@
 package org.dronedudes.backend.Warehouse;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.dronedudes.backend.item.Item;
+import org.hibernate.annotations.ManyToAny;
+
+import java.util.Map;
+import java.util.Set;
+
 @Entity
 public class Warehouse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private WarehouseModel model;
-    private Item[] warehouseItems;
+    @ManyToAny
+    private Set<Item> items;
     private String uri = "http://localhost:8081/Service.asmx";
     private WarehouseCommunicationProtocol warehouseCommunicationProtocol;
-    public void setWarehouseSize(int warehouseSize) {
-        this.warehouseSize = warehouseSize;
-    }
-    public int getWarehouseSize() {
-        return warehouseSize;
-    }
-
-    public Item[] getWarehouseItems() {
-        return warehouseItems;
-    }
-
-    public void setWarehouseItems(Item[] warehouseItems) {
-        this.warehouseItems = warehouseItems;
-    }
 
     public String getUri() {
         return uri;

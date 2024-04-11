@@ -9,10 +9,5 @@ import java.util.List;
 
 public class WarehouseService {
     private List<Warehouse> warehouses;
-    private final WarehouseCommunicationService warehouseCommunicationService;
-
-    public WarehouseService(WarehouseCommunicationService warehouseCommunicationService) {
-        this.warehouseCommunicationService = warehouseCommunicationService;
-    }
 
 }

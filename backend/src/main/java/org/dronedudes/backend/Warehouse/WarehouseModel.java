@@ -6,7 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum WarehouseModel {
-    EFFIMAT10(10, 8081);
+    EFFIMAT10(10, "http://localhost:", "/Service.asmx");
     private final int size;
-    private final int port;
+    private final String baseUri;
+    private final String suffixUri;
 }
