@@ -10,12 +10,10 @@ import java.util.List;
 
 @Service
 public class AgvObserverService implements ObserverInterface {
-    private List<SubscriberInterface> subscriberList = new ArrayList<>();
     private HashMap<Long, List<SubscriberInterface>> topicsSubscribersMap = new HashMap<>();
 
     @Override
     public void subscribe(Long agvId, SubscriberInterface subscriber) {
-        topicsSubscribersMap.computeIfAbsent(agvId, k -> new ArrayList<>());
         List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(agvId);
         subscriberList.add(subscriber);
         topicsSubscribersMap.put(agvId, subscriberList);
@@ -30,10 +28,15 @@ public class AgvObserverService implements ObserverInterface {
 
     @Override
     public void updateSubscribers(Long agvId) {
+        topicsSubscribersMap.computeIfAbsent(agvId, k -> new ArrayList<>());
         List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(agvId);
         for (SubscriberInterface subscriber : subscriberList) {
             subscriber.update(agvId);
         }
 
+    }
+
+    public List<SubscriberInterface> getSubscribersForAgv(Long agvId) {
+        return topicsSubscribersMap.get(agvId);
     }
 }

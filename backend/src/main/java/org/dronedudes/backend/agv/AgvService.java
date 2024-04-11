@@ -36,17 +36,24 @@ public class AgvService implements PublisherInterface {
 
     @PostConstruct
     public void fetchAllSystemAgvs() {
-        agvRepository.save(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
+//        saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
         for (Agv agv: agvRepository.findAll()) {
             agvMap.put(agv.getId(), agv);
+            notifyChange(agv.getId());
         }
+    }
+
+    public Agv saveAgvToDatabase(Agv agv) {
+        agvMap.put(agv.getId(), agv);
+        notifyChange(agv.getId());
+        return agvRepository.save(agv);
     }
     public Optional<Agv> returnSingleAgv() {
         return agvRepository.findFirstByOrderById();
     }
 
     @Scheduled(fixedDelay = 1000)
-    public void pollAgvSimulation() {
+    public boolean pollAgvSimulation() {
         for (Agv agv : agvMap.values()) {
             String agvJson = restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
             try {
@@ -71,15 +78,14 @@ public class AgvService implements PublisherInterface {
                 agv.setAgvState(agvState);
 
                 notifyChange(agv.getId());
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
+                return false;
             }
         }
-
+        return true;
     }
 
     public boolean agvIsChanged(int battery, AgvProgramEnum agvProgram, AgvStateEnum agvState, Agv comparisonAgv) {
