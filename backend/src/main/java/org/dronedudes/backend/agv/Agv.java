@@ -2,10 +2,7 @@ package org.dronedudes.backend.agv;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.dronedudes.backend.agv.log.AgvLogEntry;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
@@ -20,6 +17,9 @@ public class Agv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "endpoint_url", nullable = false)
+    private String endpointUrl = "http://localhost:8082/v1/status/";
 
     @Transient
     private int battery;
@@ -37,7 +37,8 @@ public class Agv {
     @Column(nullable = false)
     private String name;
 
-    public Agv(String name) {
+    public Agv(String name, String endpointUrl) {
         this.name = name;
+        this.endpointUrl = endpointUrl;
     }
 }

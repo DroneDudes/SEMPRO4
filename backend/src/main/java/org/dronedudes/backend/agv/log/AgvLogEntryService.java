@@ -1,56 +1,40 @@
 package org.dronedudes.backend.agv.log;
 
-import ch.qos.logback.core.util.FixedDelay;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.dronedudes.backend.agv.Agv;
-import org.dronedudes.backend.agv.program.AgvProgramEnum;
-import org.dronedudes.backend.agv.AgvRepository;
-import org.dronedudes.backend.agv.state.AgvStateEnum;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.dronedudes.backend.agv.AgvObserverService;
+import org.dronedudes.backend.agv.AgvService;
+import org.dronedudes.backend.common.SubscriberInterface;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Getter
 @Transactional
-public class AgvLogEntryService {
+public class AgvLogEntryService implements SubscriberInterface {
     private final AgvLogEntryRepository agvLogEntryRepository;
-    private final AgvRepository agvRepository;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final AgvObserverService agvObserverService;
+    private final AgvService agvService;
 
-    @Scheduled(fixedDelay = 1000)
-    public void logAgvStatus(Agv agv) {
-        String agvJson = restTemplate.getForEntity("http://localhost:8082/v1/status/", String.class).getBody();
-        try {
-            JsonNode agvNode = new ObjectMapper().readTree(agvJson);
-            int battery = agvNode.get("battery").intValue();
-            String programName = agvNode.get("program name").textValue();
-            int state = agvNode.get("state").intValue();
-            Agv fetchedAGV = new Agv("Warehouse AGV"); //TODO: Move out of scheduled, or move to DB query
-            agvRepository.save(fetchedAGV);
-            AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
-            AgvStateEnum agvState = AgvStateEnum.find(state);
-            if (agvProgram == null) {
-                throw new Exception("No program was found by that name");
-            }
-            if (agvState == null) {
-                throw new Exception("No state was found by that name");
-            }
-            agvLogEntryRepository.save(new AgvLogEntry(battery, agvProgram, agvState, agv));
-
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            System.out.println(e);
+    @PostConstruct
+    public void subscribeToAgvObserverService() {
+        for (Map.Entry<Long, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
+            agvObserverService.subscribe(agvEntry.getKey(), this);
         }
+    }
+
+    @Override
+    public void update(Long agvId) {
+        Agv updatedAgv = agvService.getAgvMap().get(agvId);
+        agvLogEntryRepository.save(new AgvLogEntry(
+                updatedAgv.getBattery(),
+                updatedAgv.getAgvProgram(),
+                updatedAgv.getAgvState(),
+                updatedAgv
+        ));
     }
 }

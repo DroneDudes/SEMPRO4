@@ -3,15 +3,14 @@ package org.dronedudes.backend.agv;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
-/*
+
 @Configuration
 public class AgvConfig {
     @Bean
-    CommandLineRunner initDatabase(AgvRepository agvRepository) {
-        return args -> {
-            agvRepository.save(new Agv("Warehouse AGV"));
-        };
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
+
 }
- */
