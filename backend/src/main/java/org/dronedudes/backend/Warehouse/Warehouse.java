@@ -1,10 +1,16 @@
 package org.dronedudes.backend.Warehouse;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import org.dronedudes.backend.item.Item;
-@Component
+@Entity
 public class Warehouse {
-    private int warehouseSize = 0;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private WarehouseModel model;
     private Item[] warehouseItems;
     private String uri = "http://localhost:8081/Service.asmx";
     private WarehouseCommunicationProtocol warehouseCommunicationProtocol;
