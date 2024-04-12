@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-blueprints',
@@ -7,6 +8,22 @@ import { Component } from '@angular/core';
   templateUrl: './blueprints.component.html',
   styleUrl: './blueprints.component.css'
 })
-export class BlueprintsComponent {
+export class BlueprintsComponent implements OnInit {
 
+  public jsonResponse: any;
+  constructor(private http: HttpClient) {
+
+  }
+
+  ngOnInit(): void {
+    this.getResponse();
+  }
+
+  public getResponse() {
+    this.http.get('http://localhost:8080/api/v1/blueprints/all').subscribe({
+      next: (data) => {
+        this.jsonResponse = data;
+      }
+    });
+  }
 }

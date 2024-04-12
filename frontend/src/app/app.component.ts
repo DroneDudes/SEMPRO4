@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {OverviewComponent} from "./overview/overview.component";
 import {ProductionComponent} from "./production/production.component";

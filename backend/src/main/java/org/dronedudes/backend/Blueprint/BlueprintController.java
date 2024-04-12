@@ -24,6 +24,7 @@ public class BlueprintController {
         this.blueprintService = blueprintService;
     }
 
+    @CrossOrigin
     @GetMapping("/all")
     public List<Blueprint> getAllBlueprints() {
         return blueprintService.getAll();

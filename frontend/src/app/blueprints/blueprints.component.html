@@ -1,1 +1,19 @@
 <p>blueprints works!</p>
+
+<div class="overflow-x-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Blueprints</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (blueprint of jsonResponse; track blueprint) {
+                <tr class="hover">
+                    <td> {{ blueprint.id }} </td>
+                    <td> {{ blueprint.productTitle }} </td>
+                    <td> {{ blueprint.description }} </td>
+                </tr>
+            }
+    </table>
+</div>
