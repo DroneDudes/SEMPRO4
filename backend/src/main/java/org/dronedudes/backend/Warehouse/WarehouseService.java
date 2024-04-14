@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,6 +16,10 @@ public class WarehouseService{
     private final WarehouseRepository warehouseRepository;
     private final SoapService soapService;
 
+    @PostConstruct
+    public void initializeBaseWarehouse(){
+
+    }
     public WarehouseService(WarehouseRepository warehouseRepository,
                             SoapService soapService) {
         this.warehouses = new HashMap<>();
@@ -45,7 +50,6 @@ public class WarehouseService{
             throw new NonEmptyWarehouseException(warehouseId, warehouse.getItems());
         }
         warehouseRepository.delete(warehouse);
-
         return true;
     }
 
