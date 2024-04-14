@@ -23,7 +23,7 @@ public class Warehouse {
 
     @ManyToMany
     @JoinTable(
-            name = "warehouse_items",
+            name = "warehouse_item",
             joinColumns = @JoinColumn(name = "warehouse_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
