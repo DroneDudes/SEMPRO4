@@ -23,4 +23,8 @@ public class PartService {
     public List<Part> getAll() {
         return partRepository.findAll();
     }
+
+    public List<Part> findPartsByBlueprintId(Long blueprintId) {
+        return partRepository.findPartsByBlueprintsId(blueprintId);
+    }
 }

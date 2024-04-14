@@ -35,7 +35,7 @@ public class BlueprintService {
             Optional<Part> partOpt = partRepository.findById(partID);
             if (partOpt.isPresent()) {
                 Part part = partOpt.get();
-                blueprint.getBlueprintParts().add(part);
+                blueprint.getParts().add(part);
             }
         }
         blueprintRepository.save(blueprint);

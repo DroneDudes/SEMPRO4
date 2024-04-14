@@ -17,18 +17,21 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Blueprint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String productTitle;
     private String description;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        })
     @JoinTable(
             name = "blueprintParts",
             joinColumns = @JoinColumn(name = "blueprint_id"),
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
-    private List<Part> blueprintParts = new ArrayList<>();
+    private Set<Part> Parts = new HashSet<>();
 }

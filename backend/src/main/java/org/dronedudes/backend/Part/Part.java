@@ -1,5 +1,6 @@
 package org.dronedudes.backend.Part;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Part extends Item {
 
    private String description;
@@ -26,7 +26,13 @@ public class Part extends Item {
    private long price;
 
 
-   @ManyToMany(mappedBy = "blueprintParts")
+   @ManyToMany(fetch = FetchType.LAZY,
+           cascade = {
+               CascadeType.PERSIST,
+               CascadeType.MERGE
+           },
+           mappedBy = "Parts")
+   @JsonIgnore
    private List<Blueprint> blueprints = new ArrayList<>();
 
    public Part(String name, String description, String specifications, String supplierDetails, long price) {
