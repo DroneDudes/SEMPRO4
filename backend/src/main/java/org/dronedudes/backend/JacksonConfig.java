@@ -1,4 +1,4 @@
-package org.dronedudes.backend;
+/*package org.dronedudes.backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -19,3 +19,4 @@ public class JacksonConfig {
         return objectMapper;
     }
 }
+*/

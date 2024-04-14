@@ -65,5 +65,7 @@ public class SoapServiceTest {
         assertEquals("Item Inserted", result.getInsertItemResult());
         verify(webServiceTemplate).marshalSendAndReceive(eq(warehouse.getUri()), any(InsertItem.class));
     }
+
+    // TODO Create test for getInventory()
 }
 

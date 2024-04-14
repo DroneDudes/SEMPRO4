@@ -8,7 +8,6 @@ import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
 import org.dronedudes.backend.item.Item;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,6 +27,11 @@ public class WarehouseService{
         this.soapService = soapService;
     }
 
+    @PostConstruct
+    public void test(){
+        Warehouse warehouse = new Warehouse(WarehouseModel.EFFIMAT10, 8081, "W01");
+    }
+
     public List<Warehouse> getAllWarehouses () {
         return warehouseRepository.findAll();
     }
@@ -43,8 +47,7 @@ public class WarehouseService{
     }
 
     @Transactional
-    public boolean removeWarehouse(Long warehouseId)
-            throws WarehouseNotFoundException, NonEmptyWarehouseException {
+    public boolean removeWarehouse(Long warehouseId) throws WarehouseNotFoundException, NonEmptyWarehouseException {
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(()-> new WarehouseNotFoundException(warehouseId));
         if(!warehouse.getItems().isEmpty()){
@@ -52,6 +55,13 @@ public class WarehouseService{
         }
         warehouseRepository.delete(warehouse);
         return true;
+    }
+
+    @Transactional //TODO
+    public List<Item> getWarehouseInventory(Long warehouseId) throws WarehouseNotFoundException {
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(()-> new WarehouseNotFoundException(warehouseId));
+        return warehouseRepository.getWarehouseInventory(warehouseId);
     }
 
     @Transactional
