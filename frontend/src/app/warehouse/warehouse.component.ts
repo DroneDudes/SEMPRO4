@@ -1,12 +1,45 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { WarehouseService } from './warehouse.service';
+import { Warehouse } from './warehouse.models';
 
 @Component({
   selector: 'app-warehouse',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './warehouse.component.html',
-  styleUrl: './warehouse.component.css'
+  styleUrls: ['./warehouse.component.css']
 })
-export class WarehouseComponent {
+export class WarehouseComponent implements OnInit {
+  warehouses: Warehouse[] = [];
+  selectedWarehouse: Warehouse | null = null;
+  displayDropdown: boolean = false;
+  selectedWarehouseIndex: number | null = null;
 
+  constructor(private warehouseService: WarehouseService) { }
+
+  ngOnInit(): void {
+    this.loadWarehouses();
+  }
+
+  onSelectWarehouse(index: number): void {
+    this.selectedWarehouse = this.warehouses[index];
+    this.selectedWarehouseIndex = index;
+  }
+
+  loadWarehouses(): void {
+    this.warehouseService.getAllWarehouses().subscribe({
+      next: (data) => {
+        this.warehouses = data;
+        this.displayDropdown = this.warehouses.length > 5;
+      },
+      error: (err) => {
+        console.error('Failed to get warehouses', err);
+      }
+    });
+  }
+  sortTrayIds(a: any, b: any): number {
+    return parseInt(a.key) - parseInt(b.key);
+  }
 }

@@ -1,1 +1,26 @@
-<p>warehouse works!</p>
+<section class="warehouse">
+  <div *ngIf="!displayDropdown">
+    <ng-container *ngFor="let warehouse of warehouses; let i = index">
+      <button *ngIf="i < 5" class="warehouse-btn" (click)="onSelectWarehouse(i)">
+        {{ warehouse.name }}
+      </button>
+    </ng-container>
+  </div>
+
+  <div *ngIf="displayDropdown">
+    <select [(ngModel)]="selectedWarehouseIndex" (ngModelChange)="onSelectWarehouse($event)">
+      <option *ngFor="let warehouse of warehouses; let i = index" [value]="i">
+        {{ warehouse.name }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="selectedWarehouse">
+    <h2>{{ selectedWarehouse.name }}</h2>
+    <ul>
+      <li *ngFor="let item of selectedWarehouse.items | keyvalue: sortTrayIds">
+        Tray ID: {{ item.key }}, Item Name: {{ item.value.name }}, Description: {{ item.value.description }}
+      </li>
+    </ul>
+  </div>
+</section>
