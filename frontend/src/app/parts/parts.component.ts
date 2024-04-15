@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { PartsListComponent } from '../parts-list/parts-list.component';
 
 @Component({
   selector: 'app-parts',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PartsListComponent],
   templateUrl: './parts.component.html',
   styleUrl: './parts.component.css'
 })

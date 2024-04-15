@@ -1,33 +1,37 @@
-<form [formGroup]="partForm" (ngSubmit)="onSubmit()" class="h-auto w-30 flex flex-col items-center gap-y-10">
-  <h1>Add new part</h1>
+<div class="flex flex-row justify-evenly">
+  <app-parts-list/>
+  <form [formGroup]="partForm" (ngSubmit)="onSubmit()" class="h-auto w-30 flex flex-col items-center gap-y-10 border-2 border-slate-500 border-solid p-4 rounded-xl">
+    <h1>Add new part</h1>
+  
+    <div class="form-group">
+      <label>Part Name:</label>
+      <input class="form-control" type="text" id="partName" formControlName="name" placeholder="Enter Part Name">
+    </div>
+  
+    <div class="form-group">
+      <label>Part Description:</label>
+      <textarea class="form-control" id="partDescription" formControlName="description" rows="3" placeholder="Enter Part Description"></textarea>
+    </div>
+  
+    <div class="form-group">
+      <label>Specifications:</label>
+      <textarea class="form-control" id="partSpecifications" formControlName="specifications" rows="3" placeholder="Enter Part Specifications"></textarea>
+    </div>
+  
+    <div class="form-group">
+      <label for="partSupplierDetails">Supplier Details:</label>
+      <input type="text" class="form-control" id="partSupplierDetails" formControlName="supplierDetails" placeholder="Enter Supplier Details">
+    </div>
+  
+    <div class="form-group">
+      <label for="partPrice">Price:</label>
+      <input type="number" class="form-control" id="partPrice" formControlName="price" placeholder="Enter Part Price">
+    </div>
+  
+    <button type="submit "class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+      Save Part
+    </button>
+  
+  </form>
+</div>
 
-  <div class="form-group">
-    <label>Part Name:</label>
-    <input class="form-control" type="text" id="partName" formControlName="name" placeholder="Enter Part Name">
-  </div>
-
-  <div class="form-group">
-    <label>Part Description:</label>
-    <textarea class="form-control" id="partDescription" formControlName="description" rows="3" placeholder="Enter Part Description"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label>Specifications:</label>
-    <textarea class="form-control" id="partSpecifications" formControlName="specifications" rows="3" placeholder="Enter Part Specifications"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label for="partSupplierDetails">Supplier Details:</label>
-    <input type="text" class="form-control" id="partSupplierDetails" formControlName="supplierDetails" placeholder="Enter Supplier Details">
-  </div>
-
-  <div class="form-group">
-    <label for="partPrice">Price:</label>
-    <input type="number" class="form-control" id="partPrice" formControlName="price" placeholder="Enter Part Price">
-  </div>
-
-  <button type="submit "class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
-    Save Part
-  </button>
-
-</form>
