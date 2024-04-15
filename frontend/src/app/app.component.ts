@@ -7,11 +7,12 @@ import {ProductionComponent} from "./production/production.component";
 import {ManagementComponent} from "./management/management.component";
 import {PartsComponent} from "./parts/parts.component";
 import { ReactiveFormsModule } from '@angular/forms';
+import { BlueprintsComponent } from './blueprints/blueprints.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, OverviewComponent, ProductionComponent, PartsComponent, ManagementComponent, ReactiveFormsModule],
+  imports: [RouterOutlet, NavbarComponent, OverviewComponent, ProductionComponent, BlueprintsComponent, PartsComponent, ManagementComponent, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -6,7 +6,6 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './blueprints.component.html',
-  styleUrl: './blueprints.component.css'
 })
 export class BlueprintsComponent implements OnInit {
 
