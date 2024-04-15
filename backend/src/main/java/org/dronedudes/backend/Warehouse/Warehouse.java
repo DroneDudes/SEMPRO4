@@ -25,7 +25,7 @@ public class Warehouse {
             joinColumns = @JoinColumn(name = "warehouse_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
-    private List<Item> items;
+    private Map<Long, Item> items;
     private String uri;
     private String name;
 
@@ -33,6 +33,6 @@ public class Warehouse {
         this.model = model;
         this.uri = model.getBaseUri() + port + model.getSuffixUri();
         this.name = name;
-        this.items = new ArrayList<>();
+        this.items = new HashMap<>();
     }
 }

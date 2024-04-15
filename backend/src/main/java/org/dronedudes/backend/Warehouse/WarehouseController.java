@@ -70,17 +70,21 @@ public class WarehouseController {
         try {
             Warehouse warehouse = warehouseService.addItemToWarehouse(id, item);
             return ResponseEntity.ok(warehouse);
-        } catch (WarehouseNotFoundException | WarehouseFullException e) {
+        } catch (WarehouseNotFoundException warehouseNotFoundException){
+            return ResponseEntity.notFound().build();
+        } catch (WarehouseFullException warehouseFullException) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping("/{id}/items")
-    public ResponseEntity<Warehouse> removeItemFromWarehouse(@PathVariable Long id, @RequestBody Item item) {
+    public ResponseEntity<Warehouse> removeItemFromWarehouse(@PathVariable Long id, @RequestBody Long trayId) {
         try {
-            Warehouse warehouse = warehouseService.removeItemFromWarehouse(id, item);
+            Warehouse warehouse = warehouseService.removeItemFromWarehouse(id, trayId);
             return ResponseEntity.ok(warehouse);
-        } catch (WarehouseNotFoundException | ItemNotFoundInWarehouse e) {
+        } catch (WarehouseNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (ItemNotFoundInWarehouse e) {
             return ResponseEntity.badRequest().build();
         }
     }

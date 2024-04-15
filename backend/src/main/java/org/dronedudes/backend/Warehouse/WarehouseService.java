@@ -57,11 +57,25 @@ public class WarehouseService{
         return true;
     }
 
-    @Transactional //TODO
+    @Transactional
     public List<Item> getWarehouseInventory(Long warehouseId) throws WarehouseNotFoundException {
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
-                .orElseThrow(()-> new WarehouseNotFoundException(warehouseId));
-        return warehouseRepository.getWarehouseInventory(warehouseId);
+                .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
+        return new ArrayList<>(warehouse.getItems().values());
+    }
+
+
+    @Transactional
+    public Warehouse addItemToWarehouse(Long warehouseId, Item item, Long trayId)
+            throws WarehouseNotFoundException, WarehouseFullException {
+
+        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
+
+        if (checkWarehouseCapacity(warehouse)) {
+            warehouse.getItems().put(trayId, item);
+        }
+        return warehouseRepository.save(warehouse);
     }
 
     @Transactional
@@ -71,11 +85,25 @@ public class WarehouseService{
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
 
-        if(checkWarehouseCapacity(warehouse)){
-            warehouse.getItems().add(item);
+
+        Long trayId = findFirstAvailableSlot(warehouse);
+        if (checkWarehouseCapacity(warehouse)) {
+            warehouse.getItems().put(trayId, item);
         }
         return warehouseRepository.save(warehouse);
     }
+
+    private Long findFirstAvailableSlot(Warehouse warehouse) throws WarehouseFullException {
+        int size = warehouse.getModel().getSize();
+        Map<Long, Item> items = warehouse.getItems();
+        for (long itemIndex = 1; itemIndex <= size; itemIndex++) {
+            if (!items.containsKey(itemIndex)) {
+                return itemIndex;
+            }
+        }
+        throw new WarehouseFullException(warehouse.getId());
+    }
+
 
     public boolean checkWarehouseCapacity(Warehouse warehouse)
             throws WarehouseFullException {
@@ -87,18 +115,17 @@ public class WarehouseService{
     }
 
     @Transactional
-    public Warehouse removeItemFromWarehouse(Long warehouseId, Item item)
-            throws WarehouseNotFoundException, ItemNotFoundInWarehouse{
+    public Warehouse removeItemFromWarehouse(Long warehouseId, Long trayId)
+            throws WarehouseNotFoundException, ItemNotFoundInWarehouse {
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
 
-        boolean itemRemoved = warehouse.getItems().removeIf(i -> i.equals(item));
-        if(!itemRemoved) {
-            throw new ItemNotFoundInWarehouse(item, warehouseId);
+        if (warehouse.getItems().remove(trayId) == null) {
+            throw new ItemNotFoundInWarehouse(trayId, warehouseId);
         }
-
         return warehouseRepository.save(warehouse);
     }
+
 
 
 }
