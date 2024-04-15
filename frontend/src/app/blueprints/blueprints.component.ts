@@ -1,29 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { BlueprintFormComponent } from '../blueprint-form/blueprint-form.component';
+import { BluePrintListComponent } from '../blue-print-list/blue-print-list.component';
 
 @Component({
   selector: 'app-blueprints',
   standalone: true,
-  imports: [BlueprintFormComponent],
+  imports: [BlueprintFormComponent, BluePrintListComponent],
   templateUrl: './blueprints.component.html',
 })
-export class BlueprintsComponent implements OnInit {
-
-  public jsonResponse: any;
-  constructor(private http: HttpClient) {
-
-  }
-
-  ngOnInit(): void {
-    this.getResponse();
-  }
-
-  public getResponse() {
-    this.http.get('http://localhost:8080/api/v1/blueprints/all').subscribe({
-      next: (data) => {
-        this.jsonResponse = data;
-      }
-    });
-  }
+export class BlueprintsComponent{
 }
