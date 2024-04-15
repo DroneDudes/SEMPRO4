@@ -31,8 +31,10 @@ public class BlueprintService {
         Blueprint blueprint = new Blueprint();
         blueprint.setProductTitle(createRequest.getProductTitle());
         blueprint.setDescription(createRequest.getDescription());
-        for (Long partID : createRequest.getPartIDs()) {
+        System.out.println(createRequest.getPartsList());
+        for (Long partID : createRequest.getPartsList()) {
             Optional<Part> partOpt = partRepository.findById(partID);
+            System.out.println(partOpt.get().getId());
             if (partOpt.isPresent()) {
                 Part part = partOpt.get();
                 blueprint.getParts().add(part);

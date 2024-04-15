@@ -23,6 +23,7 @@ public class Blueprint {
     private Long id;
     private String productTitle;
     private String description;
+
     @ManyToMany(fetch = FetchType.LAZY,
         cascade = {
             CascadeType.PERSIST,

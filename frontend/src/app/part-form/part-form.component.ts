@@ -23,6 +23,7 @@ export class PartFormComponent {
   onSubmit() {
     if (this.partForm.valid) {
       const partData = this.partForm.value;
+      console.log(partData);
       this.http.post<any>('http://localhost:8080/api/v1/parts/create', partData)
         .subscribe(
           response => {

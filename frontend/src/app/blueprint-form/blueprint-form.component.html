@@ -3,7 +3,7 @@
   
     <div class="form-group">
       <label>Blueprint Name:</label>
-      <input class="form-control w-full" type="text" id="blueprintName" formControlName="name" placeholder="Enter blueprint Name">
+      <input class="form-control w-full" type="text" id="blueprintName" formControlName="productTitle" placeholder="Enter blueprint Name">
     </div>
   
     <div class="form-group">
@@ -11,8 +11,6 @@
       <textarea class="form-control w-full border-violet-800" id="blueprintDescription" formControlName="description" rows="3" placeholder="Enter blueprint Description"></textarea>
     </div>
 
-    
-  
   <div>
     <h1 class="m-0 p-0">Added Parts:</h1>
     @for(part of partsList; track part){

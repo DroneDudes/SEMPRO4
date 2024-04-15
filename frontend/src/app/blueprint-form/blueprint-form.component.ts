@@ -11,17 +11,23 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BlueprintFormComponent {
 
-partsList:string[] = []; 
+partsList:number[] = []; 
 
-addNewPart(partId:string){
+addNewPart(partId:number){
   this.partsList.push(partId);
+  this.updatePartsFormControl();
 }
 
-removePart(partId:string){
+removePart(partId:number){
   const index = this.partsList.findIndex(part => part === partId);
   if(index !== -1){
     this.partsList.splice(index, 1);
+    this.updatePartsFormControl();
   }
+}
+
+updatePartsFormControl() {
+  this.blueprintForm.controls['parts'].setValue(this.partsList);
 }
 
 public jsonResponse: any;
@@ -41,8 +47,9 @@ public jsonResponse: any;
 //Creating the form for blueprints
 
   blueprintForm: FormGroup = new FormGroup({
-    title: new FormControl(''),
-    description: new FormControl('')
+    productTitle: new FormControl(''),
+    description: new FormControl(''),
+    partsList: new FormControl(this.partsList)
   })
   
   constructor(private http: HttpClient) { }
@@ -50,6 +57,8 @@ public jsonResponse: any;
   onSubmit() {
     if (this.blueprintForm.valid) {
       const blueprintData = this.blueprintForm.value;
+      console.log(blueprintData);
+      
       this.http.post<any>('http://localhost:8080/api/v1/blueprints/create', blueprintData)
         .subscribe(
           response => {
