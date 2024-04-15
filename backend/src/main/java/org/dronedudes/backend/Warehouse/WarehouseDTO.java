@@ -16,5 +16,6 @@ public class WarehouseDTO {
     private int port;
     private String name;
     private Map<Long, Item> items;
+    private int size;
 
 }

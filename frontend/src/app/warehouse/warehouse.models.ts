@@ -11,4 +11,5 @@ export interface Warehouse {
   items: { [key: number]: Item };
   uri: string;
   name: string;
+  size: number;
 }

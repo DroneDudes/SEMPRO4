@@ -15,12 +15,17 @@
     </select>
   </div>
 
-  <div *ngIf="selectedWarehouse">
-    <h2>{{ selectedWarehouse.name }}</h2>
-    <ul>
-      <li *ngFor="let item of selectedWarehouse.items | keyvalue: sortTrayIds">
-        Tray ID: {{ item.key }}, Item Name: {{ item.value.name }}, Description: {{ item.value.description }}
-      </li>
-    </ul>
+  <div class="warehouse-grid" *ngIf="selectedWarehouse">
+    <h2>Currently viewing: {{ selectedWarehouse.name }}</h2>
+    <div class="warehouse-items">
+      <div *ngFor="let trayId of trayIds" class="warehouse-item">
+        <div *ngIf="selectedWarehouse.items[trayId] as item; else emptySquare">
+          Tray ID: {{ trayId }}, Item Name: {{ item.name }}, Description: {{ item.description }}
+        </div>
+        <ng-template #emptySquare>
+          <div class="empty-square">Empty Tray {{ trayId }}</div>
+        </ng-template>
+      </div>
+    </div>
   </div>
 </section>

@@ -16,6 +16,7 @@ export class WarehouseComponent implements OnInit {
   selectedWarehouse: Warehouse | null = null;
   displayDropdown: boolean = false;
   selectedWarehouseIndex: number | null = null;
+  trayIds: number[] = [];
 
   constructor(private warehouseService: WarehouseService) { }
 
@@ -26,6 +27,7 @@ export class WarehouseComponent implements OnInit {
   onSelectWarehouse(index: number): void {
     this.selectedWarehouse = this.warehouses[index];
     this.selectedWarehouseIndex = index;
+    this.trayIds = Array.from({ length: this.warehouses[index].size }, (_, i) => i + 1);
   }
 
   loadWarehouses(): void {
