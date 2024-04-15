@@ -32,7 +32,6 @@ public class BlueprintController {
 
     @PostMapping("/create")
     public Blueprint newBlueprint(@RequestBody BlueprintCreateRequest createRequest) {
-        System.out.println(createRequest);
         return blueprintService.createAndSaveBlueprint(createRequest);
     }
 }

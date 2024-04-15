@@ -1,6 +1,8 @@
 package org.dronedudes.backend.Part;
 
 import jakarta.annotation.PostConstruct;
+import org.dronedudes.backend.Blueprint.Blueprint;
+import org.dronedudes.backend.Blueprint.BlueprintCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -25,6 +27,11 @@ public class PartController {
     @PostMapping("/create")
     public Part newPart(@RequestBody Part part){
         return partService.createPart(part);
+    }
+
+    @PostMapping("/createFromAngular")
+    public Part newBlueprint(@RequestBody PartDTO partDTO) {
+        return partService.createPartFromAngular(partDTO);
     }
 
     @GetMapping("/blueprint/{blueprintId}")
