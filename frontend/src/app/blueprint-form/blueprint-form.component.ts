@@ -10,6 +10,36 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './blueprint-form.component.css'
 })
 export class BlueprintFormComponent {
+
+partsList:string[] = []; 
+
+addNewPart(partId:string){
+  this.partsList.push(partId);
+}
+
+removePart(partId:string){
+  const index = this.partsList.findIndex(part => part === partId);
+  if(index !== -1){
+    this.partsList.splice(index, 1);
+  }
+}
+
+public jsonResponse: any;
+
+  ngOnInit(): void {
+    this.getResponse();
+  }
+
+  public getResponse() {
+    this.http.get('http://localhost:8080/api/v1/parts').subscribe({
+      next: (data) => {
+        this.jsonResponse = data;
+      }
+    });
+  }
+
+//Creating the form for blueprints
+
   blueprintForm: FormGroup = new FormGroup({
     title: new FormControl(''),
     description: new FormControl('')
@@ -31,4 +61,5 @@ export class BlueprintFormComponent {
         );
     }
   }
+
 }

@@ -5,9 +5,9 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {OverviewComponent} from "./overview/overview.component";
 import {ProductionComponent} from "./production/production.component";
 import {ManagementComponent} from "./management/management.component";
-import {PartsComponent} from "./parts/parts.component";
+import {PartsComponent} from "./parts-page/parts.component";
 import { ReactiveFormsModule } from '@angular/forms';
-import { BlueprintsComponent } from './blueprints/blueprints.component';
+import { BlueprintsComponent } from './blueprints-page/blueprints.component';
 
 @Component({
   selector: 'app-root',

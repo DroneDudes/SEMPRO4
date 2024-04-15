@@ -1,16 +1,46 @@
-<form [formGroup]="blueprintForm" (ngSubmit)="onSubmit()" class="h-auto w-30 flex flex-col items-center gap-y-10 border-2 border-slate-500 border-solid p-4 rounded-xl">
-    <h1>Add new blueprint</h1>
+<form [formGroup]="blueprintForm" (ngSubmit)="onSubmit()" class="h-auto w-96 flex flex-col gap-y-10 border-2 border-slate-500 border-solid p-4 rounded-xl">
+    <h1 class="font-bold">Add new blueprint</h1>
   
     <div class="form-group">
       <label>Blueprint Name:</label>
-      <input class="form-control" type="text" id="blueprintName" formControlName="name" placeholder="Enter blueprint Name">
+      <input class="form-control w-full" type="text" id="blueprintName" formControlName="name" placeholder="Enter blueprint Name">
     </div>
   
     <div class="form-group">
       <label>Blueprint Description:</label>
-      <textarea class="form-control" id="blueprintDescription" formControlName="description" rows="3" placeholder="Enter blueprint Description"></textarea>
+      <textarea class="form-control w-full border-violet-800" id="blueprintDescription" formControlName="description" rows="3" placeholder="Enter blueprint Description"></textarea>
     </div>
+
+    
   
+  <div>
+    <h1 class="m-0 p-0">Added Parts:</h1>
+    @for(part of partsList; track part){
+       <h1>{{ part }}</h1> 
+    }
+</div>
+
+
+    <div class="overflow-x-auto  border-2 border-slate-500 border-solid p-4 rounded-xl">
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>Parts</th>
+              </tr>
+          </thead>
+          <tbody>
+              @for (part of jsonResponse; track part) {
+                  <tr class="hover">
+                      <td>Id: {{ part.id }} </td>
+                      <td> {{ part.productTitle }} </td>
+                      <td> {{ part.description }} </td>
+                      <td><button class="text-xl" (click)="addNewPart(part.id)">+</button></td>
+                      <td><button class="text-xl" (click)="removePart(part.id)">-</button></td>
+                  </tr>
+              }
+      </table>
+  </div>
+
     <button type="submit "class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
       Save blueprint
     </button>

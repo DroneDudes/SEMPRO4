@@ -4,15 +4,15 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Blueprints</th>
+                <th>Parts</th>
             </tr>
         </thead>
         <tbody>
-            @for (blueprint of jsonResponse; track blueprint) {
+            @for (part of jsonResponse; track part) {
                 <tr class="hover">
-                    <td> {{ blueprint.id }} </td>
-                    <td> {{ blueprint.productTitle }} </td>
-                    <td> {{ blueprint.description }} </td>
+                    <td> {{ part.id }} </td>
+                    <td> {{ part.productTitle }} </td>
+                    <td> {{ part.description }} </td>
                 </tr>
             }
     </table>
