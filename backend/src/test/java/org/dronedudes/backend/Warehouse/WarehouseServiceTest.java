@@ -83,13 +83,14 @@ public class WarehouseServiceTest {
     @Test
     public void testRemoveWarehouseSuccess() throws WarehouseNotFoundException, NonEmptyWarehouseException {
         Warehouse warehouse = new Warehouse();
-        warehouse.setItems(new ArrayList<>());
+        warehouse.setItems(new HashMap<>());
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
 
         boolean result = warehouseService.removeWarehouse(1L);
         assertTrue(result);
         verify(warehouseRepository, times(1)).delete(warehouse);
     }
+
 
     @Test
     public void testRemoveWarehouseNotFound() {
@@ -105,46 +106,53 @@ public class WarehouseServiceTest {
 
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         Warehouse warehouse = new Warehouse(model, 8081, "W01");
-        warehouse.setItems(new ArrayList<>(Arrays.asList(part, product)));
+        warehouse.setItems(new HashMap<>());
+        warehouse.getItems().put(1L, part);
+        warehouse.getItems().put(2L, product);
 
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
 
         assertThrows(NonEmptyWarehouseException.class, () -> warehouseService.removeWarehouse(1L));
     }
 
+
     @Test
     public void testAddItemToWarehouseSuccess() throws WarehouseFullException, WarehouseNotFoundException {
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         Warehouse warehouse = new Warehouse(model, 8081, "W01");
+        warehouse.setItems(new HashMap<>());
         Item item = new Part();
+        Long trayId = 1L;
 
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
         when(warehouseRepository.save(any(Warehouse.class))).thenReturn(warehouse);
 
         Warehouse updatedWarehouse = warehouseService.addItemToWarehouse(1L, item);
 
-        assertTrue(updatedWarehouse.getItems().contains(item));
+        assertTrue(updatedWarehouse.getItems().containsValue(item));
+        assertNotNull(updatedWarehouse.getItems().get(trayId));
+        assertEquals(item, updatedWarehouse.getItems().get(trayId));
         verify(warehouseRepository).save(warehouse);
     }
+
 
     @Test
     public void testAddItemToWarehouseFull() {
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         Warehouse warehouse = new Warehouse(model, 8081, "W01");
+        warehouse.setItems(new HashMap<>());
 
-        System.out.println(model.getSize());
-        List<Item> items = new ArrayList<>();
-        for (int i = 0; i < model.getSize(); i++) {
+        for (long trayId = 1; trayId <= model.getSize(); trayId++) {
             Part part = new Part();
-            part.setName("Part" + i);
-            items.add(part);
+            part.setName("Part" + trayId);
+            warehouse.getItems().put(trayId, part);
         }
-        warehouse.setItems(items);
 
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
 
         assertThrows(WarehouseFullException.class, () -> warehouseService.addItemToWarehouse(1L, new Part()));
     }
+
 
 
     @Test
@@ -155,32 +163,45 @@ public class WarehouseServiceTest {
 
     @Test
     public void testRemoveItemFromWarehouseSuccess() throws WarehouseNotFoundException, ItemNotFoundInWarehouse {
-        Warehouse warehouse = new Warehouse();
+        WarehouseModel model = WarehouseModel.EFFIMAT10;
+        Warehouse warehouse = new Warehouse(model, 8081, "W01");
+        warehouse.setItems(new HashMap<>());
+
+        Long trayId = 1L;
         Item item = new Part();
-        warehouse.setItems(new ArrayList<>(Collections.singleton(item)));
+        warehouse.getItems().put(trayId, item);
 
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
         when(warehouseRepository.save(any(Warehouse.class))).thenReturn(warehouse);
 
-        Warehouse updatedWarehouse = warehouseService.removeItemFromWarehouse(1L, item);
+        Warehouse updatedWarehouse = warehouseService.removeItemFromWarehouse(1L, trayId);
 
-        assertFalse(updatedWarehouse.getItems().contains(item));
+        assertFalse(updatedWarehouse.getItems().containsKey(trayId));
+        assertNull(updatedWarehouse.getItems().get(trayId));
         verify(warehouseRepository).save(warehouse);
     }
 
+
     @Test
-    public void testRemoveItemFromWarehouseItemNotFound() throws WarehouseNotFoundException {
+    public void testRemoveItemFromWarehouseItemNotFound(){
         Warehouse warehouse = new Warehouse();
-        warehouse.setItems(new ArrayList<>());
+        warehouse.setItems(new HashMap<>());
+
+        Long trayId = 1L;
 
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
 
-        assertThrows(ItemNotFoundInWarehouse.class, () -> warehouseService.removeItemFromWarehouse(1L, new Part()));
+        assertThrows(ItemNotFoundInWarehouse.class, () -> warehouseService.removeItemFromWarehouse(1L, trayId));
     }
+
 
     @Test
     public void testRemoveItemFromWarehouseNotFound() {
+        Long trayId = 1L;
+
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(WarehouseNotFoundException.class, () -> warehouseService.removeItemFromWarehouse(1L, new Part()));
+
+        assertThrows(WarehouseNotFoundException.class, () -> warehouseService.removeItemFromWarehouse(1L, trayId));
     }
+
 }
