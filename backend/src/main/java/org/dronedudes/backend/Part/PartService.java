@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PartService {
@@ -26,5 +27,8 @@ public class PartService {
 
     public List<Part> findPartsByBlueprintId(Long blueprintId) {
         return partRepository.findPartsByBlueprintsId(blueprintId);
+    }
+    public Optional<Part> getPartById(Long partId){
+        return partRepository.findById(partId);
     }
 }
