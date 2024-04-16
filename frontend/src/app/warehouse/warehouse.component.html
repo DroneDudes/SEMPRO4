@@ -9,8 +9,8 @@
                 <div>
                     @for (tray of selectedWarehouseTrayId.slice(1); track $index) {
                         @if (isItemPresent($index + 1)) {
-                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-red-500" onclick="$index.showModal()">{{$index + 1}}</button>
-                            <dialog id={{generateModalId()}} class="modal">
+                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-red-500" (click)="showModal($index+1)">{{$index + 1}}</button>
+                            <dialog id=my_modal_1 class="modal modal-modal-{{$index+1}}">
                                 <div class="modal-box">
                                   <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
                                   <div class="overflow-x-auto">
@@ -43,8 +43,8 @@
                               </dialog>
                         }
                         @else {
-                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-green-500" onclick="$index.showModal()">{{$index + 1}}</button>
-                            <dialog id={{generateModalId()}}  class="modal">
+                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-green-500" (click)="showModal($index+1)">{{$index + 1}}</button>
+                            <dialog id=my_modal_1  class="modal modal-modal-{{$index+1}}">
                                 <div class="modal-box">
                                   <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
                                   <div class="modal-action">

@@ -41,4 +41,14 @@ export class WarehouseComponent implements OnInit{
     this.modalIdCounter++;
     return this.modalIdCounter.toString();
   }
+
+  showModal(trayIndex: number): void {
+    const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
+    modal?.showModal();
+  }
+
+  closeModal(trayIndex: number): void {
+    const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
+    modal?.close();
+  }
 }
