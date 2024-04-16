@@ -1,11 +1,25 @@
 <section class="warehouse">
-  <div *ngIf="!displayDropdown">
-    <ng-container *ngFor="let warehouse of warehouses; let i = index">
-      <button *ngIf="i < 5" class="warehouse-btn" (click)="onSelectWarehouse(i)">
-        {{ warehouse.name }}
-      </button>
-    </ng-container>
-  </div>
+  @if(!displayDropdown()) {
+    <div class="warehouse-btn-container">
+       @for(warehouse of warehouses(); track $index) {
+        <button class="warehouse-btn" (click)="onSelectWarehouse($index)">
+          {{warehouse.name}}
+        </button>
+       }
+    </div>
+  } @else {
+    <p>Der er fandme mere end 5 {{displayDropdown()}}</p>
+  }
+
+
+</section>
+   <!-- <div *ngIf="!displayDropdown">
+      <ng-container *ngFor="let warehouse of warehouses; let i = index">
+        <button *ngIf="i < 5" class="warehouse-btn" (click)="onSelectWarehouse(i)">
+          {{ warehouse.name }}
+        </button>
+      </ng-container>
+    </div>
 
   <div *ngIf="displayDropdown">
     <select [(ngModel)]="selectedWarehouseIndex" (ngModelChange)="onSelectWarehouse($event)">
@@ -27,5 +41,4 @@
         </ng-template>
       </div>
     </div>
-  </div>
-</section>
+  </div> -->

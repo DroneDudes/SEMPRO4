@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, Signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WarehouseService } from './warehouse.service';
 import { Warehouse } from './warehouse.models';
@@ -11,37 +11,28 @@ import { Warehouse } from './warehouse.models';
   templateUrl: './warehouse.component.html',
   styleUrls: ['./warehouse.component.css']
 })
-export class WarehouseComponent implements OnInit {
-  warehouses: Warehouse[] = [];
+export class WarehouseComponent {
+  warehouseService: WarehouseService = inject(WarehouseService);
+  warehouses: Signal<Warehouse[]> = this.warehouseService.getWarehouses();
+  displayDropdown: Signal<boolean> = this.warehouseService.getDisplayDropdown();
+
   selectedWarehouse: Warehouse | null = null;
-  displayDropdown: boolean = false;
+  
   selectedWarehouseIndex: number | null = null;
   trayIds: number[] = [];
 
-  constructor(private warehouseService: WarehouseService) { }
-
-  ngOnInit(): void {
-    this.loadWarehouses();
-  }
+  //ngOnInit(): void {
+  //  this.loadWarehouses();
+  //}
 
   onSelectWarehouse(index: number): void {
-    this.selectedWarehouse = this.warehouses[index];
+    this.selectedWarehouse = this.warehouses()[index];
     this.selectedWarehouseIndex = index;
-    this.trayIds = Array.from({ length: this.warehouses[index].size }, (_, i) => i + 1);
+    this.trayIds = Array.from({ length: this.warehouses()[index].size }, (_, i) => i + 1);
   }
 
-  loadWarehouses(): void {
-    this.warehouseService.getAllWarehouses().subscribe({
-      next: (data) => {
-        this.warehouses = data;
-        this.displayDropdown = this.warehouses.length > 5;
-      },
-      error: (err) => {
-        console.error('Failed to get warehouses', err);
-      }
-    });
-  }
   sortTrayIds(a: any, b: any): number {
     return parseInt(a.key) - parseInt(b.key);
   }
+  
 }

@@ -7,6 +7,7 @@ import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
+import org.dronedudes.backend.Warehouse.sse.EventPublisher;
 import org.dronedudes.backend.item.Item;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.*;
 @Service
 public class WarehouseService{
     private final WarehouseRepository warehouseRepository;
+    private final EventPublisher eventPublisher;
     private final SoapService soapService;
 
     @PostConstruct
@@ -22,8 +24,10 @@ public class WarehouseService{
 
     }
     public WarehouseService(WarehouseRepository warehouseRepository,
+                            EventPublisher eventPublisher,
                             SoapService soapService) {
         this.warehouseRepository = warehouseRepository;
+        this.eventPublisher = eventPublisher;
         this.soapService = soapService;
     }
 
@@ -42,7 +46,7 @@ public class WarehouseService{
     public Warehouse createWarehouse(WarehouseModel model, int port, String name) {
         Warehouse warehouse = new Warehouse(model, port, name);
         warehouseRepository.save(warehouse);
-
+        eventPublisher.publishWarehouseEvent(getAllWarehouses());
         return warehouse;
     }
 
@@ -54,6 +58,7 @@ public class WarehouseService{
             throw new NonEmptyWarehouseException(warehouseId, warehouse.getItems());
         }
         warehouseRepository.delete(warehouse);
+        eventPublisher.publishWarehouseEvent(getAllWarehouses());
         return true;
     }
 
@@ -75,7 +80,9 @@ public class WarehouseService{
         if (checkWarehouseCapacity(warehouse)) {
             warehouse.getItems().put(trayId, item);
         }
-        return warehouseRepository.save(warehouse);
+        warehouseRepository.save(warehouse);
+        eventPublisher.publishWarehouseEvent(getAllWarehouses());
+        return warehouse;
     }
 
     @Transactional
@@ -90,7 +97,9 @@ public class WarehouseService{
         if (checkWarehouseCapacity(warehouse)) {
             warehouse.getItems().put(trayId, item);
         }
-        return warehouseRepository.save(warehouse);
+        warehouseRepository.save(warehouse);
+        eventPublisher.publishWarehouseEvent(getAllWarehouses());
+        return warehouse;
     }
 
     private Long findFirstAvailableSlot(Warehouse warehouse) throws WarehouseFullException {
@@ -123,7 +132,9 @@ public class WarehouseService{
         if (warehouse.getItems().remove(trayId) == null) {
             throw new ItemNotFoundInWarehouse(trayId, warehouseId);
         }
-        return warehouseRepository.save(warehouse);
+        warehouseRepository.save(warehouse);
+        eventPublisher.publishWarehouseEvent(getAllWarehouses());
+        return warehouse;
     }
 
 

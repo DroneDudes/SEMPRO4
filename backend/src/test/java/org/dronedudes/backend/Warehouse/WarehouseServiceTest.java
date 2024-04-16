@@ -1,6 +1,5 @@
 package org.dronedudes.backend.Warehouse;
 
-import jakarta.transaction.Transactional;
 import org.dronedudes.backend.Part.Part;
 import org.dronedudes.backend.Product.Product;
 import org.dronedudes.backend.Warehouse.exceptions.ItemNotFoundInWarehouse;
@@ -16,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
+import org.dronedudes.backend.Warehouse.sse.EventPublisher;
 
 import java.util.*;
 
@@ -32,6 +31,8 @@ public class WarehouseServiceTest {
     private WarehouseRepository warehouseRepository;
     @Mock
     private SoapService soapService;
+    @Mock
+    private EventPublisher eventPublisher;
     @InjectMocks
     private WarehouseService warehouseService;
 
@@ -39,7 +40,7 @@ public class WarehouseServiceTest {
     void setUp() {
         warehouseRepository = mock(WarehouseRepository.class);
         soapService = mock(SoapService.class);
-        warehouseService = new WarehouseService(warehouseRepository, soapService);
+        warehouseService = new WarehouseService(warehouseRepository, eventPublisher, soapService);
     }
 
     @Test
