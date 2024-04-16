@@ -76,6 +76,17 @@ public class WarehouseController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @PostMapping("/{id}/items/{trayId}")
+    public ResponseEntity<Warehouse> addItemToWarehouseWithTrayId(@PathVariable Long id,@PathVariable Long trayId, @RequestBody Item item) {
+        try {
+            Warehouse warehouse = warehouseService.addItemToWarehouse(id, item, trayId);
+            return ResponseEntity.ok(warehouse);
+        } catch (WarehouseNotFoundException warehouseNotFoundException){
+            return ResponseEntity.notFound().build();
+        } catch (WarehouseFullException warehouseFullException) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     @DeleteMapping("/{id}/items")
     public ResponseEntity<Warehouse> removeItemFromWarehouse(@PathVariable Long id, @RequestBody Long trayId) {
