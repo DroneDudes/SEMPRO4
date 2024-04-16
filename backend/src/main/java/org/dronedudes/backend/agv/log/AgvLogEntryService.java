@@ -5,8 +5,8 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.dronedudes.backend.agv.Agv;
-import org.dronedudes.backend.agv.AgvObserverService;
 import org.dronedudes.backend.agv.AgvService;
+import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.SubscriberInterface;
 import org.springframework.stereotype.Service;
 import java.util.Map;
@@ -17,13 +17,13 @@ import java.util.Map;
 @Transactional
 public class AgvLogEntryService implements SubscriberInterface {
     private final AgvLogEntryRepository agvLogEntryRepository;
-    private final AgvObserverService agvObserverService;
+    private final ObserverService observerService;
     private final AgvService agvService;
 
     @PostConstruct
     public void subscribeToAgvObserverService() {
         for (Map.Entry<Long, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
-            agvObserverService.subscribe(agvEntry.getKey(), this);
+            observerService.subscribe(agvEntry.getKey(), this);
         }
     }
 

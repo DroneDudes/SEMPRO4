@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
+import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class AgvService implements PublisherInterface {
     private final AgvRepository agvRepository;
     private Map<Long, Agv> agvMap = new HashMap<>();
 
-    private final AgvObserverService agvObserverService;
+    private final ObserverService observerService;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @PostConstruct
@@ -96,8 +97,8 @@ public class AgvService implements PublisherInterface {
     }
 
     @Override
-    public void notifyChange(Long agvId) {
-        agvObserverService.updateSubscribers(agvId);
+    public void notifyChange(Long topicId) {
+        observerService.updateSubscribers(topicId);
     }
 
 /*

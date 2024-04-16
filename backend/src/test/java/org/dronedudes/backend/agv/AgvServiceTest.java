@@ -1,6 +1,7 @@
 package org.dronedudes.backend.agv;
 
 import org.dronedudes.backend.BackendApplication;
+import org.dronedudes.backend.common.ObserverService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,6 @@ class AgvServiceTest {
     private AgvService agvService;
     @Autowired
     private AgvRepository agvRepository;
-    @Autowired
-    private AgvObserverService agvObserverService;
 
     @BeforeEach
     void setUp() {
