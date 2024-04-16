@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import org.dronedudes.backend.agv.Agv;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

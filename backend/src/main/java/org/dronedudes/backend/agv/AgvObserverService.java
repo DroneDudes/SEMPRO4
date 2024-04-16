@@ -3,7 +3,6 @@ package org.dronedudes.backend.agv;
 import org.dronedudes.backend.common.ObserverInterface;
 import org.dronedudes.backend.common.SubscriberInterface;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

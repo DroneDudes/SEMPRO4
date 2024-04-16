@@ -6,7 +6,6 @@ import lombok.*;
 import org.dronedudes.backend.agv.log.AgvLogEntry;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
-
 import java.util.List;
 
 @Data
