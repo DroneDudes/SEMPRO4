@@ -51,4 +51,19 @@ export class WarehouseComponent implements OnInit{
     const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
     modal?.close();
   }
+
+  removeItemFromWarehouseWithTrayId(id: number, trayId: number) {
+    this.warehouseService.removeItemFromWarehouseWithTrayId(id, trayId).subscribe({
+      next: (updatedWarehouse) => {
+        if (this.selectedWarehouse?.id === id) {
+          this.selectedWarehouse = updatedWarehouse;
+        }
+        console.log("Item removed successfully. UI updated.");
+      },
+      error: (error) => {
+        console.error("Error removing item:", error);
+      }
+      }
+    )
+  }
 }

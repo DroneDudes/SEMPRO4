@@ -10,8 +10,20 @@ import { Observable } from 'rxjs';
 })
 export class WarehouseService {
   private warehouseUrl = "http://localhost:8080/api/v1/warehouses";
+  
+  httpClient: HttpClient = inject(HttpClient);
+
   getWarehouses(): Observable<Warehouse[]>{
     return this.httpClient.get<Warehouse[]>(this.warehouseUrl)
   }
-  httpClient: HttpClient = inject(HttpClient);
+
+  addItemToWarehouseWithTrayId(id: number, trayId: number, item: Item): Observable<Warehouse> {
+    return this.httpClient.post<Warehouse>(this.warehouseUrl + "/" + id + "/items/" + trayId, item)
+  }
+
+  removeItemFromWarehouseWithTrayId(id: number, trayId: number): Observable<Warehouse> {
+    console.log("Service delete");
+    return this.httpClient.delete<Warehouse>(this.warehouseUrl + "/" + id + "/items/" + trayId, {})
+    
+  }
 }
