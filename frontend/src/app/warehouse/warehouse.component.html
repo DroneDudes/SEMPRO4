@@ -33,7 +33,8 @@
                                         </tbody>
                                     </table>
                                   </div>
-                                  <div class="modal-action">
+                                  <div class="modal-action flex justify-between">
+                                      <button class="btn">Remove Part</button>
                                     <form method="dialog">
                                       <!-- if there is a button in form, it will close the modal -->
                                       <button class="btn">Close</button>
@@ -47,11 +48,13 @@
                             <dialog id=my_modal_1  class="modal modal-modal-{{$index+1}}">
                                 <div class="modal-box">
                                   <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
-                                  <div class="modal-action">
+                                  <div class="modal-action flex justify-between">
+                                      <button class="btn">Add Part</button>
                                     <form method="dialog">
                                       <!-- if there is a button in form, it will close the modal -->
                                       <button class="btn">Close</button>
                                     </form>
+                                    
                                   </div>
                                 </div>
                               </dialog>
