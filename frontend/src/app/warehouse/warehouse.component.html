@@ -1,1 +1,65 @@
-<p>warehouse works!</p>
+
+<section class="warehouse border-2 border-black ml-10 w-1/4 min-h-64">
+        <div class="w-min-fit">
+            @for (warehouse of warehouses; track $index) {
+                <button class="btn btn-ghost" (click)="showWarehouse($index)">{{warehouse.name}}</button>
+            }
+            @if (selectedWarehouse != null ) {
+                <h4>{{selectedWarehouse.name}}</h4>
+                <div>
+                    @for (tray of selectedWarehouseTrayId.slice(1); track $index) {
+                        @if (isItemPresent($index + 1)) {
+                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-red-500" onclick="$index.showModal()">{{$index + 1}}</button>
+                            <dialog id={{generateModalId()}} class="modal">
+                                <div class="modal-box">
+                                  <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
+                                  <div class="overflow-x-auto">
+                                    <table class="table table-zebra">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{selectedWarehouse.items[$index + 1].id}}</td>
+                                                <td>{{selectedWarehouse.items[$index + 1].name}}</td>
+                                                <td>{{selectedWarehouse.items[$index + 1].type}}</td>
+                                                <td>{{selectedWarehouse.items[$index + 1].description}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                  <div class="modal-action">
+                                    <form method="dialog">
+                                      <!-- if there is a button in form, it will close the modal -->
+                                      <button class="btn">Close</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </dialog>
+                        }
+                        @else {
+                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-green-500" onclick="$index.showModal()">{{$index + 1}}</button>
+                            <dialog id={{generateModalId()}}  class="modal">
+                                <div class="modal-box">
+                                  <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
+                                  <div class="modal-action">
+                                    <form method="dialog">
+                                      <!-- if there is a button in form, it will close the modal -->
+                                      <button class="btn">Close</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </dialog>
+                        }
+                        
+                        
+                    }
+                </div>
+            }
+        </div>
+</section>

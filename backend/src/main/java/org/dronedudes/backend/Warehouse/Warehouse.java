@@ -1,5 +1,6 @@
 package org.dronedudes.backend.Warehouse;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -28,11 +29,15 @@ public class Warehouse {
     private Map<Long, Item> items;
     private String uri;
     private String name;
+    private int size;
 
     public Warehouse(WarehouseModel model, int port, String name) {
         this.model = model;
         this.uri = model.getBaseUri() + port + model.getSuffixUri();
         this.name = name;
         this.items = new HashMap<>();
+        this.size = model.getSize();
     }
+    
+    
 }
