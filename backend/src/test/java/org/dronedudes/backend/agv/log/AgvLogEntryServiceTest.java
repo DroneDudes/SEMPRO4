@@ -31,20 +31,20 @@ class AgvLogEntryServiceTest {
     void setUp() {
         agv1 = agvService.saveAgvToDatabase(agv1);
         agv2 = agvService.saveAgvToDatabase(agv2);
-        agvService.notifyChange(agv1.getId());
-        agvService.notifyChange(agv2.getId());
-        observerService.subscribe(agv1.getId(), agvLogEntryService);
+        agvService.notifyChange(agv1.getUuid());
+        agvService.notifyChange(agv2.getUuid());
+        observerService.subscribe(agv1.getUuid(), agvLogEntryService);
     }
 
     @AfterEach
     void tearDown() {
         agvLogEntryRepository.deleteAll();
         agvService.getAgvMap().clear();
-        observerService.unsubscribe(agv1.getId(), agvLogEntryService);
+        observerService.unsubscribe(agv1.getUuid(), agvLogEntryService);
     }
 
     @Test
     void subscribeToAgvObserverService() {
-        assert observerService.getSubscribersForAgv(agv1.getId()).contains(agvLogEntryService);
+        assert observerService.getSubscribersForTopic(agv1.getUuid()).contains(agvLogEntryService);
     }
 }

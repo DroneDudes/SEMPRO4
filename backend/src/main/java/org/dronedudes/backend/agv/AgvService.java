@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ import java.util.Optional;
 @Transactional
 public class AgvService implements PublisherInterface {
     private final AgvRepository agvRepository;
-    private Map<Long, Agv> agvMap = new HashMap<>();
+    private Map<UUID, Agv> agvMap = new HashMap<>();
 
     private final ObserverService observerService;
     private final RestTemplate restTemplate = new RestTemplate();
@@ -33,14 +34,14 @@ public class AgvService implements PublisherInterface {
     public void fetchAllSystemAgvs() {
 //        saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
         for (Agv agv: agvRepository.findAll()) {
-            agvMap.put(agv.getId(), agv);
-            notifyChange(agv.getId());
+            agvMap.put(agv.getUuid(), agv);
+            notifyChange(agv.getUuid());
         }
     }
 
     public Agv saveAgvToDatabase(Agv agv) {
-        agvMap.put(agv.getId(), agv);
-        notifyChange(agv.getId());
+        agvMap.put(agv.getUuid(), agv);
+        notifyChange(agv.getUuid());
         return agvRepository.save(agv);
     }
     public Optional<Agv> returnSingleAgv() {
@@ -72,7 +73,7 @@ public class AgvService implements PublisherInterface {
                 agv.setAgvProgram(agvProgram);
                 agv.setAgvState(agvState);
 
-                notifyChange(agv.getId());
+                notifyChange(agv.getUuid());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             } catch (Exception e) {
@@ -97,8 +98,8 @@ public class AgvService implements PublisherInterface {
     }
 
     @Override
-    public void notifyChange(Long topicId) {
-        observerService.updateSubscribers(topicId);
+    public void notifyChange(UUID machineId) {
+        observerService.updateSubscribers(machineId);
     }
 
 /*

@@ -4,34 +4,35 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ObserverService {
-    private HashMap<Long, List<SubscriberInterface>> topicsSubscribersMap = new HashMap<>();
+    private HashMap<UUID, List<SubscriberInterface>> topicsSubscribersMap = new HashMap<>();
 
-    public void subscribe(Long topicId, SubscriberInterface subscriber) {
-        List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(topicId);
+    public void subscribe(UUID machineId, SubscriberInterface subscriber) {
+        List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(machineId);
         subscriberList.add(subscriber);
-        topicsSubscribersMap.put(topicId, subscriberList);
+        topicsSubscribersMap.put(machineId, subscriberList);
     }
 
-    public void unsubscribe(Long topicId, SubscriberInterface subscriber) {
-        List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(topicId);
+    public void unsubscribe(UUID machineId, SubscriberInterface subscriber) {
+        List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(machineId);
         subscriberList.remove(subscriber);
-        topicsSubscribersMap.put(topicId, subscriberList);
+        topicsSubscribersMap.put(machineId, subscriberList);
     }
 
-    public void updateSubscribers(Long topicId) {
-        topicsSubscribersMap.computeIfAbsent(topicId, k -> new ArrayList<>());
-        List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(topicId);
+    public void updateSubscribers(UUID machineId) {
+        topicsSubscribersMap.computeIfAbsent(machineId, k -> new ArrayList<>());
+        List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(machineId);
         for (SubscriberInterface subscriber : subscriberList) {
-            subscriber.update(topicId);
+            subscriber.update(machineId);
         }
 
     }
 
-    public List<SubscriberInterface> getSubscribersForAgv(Long topicId) {
-        return topicsSubscribersMap.get(topicId);
+    public List<SubscriberInterface> getSubscribersForTopic(UUID machineId) {
+        return topicsSubscribersMap.get(machineId);
     }
 
 }

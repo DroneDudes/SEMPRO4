@@ -6,13 +6,15 @@ import lombok.*;
 import org.dronedudes.backend.agv.log.AgvLogEntry;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
+import org.dronedudes.backend.common.Machine;
+
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "agv")
-public class Agv {
+public class Agv extends Machine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

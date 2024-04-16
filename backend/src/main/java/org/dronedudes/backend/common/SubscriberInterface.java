@@ -1,5 +1,7 @@
 package org.dronedudes.backend.common;
 
+import java.util.UUID;
+
 public interface SubscriberInterface {
-    void update(Long machineId);
+    void update(UUID machineId);
 }

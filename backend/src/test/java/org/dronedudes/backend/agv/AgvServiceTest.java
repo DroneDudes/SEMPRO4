@@ -1,7 +1,6 @@
 package org.dronedudes.backend.agv;
 
 import org.dronedudes.backend.BackendApplication;
-import org.dronedudes.backend.common.ObserverService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,9 @@ class AgvServiceTest {
     @BeforeEach
     void setUp() {
         agvService.saveAgvToDatabase(agv1);
+        System.out.println(agv1.getUuid());
         agvService.saveAgvToDatabase(agv2);
+        System.out.println(agv2.getUuid());
     }
 
     @AfterEach
@@ -45,6 +46,7 @@ class AgvServiceTest {
 
     @Test
     void localMapSizeMatchesDatabaseSize() {
+        System.out.println(agvService.getAgvMap().size());
         assert agvRepository.findAll().size() == agvService.getAgvMap().size();
     }
 

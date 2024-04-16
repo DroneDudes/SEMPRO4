@@ -10,6 +10,7 @@ import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.SubscriberInterface;
 import org.springframework.stereotype.Service;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +23,13 @@ public class AgvLogEntryService implements SubscriberInterface {
 
     @PostConstruct
     public void subscribeToAgvObserverService() {
-        for (Map.Entry<Long, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
-            observerService.subscribe(agvEntry.getKey(), this);
+        for (Map.Entry<UUID, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
+            observerService.subscribe(agvEntry.getValue().getUuid(), this);
         }
     }
 
     @Override
-    public void update(Long agvId) {
+    public void update(UUID agvId) {
         Agv updatedAgv = agvService.getAgvMap().get(agvId);
         agvLogEntryRepository.save(new AgvLogEntry(
                 updatedAgv.getBattery(),
