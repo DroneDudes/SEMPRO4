@@ -88,8 +88,8 @@ public class WarehouseController {
         }
     }
 
-    @DeleteMapping("/{id}/items")
-    public ResponseEntity<Warehouse> removeItemFromWarehouse(@PathVariable Long id, @RequestBody Long trayId) {
+    @DeleteMapping("/{id}/items/{trayId}")
+    public ResponseEntity<Warehouse> removeItemFromWarehouse(@PathVariable Long id, @PathVariable Long trayId) {
         try {
             Warehouse warehouse = warehouseService.removeItemFromWarehouse(id, trayId);
             return ResponseEntity.ok(warehouse);

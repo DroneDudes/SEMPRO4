@@ -97,7 +97,7 @@ public class WarehouseService{
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
 
-
+        //TODO fix check at pladsen er tom?!
         Long trayId = findFirstAvailableSlot(warehouse);
         if (checkWarehouseCapacity(warehouse)) {
             warehouse.getItems().put(trayId, item);
