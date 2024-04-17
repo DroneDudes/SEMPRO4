@@ -40,7 +40,9 @@ public class AgvSseService implements SubscriberInterface {
     public void update(UUID machineId) {
         for (SseEmitter emitter: emitters) {
             try {
-                emitter.send(agvService.getAgvMap().get(machineId).getId());
+                Agv agv = agvService.getAgvMap().get(machineId);
+                SseEmitter.SseEventBuilder event = SseEmitter.event().data(agv).name("Agv Event");
+                emitter.send(event);
             } catch (IOException e) {
                 emitter.complete();
                 emitters.remove(emitter);
