@@ -1,15 +1,25 @@
 
-<section class="warehouse border-2 border-black ml-10 w-1/4 min-h-64">
-        <div class="w-min-fit">
+<section class="warehouse bg-stone-200 rounded-lg shadow-md min-w-56 w-1/5 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
+        <div class="">
+          <div role="tablist" class="tabs tabs-xs tabs-bordered ">
             @for (warehouse of warehouses; track $index) {
-                <button class="btn btn-ghost" (click)="showWarehouse($index)">{{warehouse.name}}</button>
+                <!--<button type="button" class="btn btn-neutral" (click)="showWarehouse($index)">{{warehouse.name}}</button>-->
+                <input type="radio" name="my_tabs_1" role="tab" class="tab" [attr.aria-label]="warehouse.name" (click)="showWarehouse($index)" />
+                
             }
+          </div>
             @if (selectedWarehouse != null ) {
-                <h4>{{selectedWarehouse.name}}</h4>
-                <div>
+                <div class="button-container flex flex-wrap gap-2 justify-content-between justify-center m-2">
                     @for (tray of selectedWarehouseTrayId.slice(1); track $index) {
                         @if (isItemPresent($index + 1)) {
-                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-red-500" (click)="showModal($index+1)">{{$index + 1}}</button>
+                          <button class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-red-500 p-4 px-6 py-3 
+                          font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-4 hover:border-double" (click)="showModal($index+1)">
+                            <span class="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-red-500 text-white duration-300 group-hover:translate-x-0">
+                              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                            <span class="ease absolute flex h-full w-full transform items-center justify-center text-red-500 transition-all duration-300 group-hover:translate-x-full">{{$index + 1}}</span>
+                            <span class="invisible relative">{{$index + 1}}</span>
+                        </button>
                             <dialog id=my_modal_1 class="modal modal-modal-{{$index+1}}">
                                 <div class="modal-box">
                                   <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
@@ -44,7 +54,13 @@
                               </dialog>
                         }
                         @else {
-                            <button class="tray border w-10 h-10 rounded-md mr-2 bg-green-500" (click)="showModal($index+1)">{{$index + 1}}</button>
+                          <button (click)="showModal($index+1)" class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-green-500 p-4 px-6 py-3 font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-4 hover:border-double" >
+                            <span class="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-green-500 text-white duration-300 group-hover:translate-x-0">
+                              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                            <span class="ease absolute flex h-full w-full transform items-center justify-center text-green-500 transition-all duration-300 group-hover:translate-x-full">{{$index + 1}}</span>
+                            <span class="invisible relative">{{$index + 1}}</span>
+                        </button>
                             <dialog id=my_modal_1  class="modal modal-modal-{{$index+1}}">
                                 <div class="modal-box">
                                   <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
@@ -59,8 +75,6 @@
                                 </div>
                               </dialog>
                         }
-                        
-                        
                     }
                 </div>
             }
