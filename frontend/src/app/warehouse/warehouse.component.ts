@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
+import { Item } from './_models/Item';
 
 
 @Component({
@@ -17,7 +18,9 @@ export class WarehouseComponent implements OnInit{
   selectedWarehouse: Warehouse | null = null;
   selectedWarehouseTrayId: number[] = [];
   parts: Part[] = [];
+  selectedPart: Part | null = null;
   private modalIdCounter: number = 0;
+  selectedPartIndex: number | null = null;
   ngOnInit() {
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
@@ -44,10 +47,10 @@ export class WarehouseComponent implements OnInit{
   }
 
   showModalAndGetParts(trayIndex: number): void {
-    const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
-    modal?.showModal();
     this.updateParts();
     console.log(this.parts);
+    const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
+    modal?.showModal();
   }
 
 
@@ -74,7 +77,16 @@ export class WarehouseComponent implements OnInit{
       error: (error) => {
         console.error('Server error', error);
       }
-
     }); 
+  }
+
+  selectPart(index: number) {
+    this.selectedPart = this.parts[index];
+    this.selectedPartIndex = index;
+    console.log(this.selectedPart);
+  }
+
+  addPart(id: number, trayId: number, item: Item) {
+    this.warehouseService.addItemToWarehouseWithTrayId(id , trayId, item);
   }
 }

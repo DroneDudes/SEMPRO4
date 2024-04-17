@@ -64,8 +64,38 @@
                             <dialog id=my_modal_1  class="modal modal-modal-{{$index+1}}">
                                 <div class="modal-box">
                                   <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
+                                  <div class="overflow-x-auto">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                          @if (parts.length > 0) {
+                                            @for (part of parts; track $index) {
+                                              <tr (click)="selectPart($index)"
+                                              class="cursor-pointer hover:bg-gray-100"
+                                              [class.bg-gray-200]="selectedPartIndex === $index">
+                                                <td>{{part.id}}</td>
+                                                <td>{{part.name}}</td>
+                                                <td>{{part.type}}</td>
+                                                <td>{{part.description}}</td>
+                                              </tr>
+                                            }
+                                          }
+                                          @else {
+                                            <p>No parts available</p>
+                                          }
+                                            
+                                        </tbody>
+                                    </table>
+                                  </div>
                                   <div class="modal-action flex justify-between">
-                                      <button class="btn">Add Part</button>
+                                      <button class="btn" *ngIf="selectedPart" (click)="addPart(selectedWarehouse.id, selectedWarehouseTrayId.indexOf($index + 1), selectedPart)">Add Part</button>
                                     <form method="dialog">
                                       <!-- if there is a button in form, it will close the modal -->
                                       <button class="btn">Close</button>
