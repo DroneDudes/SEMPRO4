@@ -1,0 +1,27 @@
+<div class="overflow-x-auto">
+    <table class="table">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Name</th>
+          <th>Battery</th>
+          <th>Program</th>
+          <th>State</th>
+          <th>User id</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of agvLogs$(); track $index) {
+        <tr>
+          <th>{{log.timestamp}}</th>
+          <td>{{log.agv.name}}</td>
+          <td>{{log.battery}} %</td>
+          <td>{{log.agvProgram}}</td>
+          <td>{{log.agvState}}</td>
+          <td>{{log.userId}} (replace with username?)</td>
+        </tr>
+    }
+      </tbody>
+    </table>
+  </div>

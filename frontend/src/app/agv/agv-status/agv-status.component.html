@@ -1,0 +1,22 @@
+<div >
+    <table class="table w-24 border-stone-900 border-2 mx-auto shadow-md">
+      <tbody>
+        <tr>
+          <th scope="row">Name</th>
+          <td>{{agvEvent$()?.name}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Battery</th>
+          <td>{{agvEvent$()?.battery}} %</td>
+        </tr>
+        <tr>
+          <th scope="row">Program</th>
+          <td>{{agvEvent$()?.agvProgram}}</td>
+        </tr>
+        <tr>
+          <th scope="row">State</th>
+          <td>{{agvEvent$()?.agvState}}</td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>

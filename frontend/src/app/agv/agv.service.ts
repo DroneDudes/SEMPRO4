@@ -11,6 +11,27 @@ export interface AgvEvent {
   name: string;
 }
 
+export interface AgvLog {
+  id: number
+  battery: number
+  agvProgram: string
+  agvState: number
+  timestamp: string
+  agv: Agv
+  userId: number
+  carriedPartId: number
+}
+
+export interface Agv {
+  uuid: string
+  id: number
+  endpointUrl: string
+  battery: number
+  agvProgram: any
+  agvState: any
+  name: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,21 +47,29 @@ export class AgvService {
     name: 'Storeroom AGV'
   });
 
+  private agvLogs$: WritableSignal<AgvLog[]> = signal([]);
+
   constructor() { 
     this.subscribeToAgvSse();
+    this.getLast10AgvLogs();
     //this.fetchInitialAgvStatus();
   }
 
   private subscribeToAgvSse() {
     console.log('Subscribing to AGV SSE');
-    const eventSource = new EventSource('http://localhost:8080/api/v1/agv/sse');
+    const eventSource = new EventSource('http://localhost:8080/api/v1/agv/status');
     eventSource.addEventListener("Agv Event", (e) => {
       this.agvEvents$.set(JSON.parse(e.data));
+      this.getLast10AgvLogs();
     })
   };
 
-  public getAgvEvents$() {
-    return this.agvEvents$.asReadonly();
+
+  public getLast10AgvLogs() {
+    this.httpClient.get<AgvLog[]>("http://localhost:8080/api/v1/agv/logs").subscribe((AgvLog) => {
+      this.agvLogs$.set(AgvLog);
+      console.table(this.agvLogs$());
+    });
   }
 
   /*
@@ -51,4 +80,12 @@ export class AgvService {
     });
   }
   */
+
+  public getAgvEvents$() {
+    return this.agvEvents$.asReadonly();
+  }
+
+  public getAgvLogs$() {
+    return this.agvLogs$.asReadonly();
+  }
 }
