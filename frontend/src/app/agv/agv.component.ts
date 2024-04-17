@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Signal, inject } from '@angular/core';
+import { AgvEvent, AgvService } from '../agv/agv.service';
 
 @Component({
   selector: 'app-agv',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './agv.component.css'
 })
 export class AgvComponent {
-
+  private agvService: AgvService = inject(AgvService);
+  public agvEvent$: Signal<AgvEvent|null> = this.agvService.getAgvEvents$();
 }

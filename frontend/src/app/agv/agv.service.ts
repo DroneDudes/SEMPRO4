@@ -1,4 +1,5 @@
-import { Injectable, WritableSignal, effect, signal } from '@angular/core';
+import { Injectable, WritableSignal, effect, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 export interface AgvEvent {
   UUUID: string;
@@ -14,11 +15,12 @@ export interface AgvEvent {
   providedIn: 'root'
 })
 export class AgvService {
-
+  private httpClient: HttpClient = inject(HttpClient);
   private agvEvents$: WritableSignal<AgvEvent|null> = signal(null);
 
   constructor() { 
     this.subscribeToAgvSse();
+    this.fetchInitialAgvStatus();
   }
 
   private subscribeToAgvSse() {
@@ -29,7 +31,14 @@ export class AgvService {
     })
   };
 
-  getAgvEvents$() {
+  public getAgvEvents$() {
     return this.agvEvents$.asReadonly();
+  }
+
+  private fetchInitialAgvStatus() {
+    this.httpClient.get<AgvEvent>("http://localhost:8080/api/v1/agv/").subscribe((agvEvent) => {
+      this.agvEvents$.set(agvEvent);
+      console.log(agvEvent);
+    });
   }
 }

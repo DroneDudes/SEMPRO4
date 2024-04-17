@@ -1,1 +1,30 @@
-<p>agv works!</p>
+<div class="overflow-x-auto">
+    <table class="table">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Battery</th>
+          <th>Program</th>
+          <th>State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        <tr>
+          <td>
+            {{ agvEvent$()?.name }}
+          </td>
+          <td>
+            {{ agvEvent$()?.battery }} %
+          </td>
+          <td>
+            {{ agvEvent$()?.agvProgram }}
+          </td>
+          <td>
+            {{ agvEvent$()?.agvState }}
+          </td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>

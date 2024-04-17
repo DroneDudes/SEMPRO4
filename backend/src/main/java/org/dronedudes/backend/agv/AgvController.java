@@ -13,7 +13,7 @@ import java.util.Optional;
 public class AgvController {
     private final AgvService agvService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<Optional<Agv>> getAgv() {
         return new ResponseEntity<>(agvService.returnSingleAgv(), HttpStatus.OK);
     }
