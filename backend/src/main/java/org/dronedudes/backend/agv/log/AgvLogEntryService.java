@@ -31,7 +31,7 @@ public class AgvLogEntryService implements SubscriberInterface {
     }
 
     public List<AgvLogEntry> return10NewestAgvLogs() {
-        return agvLogEntryRepository.findFirst10ByAgv_Id(1L);
+        return agvLogEntryRepository.findTop10ByOrderByTimestampDesc();
     }
 
     @Override
