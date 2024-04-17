@@ -86,7 +86,18 @@ export class WarehouseComponent implements OnInit{
     console.log(this.selectedPart);
   }
 
-  addPart(id: number, trayId: number, item: Item) {
-    this.warehouseService.addItemToWarehouseWithTrayId(id , trayId, item);
+  addPart(id: number, trayId: number, part: Part | null) {
+    if(part === null){
+      console.error("Item is null");
+    } else {
+      this.warehouseService.addItemToWarehouseWithTrayId(id, trayId, part).subscribe(
+        response => {
+            this.warehouseService.getWarehouses();
+        },
+        error => {
+            console.error('Error:', error);
+        }
+    );
+    }
   }
 }

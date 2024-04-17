@@ -95,7 +95,7 @@
                                     </table>
                                   </div>
                                   <div class="modal-action flex justify-between">
-                                      <button class="btn" *ngIf="selectedPart" (click)="addPart(selectedWarehouse.id, selectedWarehouseTrayId.indexOf($index + 1), selectedPart)">Add Part</button>
+                                      <button class="btn" (click)="addPart(selectedWarehouse.id, ($index+1), selectedPart)">Add Part</button>
                                     <form method="dialog">
                                       <!-- if there is a button in form, it will close the modal -->
                                       <button class="btn">Close</button>
