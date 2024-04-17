@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
-import { Item } from './_models/Item';
+import { Part } from './_models/Part';
 
 
 @Component({
@@ -16,6 +16,7 @@ export class WarehouseComponent implements OnInit{
   warehouses: Warehouse[] = [];
   selectedWarehouse: Warehouse | null = null;
   selectedWarehouseTrayId: number[] = [];
+  parts: Part[] = [];
   private modalIdCounter: number = 0;
   ngOnInit() {
     this.warehouseService.getWarehouses().subscribe({
@@ -23,7 +24,7 @@ export class WarehouseComponent implements OnInit{
         this.warehouses= warehouses;
       },
       error: (error) => {
-        console.error('DER ER FANDME IKKE NOGEN WAREHOUSES MAKKER:', error);
+        console.error('No Warehouses', error);
       }
 
     }); 
@@ -37,20 +38,18 @@ export class WarehouseComponent implements OnInit{
     return !!this.selectedWarehouse?.items[index];
   }
   
-  generateModalId(): string {
-    this.modalIdCounter++;
-    return this.modalIdCounter.toString();
-  }
-
   showModal(trayIndex: number): void {
     const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
     modal?.showModal();
   }
 
-  closeModal(trayIndex: number): void {
+  showModalAndGetParts(trayIndex: number): void {
     const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
-    modal?.close();
+    modal?.showModal();
+    this.updateParts();
+    console.log(this.parts);
   }
+
 
   removeItemFromWarehouseWithTrayId(id: number, trayId: number) {
     this.warehouseService.removeItemFromWarehouseWithTrayId(id, trayId).subscribe({
@@ -65,5 +64,17 @@ export class WarehouseComponent implements OnInit{
       }
       }
     )
+  }
+
+  updateParts() {
+    this.warehouseService.getParts().subscribe({
+      next:(parts: Part[]) => {
+        this.parts = parts;
+      },
+      error: (error) => {
+        console.error('Server error', error);
+      }
+
+    }); 
   }
 }
