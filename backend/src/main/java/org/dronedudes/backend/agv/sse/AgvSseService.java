@@ -1,6 +1,7 @@
 package org.dronedudes.backend.agv.sse;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.dronedudes.backend.agv.Agv;
 import org.dronedudes.backend.agv.AgvService;
@@ -39,7 +40,7 @@ public class AgvSseService implements SubscriberInterface {
     public void update(UUID machineId) {
         for (SseEmitter emitter: emitters) {
             try {
-                emitter.send(agvService.getAgvMap().get(machineId));
+                emitter.send(agvService.getAgvMap().get(machineId).getId());
             } catch (IOException e) {
                 emitter.complete();
                 emitters.remove(emitter);

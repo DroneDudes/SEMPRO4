@@ -32,7 +32,7 @@ public class AgvService implements PublisherInterface {
 
     @PostConstruct
     public void fetchAllSystemAgvs() {
-//        saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
+        saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
         for (Agv agv: agvRepository.findAll()) {
             agvMap.put(agv.getUuid(), agv);
             notifyChange(agv.getUuid());
