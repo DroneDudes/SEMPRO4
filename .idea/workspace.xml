@@ -36,7 +36,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "V1__T20__AgvDataRepresentation",
+    "git-widget-placeholder": "V1__T19__AgvDataLogging",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -53,7 +53,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-4f524021" />
+        <option value="jdk-21.0.2-temurin-21.0.2-4caba194b151-7da56cdf" />
       </set>
     </attachedChunks>
   </component>
@@ -68,6 +68,7 @@
       <workItem from="1712225427476" duration="330000" />
       <workItem from="1712306142124" duration="670000" />
       <workItem from="1712317001291" duration="60000" />
+      <workItem from="1713338951986" duration="5000" />
     </task>
     <servers />
   </component>
