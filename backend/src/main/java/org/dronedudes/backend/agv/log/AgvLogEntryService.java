@@ -22,7 +22,7 @@ public class AgvLogEntryService implements SubscriberInterface {
     private final AgvService agvService;
 
     @PostConstruct
-    public void subscribeToAgvObserverService() {
+    public void subscribe() {
         for (Map.Entry<UUID, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
             observerService.subscribe(agvEntry.getValue().getUuid(), this);
         }
