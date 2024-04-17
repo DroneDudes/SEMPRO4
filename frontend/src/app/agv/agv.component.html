@@ -1,29 +1,21 @@
-<div class="overflow-x-auto">
-    <table class="table">
-      <!-- head -->
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Battery</th>
-          <th>Program</th>
-          <th>State</th>
-        </tr>
-      </thead>
+<div >
+    <table class="table w-24 border-stone-900 border-2 mx-auto shadow-md">
       <tbody>
-        <!-- row 1 -->
         <tr>
-          <td>
-            {{ agvEvent$()?.name }}
-          </td>
-          <td>
-            {{ agvEvent$()?.battery }} %
-          </td>
-          <td>
-            {{ agvEvent$()?.agvProgram }}
-          </td>
-          <td>
-            {{ agvEvent$()?.agvState }}
-          </td>
+          <th scope="row">Name</th>
+          <td>{{agvEvent$()?.name}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Battery</th>
+          <td>{{agvEvent$()?.battery}} %</td>
+        </tr>
+        <tr>
+          <th scope="row">Program</th>
+          <td>{{agvEvent$()?.agvProgram}}</td>
+        </tr>
+        <tr>
+          <th scope="row">State</th>
+          <td>{{agvEvent$()?.agvState}}</td>
         </tr>
       </tbody>      
     </table>

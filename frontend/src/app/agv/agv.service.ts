@@ -16,11 +16,19 @@ export interface AgvEvent {
 })
 export class AgvService {
   private httpClient: HttpClient = inject(HttpClient);
-  private agvEvents$: WritableSignal<AgvEvent|null> = signal(null);
+  private agvEvents$: WritableSignal<AgvEvent|null> = signal({
+    UUUID: '9bf5ec17-afbc-4449-8a20-5e2b94a850de',
+    id: 1,
+    endpointUrl: 'localhost:8081/api/v1/agv/1',
+    battery: 100,
+    agvProgram: 'No program loaded',
+    agvState: '1',
+    name: 'Storeroom AGV'
+  });
 
   constructor() { 
     this.subscribeToAgvSse();
-    this.fetchInitialAgvStatus();
+    //this.fetchInitialAgvStatus();
   }
 
   private subscribeToAgvSse() {
@@ -35,10 +43,12 @@ export class AgvService {
     return this.agvEvents$.asReadonly();
   }
 
+  /*
   private fetchInitialAgvStatus() {
     this.httpClient.get<AgvEvent>("http://localhost:8080/api/v1/agv/").subscribe((agvEvent) => {
       this.agvEvents$.set(agvEvent);
       console.log(agvEvent);
     });
   }
+  */
 }
