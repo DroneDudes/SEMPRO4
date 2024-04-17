@@ -34,11 +34,6 @@ public class PartController {
         return partService.createPartFromAngular(partDTO);
     }
 
-    @GetMapping("/blueprint/{blueprintId}")
-    public List<Part> getAllPartsByBlueprintId(@PathVariable(value = "blueprintId") Long blueprintId) {
-        return partService.findPartsByBlueprintId(blueprintId);
-    }
-
     @PostConstruct
     public Part testPart() {
         Part part = new Part("1","1","1","1",1);

@@ -31,7 +31,7 @@ public class Part extends Item {
                CascadeType.PERSIST,
                CascadeType.MERGE
            },
-           mappedBy = "Parts")
+           mappedBy = "parts")
    @JsonIgnore
    private List<Blueprint> blueprints = new ArrayList<>();
 

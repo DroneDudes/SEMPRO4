@@ -7,5 +7,4 @@ import java.util.List;
 
 @Repository
 public interface PartRepository extends JpaRepository<Part,Long> {
-    List<Part> findPartsByBlueprintsId(Long id);
 }

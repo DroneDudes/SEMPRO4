@@ -4,11 +4,8 @@ import org.dronedudes.backend.Part.Part;
 import org.dronedudes.backend.Part.PartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +52,10 @@ public class BlueprintService {
 
     public Blueprint getById(Long Id) {
         return blueprintRepository.findById(Id).get();
+    }
+
+    public List<Blueprint> getBlueprintsByPartId(Long Id) {
+        return blueprintRepository.findBlueprintsByPartsId(Id);
     }
 
     /*

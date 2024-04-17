@@ -1,16 +1,12 @@
 package org.dronedudes.backend.Blueprint;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.Part.Part;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,5 +30,5 @@ public class Blueprint {
             joinColumns = @JoinColumn(name = "blueprint_id"),
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
-    private Set<Part> Parts = new HashSet<>();
+    private Set<Part> parts = new HashSet<>();
 }

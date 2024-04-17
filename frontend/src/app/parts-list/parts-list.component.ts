@@ -9,7 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PartsListComponent {
 
-  public jsonResponse: any;
+  public partResponse: any;
+  public blueprintResponse: any;
   constructor(private http: HttpClient) {
 
   }
@@ -21,7 +22,16 @@ export class PartsListComponent {
   public getResponse() {
     this.http.get('http://localhost:8080/api/v1/parts').subscribe({
       next: (data) => {
-        this.jsonResponse = data;
+        this.partResponse = data;
+      }
+    });
+  }
+
+  public getBlueprints(partId: string) {
+    console.log(partId);
+    this.http.get(`http://localhost:8080/api/v1/blueprints/part/${partId}`).subscribe({
+      next: (response: any) => {
+        this.blueprintResponse = response;
       }
     });
   }
