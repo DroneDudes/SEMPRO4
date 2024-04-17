@@ -57,7 +57,7 @@ export class AgvService {
 
   private subscribeToAgvSse() {
     console.log('Subscribing to AGV SSE');
-    const eventSource = new EventSource('http://localhost:8080/api/v1/agv/status');
+    const eventSource = new EventSource('http://localhost:8080/api/v1/agv/sse');
     eventSource.addEventListener("Agv Event", (e) => {
       this.agvEvents$.set(JSON.parse(e.data));
       this.getLast10AgvLogs();
