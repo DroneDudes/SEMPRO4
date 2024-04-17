@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AgvService } from '../agv/agv.service';
 
 @Component({
   selector: 'app-overview',
@@ -8,5 +9,5 @@ import { Component } from '@angular/core';
   styleUrl: './overview.component.css'
 })
 export class OverviewComponent {
-
+  constructor(private agvService: AgvService) { }
 }
