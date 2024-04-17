@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e502c00b-f9b7-47f5-be59-67716deeffe9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="e502c00b-f9b7-47f5-be59-67716deeffe9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,7 +38,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "V1__T09__Stock-Overview__Repository",
+    "git-widget-placeholder": "V1T25__Read__Blueprints",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/morte/Documents/GitHub/SEMPRO4/backend",
@@ -70,6 +67,7 @@
       <updated>1712225424456</updated>
       <workItem from="1712225427476" duration="330000" />
       <workItem from="1712824088317" duration="683000" />
+      <workItem from="1713355646738" duration="29000" />
     </task>
     <servers />
   </component>

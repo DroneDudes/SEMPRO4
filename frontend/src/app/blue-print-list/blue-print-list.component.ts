@@ -10,7 +10,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BluePrintListComponent implements OnInit {
 
-  public jsonResponse: any;
+  public blueprintResponse: any;
+  public partsResponse: any
   constructor(private http: HttpClient) {
 
   }
@@ -22,7 +23,16 @@ export class BluePrintListComponent implements OnInit {
   public getResponse() {
     this.http.get('http://localhost:8080/api/v1/blueprints/all').subscribe({
       next: (data) => {
-        this.jsonResponse = data;
+        this.blueprintResponse = data;
+      }
+    });
+  }
+
+  public getParts(blueprintId: string) {
+    console.log(blueprintId);
+    this.http.get(`http://localhost:8080/api/v1/blueprints/${blueprintId}`).subscribe({
+      next: (response: any) => {
+        this.partsResponse = response.parts;
       }
     });
   }

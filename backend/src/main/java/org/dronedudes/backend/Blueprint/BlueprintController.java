@@ -30,6 +30,11 @@ public class BlueprintController {
         return blueprintService.getAll();
     }
 
+    @GetMapping("/{blueprintId}")
+    public Blueprint getBlueprintById(@PathVariable (value = "blueprintId") Long blueprintId) {
+        return blueprintService.getById(blueprintId);
+    }
+
     @PostMapping("/create")
     public Blueprint newBlueprint(@RequestBody BlueprintCreateRequest createRequest) {
         return blueprintService.createAndSaveBlueprint(createRequest);

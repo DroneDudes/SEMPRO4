@@ -53,6 +53,10 @@ public class BlueprintService {
         return blueprintRepository.findAll();
     }
 
+    public Blueprint getById(Long Id) {
+        return blueprintRepository.findById(Id).get();
+    }
+
     /*
     @Transactional()
     public boolean addPartToBlueprint(long blueprint_ID,long part_ID) {
