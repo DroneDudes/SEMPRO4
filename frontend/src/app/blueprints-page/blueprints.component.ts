@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { BlueprintFormComponent } from '../blueprint-form/blueprint-form.component';
-import { BluePrintListComponent } from '../blue-print-list/blue-print-list.component';
+import { BluePrintListComponent } from '../blueprint-list/blue-print-list.component';
 
 @Component({
   selector: 'app-blueprints',

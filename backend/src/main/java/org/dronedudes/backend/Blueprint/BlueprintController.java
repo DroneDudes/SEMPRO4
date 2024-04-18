@@ -35,6 +35,11 @@ public class BlueprintController {
         return blueprintService.getById(blueprintId);
     }
 
+    @GetMapping("/part/{partId}")
+    public List<Blueprint> getBlueprintsByPartId(@PathVariable (value = "partId") Long partId) {
+        return blueprintService.getBlueprintsByPartId(partId);
+    }
+
     @PostMapping("/create")
     public Blueprint newBlueprint(@RequestBody BlueprintCreateRequest createRequest) {
         return blueprintService.createAndSaveBlueprint(createRequest);
