@@ -1,12 +1,33 @@
 <section class="warehouse bg-stone-200 rounded-lg shadow-md min-w-56 w-1/5 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
         <div class="">
-          <!-- Open the modal using ID.showModal() method -->
-            <button class="btn btn-ghost" onclick="my_modal_2.showModal()">open modal</button>
+            <div class="flex justify-center">
+              <button class="btn btn-ghost justify-center" onclick="my_modal_2.showModal()">Create Warehouse</button>
+            </div>
+            
             <dialog id="my_modal_2" class="modal">
               <div class="modal-box">
                 <h3 class="font-bold text-lg">Hello!</h3>
                 <p class="py-4">Press ESC key or click the button below to close</p>
                 <div class="modal-action">
+                  <div>
+                    <label class="input input-bordered flex items-center gap-2">
+                      Name
+                      <input type="text" class="grow" placeholder="ie. W06" />
+                    </label>
+                    <label class="input input-bordered flex items-center gap-2">
+                      Port
+                      <input type="number" class="grow" placeholder="ie. 8081" />
+                    </label>
+                    <select class="select select-bordered w-full max-w-xs">
+                        <option disabled selected>Who shot first?</option>
+                      @for (warehouseModel of warehouseModels; track $index) {
+                        <option>{{warehouseModal.name}}</option>
+                        
+                      }
+                    
+                      
+                    </select>
+                  </div>
                   <form method="dialog">
                     <!-- if there is a button in form, it will close the modal -->
                     <button class="btn">Close</button>

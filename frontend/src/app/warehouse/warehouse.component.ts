@@ -21,8 +21,8 @@ export class WarehouseComponent implements OnInit{
   selectedWarehouseTrayId: number[] = [];
   parts: Part[] = [];
   selectedPart: Part | null = null;
-  private modalIdCounter: number = 0;
   selectedPartIndex: number | null = null;
+  warehouseModels: WarehouseModel[] = [];
   ngOnInit() {
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
@@ -104,6 +104,6 @@ export class WarehouseComponent implements OnInit{
   }
 
   createWarehouse() {
-    
+
   }
 }
