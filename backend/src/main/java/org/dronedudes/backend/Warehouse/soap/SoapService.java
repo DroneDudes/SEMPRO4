@@ -27,7 +27,7 @@ public class SoapService {
     public InsertItemResponse insertItem(Warehouse warehouse, int trayId, Item item) {
         InsertItem insertItemRequest = new InsertItem();
         insertItemRequest.setTrayId(trayId);
-        insertItemRequest.setName(item.getName());
+        insertItemRequest.setName(item.getId().toString());
 
         InsertItemResponse insertItemResponse = (InsertItemResponse)  webServiceTemplate.marshalSendAndReceive(
                 warehouse.getUri(), insertItemRequest

@@ -33,14 +33,11 @@ public class WarehouseService{
         this.warehouseEventPublisher = warehouseEventPublisher;
     }
 
-    @PostConstruct
-    public void test(){
-        Warehouse warehouse = new Warehouse(WarehouseModel.EFFIMAT10, 8081, "W01");
-    }
 
     public List<Warehouse> getAllWarehouses () {
         return warehouseRepository.findAll();
     }
+
     public Optional<Warehouse> getWarehouse (Long id) {
         return warehouseRepository.findById(id);
     }
@@ -49,9 +46,16 @@ public class WarehouseService{
         Warehouse warehouse = new Warehouse(model, port, name);
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
+        try {
+            for(int i = 1; i <= warehouse.getModel().getSize(); i++)
+                soapService.pickItem(warehouse,i);
+        } catch(Exception e){
+            System.out.println("Could not remove");
+        }
         warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return warehouse;
     }
+
 
     @Transactional
     public boolean removeWarehouse(Long warehouseId) throws WarehouseNotFoundException, NonEmptyWarehouseException {
@@ -86,6 +90,7 @@ public class WarehouseService{
         }
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
+        soapService.insertItem(warehouse, trayId.intValue(), item);
         warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return warehouse;
     }
@@ -140,11 +145,15 @@ public class WarehouseService{
             throw new ItemNotFoundInWarehouse(trayId, warehouseId);
         }
         warehouseRepository.save(warehouse);
+        soapService.pickItem(warehouse, trayId.intValue());
         warehouses.put(warehouse.getId(), warehouse);
         warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return warehouse;
     }
 
-
+    public Warehouse setItems(Warehouse warehouse, Map<Long, Item> items) {
+        warehouse.setItems(items);
+        return warehouse;
+    }
 
 }
