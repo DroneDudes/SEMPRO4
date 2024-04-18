@@ -1,5 +1,7 @@
 package org.dronedudes.backend.Blueprint;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +9,16 @@ import lombok.NoArgsConstructor;
 import org.dronedudes.backend.Part.Part;
 
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Blueprint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

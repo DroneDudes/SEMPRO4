@@ -7,4 +7,5 @@ import java.util.List;
 
 @Repository
 public interface PartRepository extends JpaRepository<Part,Long> {
+
 }

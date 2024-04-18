@@ -8,4 +8,5 @@ public class BlueprintCreateRequest {
     private String productTitle;
     private String description;
     private List<Long> partsList;
+
 }

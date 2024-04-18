@@ -15,7 +15,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("api/v1/blueprints")
-@CrossOrigin(origins = "http://localhost:4200")
 public class BlueprintController {
 
     private final BlueprintService blueprintService;
@@ -39,7 +38,7 @@ public class BlueprintController {
     public List<Blueprint> getBlueprintsByPartId(@PathVariable (value = "partId") Long partId) {
         return blueprintService.getBlueprintsByPartId(partId);
     }
-
+  
     @PostMapping("/create")
     public Blueprint newBlueprint(@RequestBody BlueprintCreateRequest createRequest) {
         return blueprintService.createAndSaveBlueprint(createRequest);
