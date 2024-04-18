@@ -1,0 +1,16 @@
+.button-container button {
+    flex-grow: 0;
+  }
+
+  .button-container button {
+    width: 20%; /* Adjust width as needed */
+  }
+
+  .button-container button .text-content {
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    
+  }
+
+  

@@ -1,0 +1,46 @@
+<div class="overflow-x-auto border-2 border-slate-500 border-solid p-4 mx-4 rounded-xl">
+    <h2 class="text-center font-bold mb-4">Blueprints</h2>
+    <table class="table">
+      <thead>
+          <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>Description</th>
+          </tr>
+      </thead>
+      <tbody>
+          @for (blueprint of blueprintResponse; track blueprint) {
+              <tr class="hover" (click)="getParts(blueprint.id)">
+                  <td> {{ blueprint.id }} </td>
+                  <td> {{ blueprint.productTitle }} </td>
+                  <td> {{ blueprint.description }} </td>
+              </tr>
+          }
+  </table>
+</div>
+
+<div class="overflow-x-auto border-2 border-slate-500 border-solid p-4 rounded-xl">
+    <h2 class="text-center font-bold mb-4">Blueprint Parts</h2>  
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>  
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Supplier Details</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (part of partsResponse; track part) {
+            <tr class="hover">
+            <td> {{ part.id }} </td>
+            <td> {{ part.name }} </td>
+            <td> {{ part.description }} </td>
+            <td> {{ part.supplierDetails }} </td>
+            <td> {{ part.price }} </td>
+        </tr>
+        }
+    </tbody>
+    </table>
+</div>
