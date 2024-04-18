@@ -156,4 +156,8 @@ public class WarehouseService{
         return warehouse;
     }
 
+    public List<WarehouseModel> getWarehouseModels(){
+        return List.of(WarehouseModel.EFFIMAT10);
+    }
+
 }

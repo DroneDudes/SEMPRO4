@@ -104,6 +104,18 @@ export class WarehouseComponent implements OnInit{
     }
   }
 
+
+  getWarehouseModels(){
+    this.warehouseService.getWarehouseModels().subscribe({
+      next:(warehouseModels: WarehouseModel[]) => {
+        this.warehouseModels = warehouseModels;
+      },
+      error: (error) => {
+        console.error('Server error for WarehouseModel', error);
+      }
+    }); 
+  }
+
   createWarehouse() {
 
   }

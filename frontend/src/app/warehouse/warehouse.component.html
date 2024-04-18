@@ -1,7 +1,7 @@
 <section class="warehouse bg-stone-200 rounded-lg shadow-md min-w-56 w-1/5 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
         <div class="">
             <div class="flex justify-center">
-              <button class="btn btn-ghost justify-center" onclick="my_modal_2.showModal()">Create Warehouse</button>
+              <button class="btn btn-ghost justify-center" onclick="my_modal_2.showModal()" (click)="getWarehouseModels()">Create Warehouse</button>
             </div>
             
             <dialog id="my_modal_2" class="modal">
@@ -19,9 +19,9 @@
                       <input type="number" class="grow" placeholder="ie. 8081" />
                     </label>
                     <select class="select select-bordered w-full max-w-xs">
-                        <option disabled selected>Who shot first?</option>
+                        <option disabled selected>Select Model</option>
                       @for (warehouseModel of warehouseModels; track $index) {
-                        <option>{{warehouseModel.model}}</option>
+                        <option>{{warehouseModel}}</option>
                         
                       }
                     

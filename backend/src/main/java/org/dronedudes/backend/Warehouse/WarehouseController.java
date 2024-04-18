@@ -100,4 +100,9 @@ public class WarehouseController {
         }
     }
 
+    @GetMapping("/models")
+    public ResponseEntity<List<WarehouseModel>> getWarehouseModels(){
+        return ResponseEntity.ok(warehouseService.getWarehouseModels());
+    }
+
 }
