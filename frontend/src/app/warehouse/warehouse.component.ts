@@ -3,6 +3,7 @@ import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
 import { Item } from './_models/Item';
+import { WarehouseModel } from './_models/WarehouseModel';
 
 
 
