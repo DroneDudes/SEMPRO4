@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/v1/agv")
-@CrossOrigin()
 @RequiredArgsConstructor
 public class AgvSseController {
     private final AgvSseService agvSseService;
