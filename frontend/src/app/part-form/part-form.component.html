@@ -1,0 +1,41 @@
+<form [formGroup]="partForm" (ngSubmit)="onSubmit()" class="h-auto w-auto flex flex-col gap-y-10 border-2 border-slate-500 border-solid p-4 rounded-xl">
+  <h1>Add new part</h1>
+
+  <div class="form-group">
+    <label>Part Name:</label>
+    <input class="form-control w-full border-2 border-gray-400 rounded-lg p-3" type="text" id="partName" formControlName="name" placeholder="Enter Part Name">
+    <div *ngIf="f['name'].errors && f['name'].errors['required']"> This field is required</div>
+  </div>
+
+  <div class="form-group">
+    <label>Part Description:</label>
+    <textarea class="form-control w-full border-2 border-gray-400 rounded-lg p-3" id="partDescription" formControlName="description" rows="3" placeholder="Enter Part Description"></textarea>
+    <div *ngIf="f['description'].errors && f['description'].errors['required']"> This field is required</div>
+  </div>
+
+  <div class="form-group">
+    <label>Specifications:</label>
+    <textarea class="form-control w-full border-2 border-gray-400 rounded-lg p-3" id="partSpecifications" formControlName="specifications" rows="3" placeholder="Enter Part Specifications"></textarea>
+    <div *ngIf="f['specifications'].errors && f['specifications'].errors['required']"> This field is required</div>
+  </div>
+
+  <div class="form-group">
+    <label for="partSupplierDetails">Supplier Details:</label>
+    <input type="text" class="form-control w-full border-2 border-gray-400 rounded-lg p-3" id="partSupplierDetails" formControlName="supplierDetails" placeholder="Enter Supplier Details">
+    <div *ngIf="f['supplierDetails'].errors && f['supplierDetails'].errors['required']"> This field is required</div>
+  </div>
+
+  <div class="form-group">
+    <label for="partPrice">Price:</label>
+    <input type="number" class="form-control w-full border-2 border-gray-400 rounded-lg p-3" id="partPrice" formControlName="price" placeholder="Enter Part Price">
+    <div *ngIf="f['price'].errors && f['price'].errors['required']"> This field is required</div>
+  </div>
+
+  
+  <button type="submit "class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+    Save Part
+  </button>
+  <div id="successAlert"></div>
+
+
+</form>

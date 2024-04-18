@@ -5,6 +5,7 @@ import { Part } from './_models/Part';
 import { Item } from './_models/Item';
 
 
+
 @Component({
   selector: 'app-warehouse',
   standalone: true,
@@ -12,6 +13,7 @@ import { Item } from './_models/Item';
   templateUrl: './warehouse.component.html',
   styleUrl: './warehouse.component.css'
 })
+
 export class WarehouseComponent implements OnInit{
   warehouseService: WarehouseService = inject(WarehouseService);
   warehouses: Warehouse[] = [];

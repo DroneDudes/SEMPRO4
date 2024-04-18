@@ -4,6 +4,7 @@ import org.dronedudes.backend.Part.Part;
 import org.dronedudes.backend.Part.PartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +32,13 @@ public class BlueprintService {
         Blueprint blueprint = new Blueprint();
         blueprint.setProductTitle(createRequest.getProductTitle());
         blueprint.setDescription(createRequest.getDescription());
-        for (Long partID : createRequest.getPartIDs()) {
+        System.out.println(createRequest.getPartsList());
+        for (Long partID : createRequest.getPartsList()) {
             Optional<Part> partOpt = partRepository.findById(partID);
+            System.out.println(partOpt.get().getId());
             if (partOpt.isPresent()) {
                 Part part = partOpt.get();
-                blueprint.getBlueprintParts().add(part);
+                blueprint.getParts().add(part);
             }
         }
         blueprintRepository.save(blueprint);
@@ -49,6 +52,14 @@ public class BlueprintService {
 
     public List<Blueprint> getAll() {
         return blueprintRepository.findAll();
+    }
+
+    public Blueprint getById(Long Id) {
+        return blueprintRepository.findById(Id).get();
+    }
+
+    public List<Blueprint> getBlueprintsByPartId(Long Id) {
+        return blueprintRepository.findBlueprintsByPartsId(Id);
     }
 
     /*

@@ -1,10 +1,12 @@
 package org.dronedudes.backend.Part;
 
 import jakarta.annotation.PostConstruct;
+import org.dronedudes.backend.Blueprint.Blueprint;
+import org.dronedudes.backend.Blueprint.BlueprintCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/parts")
@@ -26,6 +28,11 @@ public class PartController {
         return partService.createPart(part);
     }
 
+    @PostMapping("/createFromAngular")
+    public Part newBlueprint(@RequestBody PartDTO partDTO) {
+        return partService.createPartFromAngular(partDTO);
+    }
+
     @PostConstruct
     public Part testPart() {
         Part part = new Part("1","1","1","1",1);
@@ -35,4 +42,11 @@ public class PartController {
         partService.createPart(part1);
         return part;
     }
+
+
+    @GetMapping("/{partId}")
+    public Optional<Part> getPart(@PathVariable("partId") Long partId){
+        return partService.getPartById(partId);
+    }
+
 }

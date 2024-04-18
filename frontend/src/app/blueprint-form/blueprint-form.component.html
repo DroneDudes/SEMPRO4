@@ -1,0 +1,66 @@
+<form [formGroup]="blueprintForm" (ngSubmit)="onSubmit()" class="h-auto w-auto flex flex-col gap-y-4 border-2 border-slate-500 border-solid p-4 rounded-xl">
+    <h1 class="font-bold">Add new blueprint</h1>
+  
+    <div class="form-group">
+      <label>Blueprint Name:</label>
+      <input class="form-control w-full border-2 border-gray-400 rounded-lg p-3" type="text" id="blueprintName" formControlName="productTitle" placeholder="Enter blueprint Name">
+      <div *ngIf="f['productTitle'].errors && f['productTitle'].errors['required']"> This field is required</div>
+      <!-- <div *ngIf="f['productTitle'].errors && f['productTitle'].errors['minlength']"> Blueprint Title to short. Minimum 3 characters</div>
+      <div *ngIf="f['productTitle'].errors && f['productTitle'].errors['maxlength']"> Blueprint Title too long. Maximum 20 characters</div> -->
+    </div>
+    <hr>
+    <div class="form-group">
+      <label>Blueprint Description:</label>
+      <textarea class="form-control w-full border-2 border-gray-400 rounded-lg p-3" id="blueprintDescription" formControlName="description" rows="3" placeholder="Enter blueprint Description"></textarea>
+      <!-- <div *ngIf="f['description'].touched && f['description'].invalid" class="text-red-700">Invalid</div> -->
+      <div *ngIf="f['description'].errors && f['description'].errors['required']"> This field is required</div>
+      <!-- <div *ngIf="f['description'].errors && f['description'].errors['minlength']"> Description to short. Has to be between 50-200 characters</div>
+      <div *ngIf="f['description'].errors && f['description'].errors['maxlength']"> Description too long. Has to be between 50-200 characters</div> -->
+      
+    </div>
+    <hr>
+  <div>
+    <h1 class="m-0 p-0">Added Parts:</h1>
+    @for(part of partsList; track part){
+       <h1 class="font-semibold">{{ part }}</h1> 
+    }
+</div>
+
+
+
+    <div class="overflow-x-auto  border-2 border-slate-500 border-solid p-4 rounded-xl">
+      <h2 class="text-center font-bold mb-4">Parts Information</h2>
+      <table class="table">
+          <thead>
+              <tr>
+                <th scope="col">ID</th>  
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Supplier Details</th>
+                <th scope="col">Price</th>
+              </tr>
+          </thead>
+          <tbody>
+              @for (part of jsonResponse; track part) {
+                  <tr class="hover">
+                      <td>Id: {{ part.id }} </td>
+                      <td> {{ part.productTitle }} </td>
+                      <td> {{ part.description }} </td>
+                      <td> {{ part.supplierDetails }} </td>
+                      <td> {{ part.price }} </td>
+                      <td><button class="text-xl" (click)="addNewPart(part.id)">+</button></td>
+                      <td><button class="text-xl" (click)="removePart(part.id)">-</button></td>
+                  </tr>
+              }
+      </table>
+  </div>
+
+    
+    <button type="submit "class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+      Save blueprint
+    </button>
+    <div id="successAlert"></div>
+    
+  
+  </form>
+  

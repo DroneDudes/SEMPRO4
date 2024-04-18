@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.Part.Part;
 
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,11 +25,16 @@ public class Blueprint {
     private Long id;
     private String productTitle;
     private String description;
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        })
     @JoinTable(
             name = "blueprintParts",
             joinColumns = @JoinColumn(name = "blueprint_id"),
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
-    private List<Part> blueprintParts = new ArrayList<>();
+    private Set<Part> parts = new HashSet<>();
 }

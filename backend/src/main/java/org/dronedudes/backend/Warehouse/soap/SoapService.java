@@ -1,8 +1,10 @@
 package org.dronedudes.backend.Warehouse.soap;
 
+
 import jakarta.annotation.PostConstruct;
 import org.dronedudes.backend.Warehouse.Warehouse;
 import org.dronedudes.backend.item.Item;
+
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
@@ -13,7 +15,7 @@ public class SoapService {
     public SoapService(WebServiceTemplate webServiceTemplate) {
         this.webServiceTemplate = webServiceTemplate;
     }
-    
+
     public String pickItem(Warehouse warehouse, int trayId) {
         PickItem pickItemRequest = new PickItem();
         pickItemRequest.setTrayId(trayId);
@@ -23,6 +25,7 @@ public class SoapService {
 
         return pickItemResponse.getPickItemResult();
     }
+
 
     public InsertItemResponse insertItem(Warehouse warehouse, int trayId, Item item) {
         InsertItem insertItemRequest = new InsertItem();
@@ -45,5 +48,6 @@ public class SoapService {
 
         System.out.println(getInventoryResponse.getInventoryResult);
     }
+
 
 }

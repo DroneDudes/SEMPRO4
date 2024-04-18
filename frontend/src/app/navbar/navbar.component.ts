@@ -12,5 +12,5 @@ import {RouterLink, RouterLinkActive} from "@angular/router";
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  public routingButtons: string[] = ["Overview", "Production", "Blueprints", "Management"];
+  public routingButtons: string[] = ["Overview", "Production", "Blueprints", "Parts", "Management"];
 }

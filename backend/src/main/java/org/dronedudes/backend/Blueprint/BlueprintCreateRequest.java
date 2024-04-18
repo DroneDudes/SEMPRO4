@@ -7,5 +7,6 @@ import java.util.List;
 public class BlueprintCreateRequest {
     private String productTitle;
     private String description;
-    private List<Long> partIDs;
+    private List<Long> partsList;
+
 }
