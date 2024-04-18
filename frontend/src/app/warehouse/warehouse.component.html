@@ -1,5 +1,19 @@
 <section class="warehouse bg-stone-200 rounded-lg shadow-md min-w-56 w-1/5 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
         <div class="">
+          <!-- Open the modal using ID.showModal() method -->
+            <button class="btn btn-ghost" onclick="my_modal_2.showModal()">open modal</button>
+            <dialog id="my_modal_2" class="modal">
+              <div class="modal-box">
+                <h3 class="font-bold text-lg">Hello!</h3>
+                <p class="py-4">Press ESC key or click the button below to close</p>
+                <div class="modal-action">
+                  <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
           <div role="tablist" class="tabs tabs-xs tabs-bordered ">
             @for (warehouse of warehouses; track $index) {
                 <!--<button type="button" class="btn btn-neutral" (click)="showWarehouse($index)">{{warehouse.name}}</button>-->

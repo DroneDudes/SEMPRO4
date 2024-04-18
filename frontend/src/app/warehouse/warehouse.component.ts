@@ -102,4 +102,8 @@ export class WarehouseComponent implements OnInit{
     );
     }
   }
+
+  createWarehouse() {
+    
+  }
 }
