@@ -1,0 +1,112 @@
+
+<section class="warehouse bg-stone-200 rounded-lg shadow-md min-w-56 w-1/5 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
+        <div class="">
+          <div role="tablist" class="tabs tabs-xs tabs-bordered ">
+            @for (warehouse of warehouses; track $index) {
+                <!--<button type="button" class="btn btn-neutral" (click)="showWarehouse($index)">{{warehouse.name}}</button>-->
+                <input type="radio" name="my_tabs_1" role="tab" class="tab" [attr.aria-label]="warehouse.name" (click)="showWarehouse($index)" />
+                
+            }
+          </div>
+            @if (selectedWarehouse != null ) {
+                <div class="button-container flex flex-wrap gap-2 justify-content-between justify-center m-2">
+                    @for (tray of selectedWarehouseTrayId.slice(1); track $index) {
+                        @if (isItemPresent($index + 1)) {
+                          <button class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-red-500 p-4 px-6 py-3 
+                          font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-4 hover:border-double" (click)="showModal($index+1)">
+                            <span class="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-red-500 text-white duration-300 group-hover:translate-x-0">
+                              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                            <span class="ease absolute flex h-full w-full transform items-center justify-center text-red-500 transition-all duration-300 group-hover:translate-x-full">{{$index + 1}}</span>
+                            <span class="invisible relative">{{$index + 1}}</span>
+                        </button>
+                            <dialog id=my_modal_1 class="modal modal-modal-{{$index+1}}">
+                                <div class="modal-box">
+                                  <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
+                                  <div class="overflow-x-auto">
+                                    <table class="table table-zebra">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{selectedWarehouse.items[$index + 1].id}}</td>
+                                                <td>{{selectedWarehouse.items[$index + 1].name}}</td>
+                                                <td>{{selectedWarehouse.items[$index + 1].type}}</td>
+                                                <td>{{selectedWarehouse.items[$index + 1].description}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                  <div class="modal-action flex justify-between">
+                                      <button class="btn" (click)="removeItemFromWarehouseWithTrayId(selectedWarehouse.id, $index + 1)">Remove Part</button>
+                                    <form method="dialog">
+                                      <!-- if there is a button in form, it will close the modal -->
+                                      <button class="btn">Close</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </dialog>
+                        }
+                        @else {
+                          <button (click)="showModalAndGetParts($index+1)" class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-green-500 p-4 px-6 py-3 font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-4 hover:border-double" >
+                            <span class="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-green-500 text-white duration-300 group-hover:translate-x-0">
+                              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </span>
+                            <span class="ease absolute flex h-full w-full transform items-center justify-center text-green-500 transition-all duration-300 group-hover:translate-x-full">{{$index + 1}}</span>
+                            <span class="invisible relative">{{$index + 1}}</span>
+                        </button>
+                            <dialog id=my_modal_1  class="modal modal-modal-{{$index+1}}">
+                                <div class="modal-box">
+                                  <h3 class="font-bold text-lg">Warehouse: {{selectedWarehouse.name}} | Tray ID: {{$index + 1}}</h3>
+                                  <div class="overflow-x-auto">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                          @if (parts.length > 0) {
+                                            @for (part of parts; track $index) {
+                                              <tr (click)="selectPart($index)"
+                                              class="cursor-pointer hover:bg-gray-100"
+                                              [class.bg-gray-200]="selectedPartIndex === $index">
+                                                <td>{{part.id}}</td>
+                                                <td>{{part.name}}</td>
+                                                <td>{{part.type}}</td>
+                                                <td>{{part.description}}</td>
+                                              </tr>
+                                            }
+                                          }
+                                          @else {
+                                            <p>No parts available</p>
+                                          }
+                                            
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                  <div class="modal-action flex justify-between">
+                                      <button class="btn" (click)="addPart(selectedWarehouse.id, ($index+1), selectedPart)">Add Part</button>
+                                    <form method="dialog">
+                                      <!-- if there is a button in form, it will close the modal -->
+                                      <button class="btn">Close</button>
+                                    </form>
+                                    
+                                  </div>
+                                </div>
+                              </dialog>
+                        }
+                    }
+                </div>
+            }
+        </div>
+</section>
