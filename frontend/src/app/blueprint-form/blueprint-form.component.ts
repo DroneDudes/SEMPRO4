@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-blueprint-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgIf],
   templateUrl: './blueprint-form.component.html',
   styleUrl: './blueprint-form.component.css'
 })
 export class BlueprintFormComponent {
+[x: string]: any;
 
 partsList:number[] = []; 
+
 
 addNewPart(partId:number){
   this.partsList.push(partId);
@@ -28,6 +31,10 @@ removePart(partId:number){
 
 updatePartsFormControl() {
   this.blueprintForm.controls['parts'].setValue(this.partsList);
+}
+
+get f(){
+  return this.blueprintForm.controls;
 }
 
 public jsonResponse: any;
@@ -47,12 +54,23 @@ public jsonResponse: any;
 //Creating the form for blueprints
 
   blueprintForm: FormGroup = new FormGroup({
-    productTitle: new FormControl(''),
-    description: new FormControl(''),
-    partsList: new FormControl(this.partsList)
+    productTitle: new FormControl('', [
+      Validators.required,  
+      // Validators.minLength(4), 
+      // Validators.maxLength(20), 
+    ]),
+    description: new FormControl('', [
+      Validators.required,  
+      // Validators.minLength(50), 
+      // Validators.maxLength(200), 
+    ]),
+    partsList: new FormControl(this.partsList, [
+      // Validators.required,
+    ])
   })
   
   constructor(private http: HttpClient) { }
+
   
   onSubmit() {
     if (this.blueprintForm.valid) {
@@ -63,12 +81,18 @@ public jsonResponse: any;
         .subscribe(
           response => {
             console.log("Inshallah!")
+            console.log("Success! Response:", response); 
+            const successDiv = document.getElementById('successAlert');
+            const successNotification = document.createElement('span');
+            successNotification.innerHTML = "Success";
+  
+            successDiv?.append(successNotification);
           },
           error => {
             console.log("Mahiba!")
           }
         );
-    }
+    } 
   }
 
 }
