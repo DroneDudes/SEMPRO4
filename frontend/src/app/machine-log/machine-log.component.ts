@@ -1,13 +1,13 @@
 import { Component, Signal, inject } from '@angular/core';
-import { AgvLog, AgvService } from '../agv.service'
+import { AgvLog, AgvService } from '../agv/agv.service';
 @Component({
-  selector: 'app-agv-log',
+  selector: 'app-machine-log',
   standalone: true,
   imports: [],
-  templateUrl: './agv-log.component.html',
-  styleUrl: './agv-log.component.css'
+  templateUrl: './machine-log.component.html',
+  styleUrl: './machine-log.component.css'
 })
-export class AgvLogComponent {
+export class MachineLogComponent {
   private agvService: AgvService = inject(AgvService);
   public agvLogs$: Signal<AgvLog[]|null> = this.agvService.getAgvLogs$();
 }

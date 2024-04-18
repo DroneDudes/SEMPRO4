@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgvLogComponent } from './agv-log.component';
+import { MachineLogComponent } from './machine-log.component';
 
-describe('AgvLogComponent', () => {
-  let component: AgvLogComponent;
-  let fixture: ComponentFixture<AgvLogComponent>;
+describe('MachineLogComponent', () => {
+  let component: MachineLogComponent;
+  let fixture: ComponentFixture<MachineLogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgvLogComponent]
+      imports: [MachineLogComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AgvLogComponent);
+    fixture = TestBed.createComponent(MachineLogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
