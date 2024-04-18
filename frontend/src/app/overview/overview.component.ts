@@ -6,7 +6,6 @@ import { WarehouseComponent } from '../warehouse/warehouse.component';
   standalone: true,
   imports: [WarehouseComponent],
   templateUrl: './overview.component.html',
-  styleUrl: './overview.component.css'
 })
 export class OverviewComponent {
 
