@@ -10,3 +10,5 @@ import { WarehouseComponent } from '../warehouse/warehouse.component';
   styleUrl: './overview.component.css'
 })
 export class OverviewComponent {
+
+}
