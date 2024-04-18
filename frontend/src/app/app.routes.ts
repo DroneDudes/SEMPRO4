@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+<<<<<<< HEAD
 import {OverviewComponent} from "./overview/overview.component";
 import {ProductionComponent} from "./production/production.component";
 import {ManagementComponent} from "./management/management.component";
@@ -13,3 +14,7 @@ export const routes: Routes = [
   {path: "blueprints", component: BlueprintsComponent},
   {path: "**", component: OverviewComponent}
 ];
+=======
+
+export const routes: Routes = [];
+>>>>>>> V1_T20_AgvDataRepresentation
