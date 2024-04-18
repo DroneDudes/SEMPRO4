@@ -6,10 +6,10 @@
             
             <dialog id="my_modal_2" class="modal">
               <div class="modal-box">
-                <h3 class="font-bold text-lg">Hello!</h3>
-                <p class="py-4">Press ESC key or click the button below to close</p>
-                <div class="modal-action">
-                  <div>
+                <h3 class="font-bold text-lg">Create a Warehouse</h3>
+                <p id="warehouseCreationInformation" class="py-4"></p>
+                <div class="modal-action list-item list-none">
+                  <div class="ml-2 mb-8 max-w-xs">
                     <label class="input input-bordered flex items-center gap-2">
                       Name
                       <input type="text" class="grow" placeholder="ie. W06" />
@@ -18,20 +18,25 @@
                       Port
                       <input type="number" class="grow" placeholder="ie. 8081" />
                     </label>
-                    <select class="select select-bordered w-full max-w-xs">
+                    <select class="select select-bordered w-full">
                         <option disabled selected>Select Model</option>
                       @for (warehouseModel of warehouseModels; track $index) {
                         <option>{{warehouseModel}}</option>
                         
                       }
-                    
+                      
                       
                     </select>
+                    
                   </div>
+                  <div class="flex justify-between">
+                    <button class="btn bg-green-500" (click)="createWarehouse()">Create</button>
                   <form method="dialog">
                     <!-- if there is a button in form, it will close the modal -->
-                    <button class="btn">Close</button>
+                    <button class="btn" (click)="removeNotYetImplemented()">Close</button>
                   </form>
+                  </div>
+                  
                 </div>
               </div>
             </dialog>

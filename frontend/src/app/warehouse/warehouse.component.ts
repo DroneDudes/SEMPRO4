@@ -116,7 +116,16 @@ export class WarehouseComponent implements OnInit{
     }); 
   }
 
-  createWarehouse() {
-
+  createWarehouse(): void {
+    const warehouseCreationInformation = document.getElementById("warehouseCreationInformation");
+    if (warehouseCreationInformation) {
+      warehouseCreationInformation.innerText = "Not yet implemented!";
+    }
+  }
+  removeNotYetImplemented(): void {
+    const warehouseCreationInformation = document.getElementById("warehouseCreationInformation");
+    if (warehouseCreationInformation) {
+      warehouseCreationInformation.innerText = "";
+    }
   }
 }
