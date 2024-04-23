@@ -2,10 +2,11 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
-import { Item } from './_models/Item';
 import { WarehouseModel } from './_models/WarehouseModel';
 import { SseService } from './_services/sse.service';
 import { delay } from 'rxjs/operators';
+import { Notification } from './_models/Notification';
+
 
 
 @Component({
@@ -25,6 +26,10 @@ export class WarehouseComponent implements OnInit{
   selectedPart: Part | null = null;
   selectedPartIndex: number | null = null;
   warehouseModels: WarehouseModel[] = [];
+  notification: Notification | null = null;
+
+
+
 
   constructor(private sseService: SseService, private cd: ChangeDetectorRef) {}
 
@@ -33,6 +38,7 @@ export class WarehouseComponent implements OnInit{
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
         this.warehouses= warehouses;
+        
       },
       error: (error) => {
         console.error('No Warehouses', error);
@@ -40,6 +46,16 @@ export class WarehouseComponent implements OnInit{
 
     }); 
   }
+
+  async showNotification(): Promise<void> {
+    document.getElementById("notinoti")?.classList.remove("hidden");
+    console.log("added");
+    setTimeout(() => {
+      document.getElementById("notinoti")?.classList.add("hidden");
+      console.log("removed");
+    }, 2000);
+  }
+
 
   listenToWarehouseUpdates() {
     this.sseService.getServerSentEvent('http://localhost:8080/sse/v1/warehouses').subscribe({
@@ -92,6 +108,7 @@ export class WarehouseComponent implements OnInit{
       next: (updatedWarehouse) => {
         if (this.selectedWarehouse?.id === id) {
           this.selectedWarehouse = updatedWarehouse;
+          this.createAndDisplayNotification("success", "Successfully removed part!");
         }
         console.log("Item removed successfully. UI updated.");
       },
@@ -100,6 +117,13 @@ export class WarehouseComponent implements OnInit{
       }
       }
     )
+  }
+
+  //Type can either be 'sucess', 'info', 'warning' or 'error'.
+  createAndDisplayNotification(type: string, message: string) {
+    this.notification = new Notification(message, type);
+    this.showNotification();
+    console.log("Showing");
   }
 
   updateParts() {
@@ -126,6 +150,7 @@ export class WarehouseComponent implements OnInit{
       this.warehouseService.addItemToWarehouseWithTrayId(id, trayId, part).subscribe(
         response => {
             this.warehouseService.getWarehouses();
+            this.createAndDisplayNotification("success","Successfully added part!");
         },
         error => {
             console.error('Error:', error);
