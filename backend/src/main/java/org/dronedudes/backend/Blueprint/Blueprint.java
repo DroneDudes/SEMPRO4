@@ -38,4 +38,12 @@ public class Blueprint {
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
     private Set<Part> parts = new HashSet<>();
+
+    public void addPart(Part part) {
+        if (this.parts == null) {
+            this.parts = new HashSet<>() {
+            };
+        }
+        this.parts.add(part);
+    }
 }
