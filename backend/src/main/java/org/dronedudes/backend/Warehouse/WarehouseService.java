@@ -92,6 +92,7 @@ public class WarehouseService{
         warehouses.put(warehouse.getId(), warehouse);
         soapService.insertItem(warehouse, trayId.intValue(), item);
         warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
+
         return warehouse;
     }
 

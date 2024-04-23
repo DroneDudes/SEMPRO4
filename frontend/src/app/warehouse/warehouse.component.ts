@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
 import { Item } from './_models/Item';
 import { WarehouseModel } from './_models/WarehouseModel';
-
+import { SseService } from './_services/sse.service';
+import { delay } from 'rxjs/operators';
 
 
 @Component({
@@ -24,7 +25,11 @@ export class WarehouseComponent implements OnInit{
   selectedPart: Part | null = null;
   selectedPartIndex: number | null = null;
   warehouseModels: WarehouseModel[] = [];
+
+  constructor(private sseService: SseService, private cd: ChangeDetectorRef) {}
+
   ngOnInit() {
+    this.listenToWarehouseUpdates();
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
         this.warehouses= warehouses;
@@ -35,6 +40,31 @@ export class WarehouseComponent implements OnInit{
 
     }); 
   }
+
+  listenToWarehouseUpdates() {
+    this.sseService.getServerSentEvent('http://localhost:8080/sse/v1/warehouses').subscribe({
+      next: (data: string) => {
+        this.warehouses = JSON.parse(data);
+        this.refreshSelectedWarehouse();
+      },
+      error: (error) => {
+        console.error('Failed to connect to SSE', error);
+      }
+    });
+  }
+
+  refreshSelectedWarehouse() {
+    if (this.selectedWarehouse) {
+      const updatedWarehouse = this.warehouses.find(w => w.id === this.selectedWarehouse!.id);
+      if (updatedWarehouse) {
+        this.selectedWarehouse = updatedWarehouse;
+        this.selectedWarehouseTrayId = new Array(this.selectedWarehouse.size + 1).fill(undefined);
+      }
+      this.cd.detectChanges();
+    }
+  }
+  
+  
   showWarehouse(index: number): void {
     this.selectedWarehouse = this.warehouses[index];
     this.selectedWarehouseTrayId = new Array(this.selectedWarehouse.size + 1);

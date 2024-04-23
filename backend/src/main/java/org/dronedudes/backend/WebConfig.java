@@ -14,5 +14,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);
+        
+        corsRegistry.addMapping("/sse/**")
+                .allowedOrigins("http://localhost:4200")
+                .allowedMethods("GET")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }
