@@ -93,6 +93,7 @@ public class WarehouseService{
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
         soapService.insertItem(warehouse, trayId.intValue(), item);
+        eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;
     }
 
@@ -111,6 +112,7 @@ public class WarehouseService{
 
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
+        eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;
     }
 
@@ -147,6 +149,7 @@ public class WarehouseService{
         warehouseRepository.save(warehouse);
         soapService.pickItem(warehouse, trayId.intValue());
         warehouses.put(warehouse.getId(), warehouse);
+        eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;
     }
 

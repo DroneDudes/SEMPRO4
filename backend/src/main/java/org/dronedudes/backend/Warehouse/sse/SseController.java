@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/sse/v1/warehouses")
 public class SseController {
-    //private final WarehouseService warehouseService;
+
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final long TIMEOUT_HALF_AN_HOUR = 1800000;
 
@@ -50,6 +50,7 @@ public class SseController {
         emitters.forEach((id, emitter) -> {
             try {
                 emitter.send(event.getWarehouses());
+                System.out.println("Sending data");
             } catch (Exception e) {
                 deadEmitters.put(id, emitter);
             }
