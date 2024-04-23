@@ -47,8 +47,13 @@ export class PartFormComponent {
             successDiv?.append(successNotification);
           },
           error => {
-            console.log(partData)
-            console.log("Mahiba!", error);
+            if(error.status === 409){
+              const successDiv = document.getElementById('successAlert');
+            const successNotification = document.createElement('span');
+            successNotification.innerHTML = error.error;
+  
+            successDiv?.append(successNotification);
+            }
           }
         );
     }
