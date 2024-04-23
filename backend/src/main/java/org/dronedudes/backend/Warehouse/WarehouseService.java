@@ -7,7 +7,7 @@ import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
-import org.dronedudes.backend.Warehouse.sse.WarehouseEventPublisher;
+import org.dronedudes.backend.Warehouse.sse.SseEmitterManager;
 import org.dronedudes.backend.item.Item;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WarehouseService{
     private final WarehouseRepository warehouseRepository;
     private final SoapService soapService;
-    private final WarehouseEventPublisher warehouseEventPublisher;
+    private final SseEmitterManager sseEmitterManager;
     private Map<Long, Warehouse> warehouses = new ConcurrentHashMap<>();
 
     @PostConstruct
@@ -26,11 +26,10 @@ public class WarehouseService{
 
     }
     public WarehouseService(WarehouseRepository warehouseRepository,
-                            SoapService soapService,
-                            WarehouseEventPublisher warehouseEventPublisher) {
+                            SoapService soapService, SseEmitterManager sseEmitterManager) {
+        this.sseEmitterManager = sseEmitterManager;
         this.warehouseRepository = warehouseRepository;
         this.soapService = soapService;
-        this.warehouseEventPublisher = warehouseEventPublisher;
     }
 
 
@@ -52,7 +51,7 @@ public class WarehouseService{
         } catch(Exception e){
             System.out.println("Could not remove");
         }
-        warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
+        sseEmitterManager.sendSseEventToClients(item);
         return warehouse;
     }
 
@@ -66,7 +65,6 @@ public class WarehouseService{
         }
         warehouseRepository.delete(warehouse);
         warehouses.remove(warehouse.getId());
-        warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return true;
     }
 
@@ -91,7 +89,6 @@ public class WarehouseService{
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
         soapService.insertItem(warehouse, trayId.intValue(), item);
-        warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return warehouse;
     }
 
@@ -110,7 +107,6 @@ public class WarehouseService{
 
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
-        warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return warehouse;
     }
 
@@ -147,7 +143,6 @@ public class WarehouseService{
         warehouseRepository.save(warehouse);
         soapService.pickItem(warehouse, trayId.intValue());
         warehouses.put(warehouse.getId(), warehouse);
-        warehouseEventPublisher.publishWarehouseUpdateEvent(warehouses.values().stream().toList());
         return warehouse;
     }
 
