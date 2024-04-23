@@ -43,10 +43,14 @@ public class PartController {
         return part;
     }
 
+    @DeleteMapping("/delete/{partId}")
+    public void deletePart(@PathVariable (value = "partId") Long partId) {
+        partService.deletePart(partId);
+    }
+
 
     @GetMapping("/{partId}")
     public Optional<Part> getPart(@PathVariable("partId") Long partId){
         return partService.getPartById(partId);
     }
-
 }

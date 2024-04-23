@@ -36,4 +36,12 @@ export class BluePrintListComponent implements OnInit {
       }
     });
   }
+
+  public onDelete(blueprintId: string) {
+    this.http.delete(`http://localhost:8080/api/v1/blueprints/delete/${blueprintId}`).subscribe({
+      next: (response: any) => {
+        this.getResponse();
+      }
+    });
+  }
 }
