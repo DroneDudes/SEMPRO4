@@ -28,6 +28,7 @@ export class WarehouseComponent implements OnInit{
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
         this.warehouses= warehouses;
+        this.showNotification();
       },
       error: (error) => {
         console.error('No Warehouses', error);
@@ -35,6 +36,16 @@ export class WarehouseComponent implements OnInit{
 
     }); 
   }
+
+  async showNotification(): Promise<void> {
+    document.getElementById("notinoti")?.classList.remove("hidden");
+    console.log("added");
+    setTimeout(() => {
+      document.getElementById("notinoti")?.classList.add("hidden");
+      console.log("removed");
+    }, 2000);
+  }
+
   showWarehouse(index: number): void {
     this.selectedWarehouse = this.warehouses[index];
     this.selectedWarehouseTrayId = new Array(this.selectedWarehouse.size + 1);
