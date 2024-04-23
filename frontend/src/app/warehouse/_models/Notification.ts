@@ -1,9 +1,9 @@
 export class Notification {
     message: string;
-    color: string;
+    type: string;
 
-    constructor (message: string, color: string) {
+    constructor (message: string, type: string) {
         this.message = message;
-        this.color = color;
+        this.type = type;
     }
 }

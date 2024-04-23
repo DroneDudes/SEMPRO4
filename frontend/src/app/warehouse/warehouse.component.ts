@@ -2,8 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
-import { Item } from './_models/Item';
 import { WarehouseModel } from './_models/WarehouseModel';
+import { Notification } from './_models/Notification';
 
 
 
@@ -26,11 +26,13 @@ export class WarehouseComponent implements OnInit{
   warehouseModels: WarehouseModel[] = [];
   notification: Notification | null = null;
 
+
+
   ngOnInit() {
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
         this.warehouses= warehouses;
-        this.showNotification();
+        
       },
       error: (error) => {
         console.error('No Warehouses', error);
@@ -75,6 +77,7 @@ export class WarehouseComponent implements OnInit{
       next: (updatedWarehouse) => {
         if (this.selectedWarehouse?.id === id) {
           this.selectedWarehouse = updatedWarehouse;
+          this.createAndDisplayNotification("success", "Successfully removed part!");
         }
         console.log("Item removed successfully. UI updated.");
       },
@@ -85,8 +88,11 @@ export class WarehouseComponent implements OnInit{
     )
   }
 
-  showNotification(color: string, message: string) {
-    this.notification = new Notification()
+  //Type can either be 'sucess', 'info', 'warning' or 'error'.
+  createAndDisplayNotification(type: string, message: string) {
+    this.notification = new Notification(message, type);
+    this.showNotification();
+    console.log("Showing");
   }
 
   updateParts() {
@@ -113,6 +119,7 @@ export class WarehouseComponent implements OnInit{
       this.warehouseService.addItemToWarehouseWithTrayId(id, trayId, part).subscribe(
         response => {
             this.warehouseService.getWarehouses();
+            this.createAndDisplayNotification("success","Successfully added part!");
         },
         error => {
             console.error('Error:', error);
