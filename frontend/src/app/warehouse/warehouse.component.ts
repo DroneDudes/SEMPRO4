@@ -4,6 +4,7 @@ import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
 import { WarehouseModel } from './_models/WarehouseModel';
 import { Notification } from './_models/Notification';
+import { SseWarehouseService } from './_services/sse-warehouse.service';
 
 
 
@@ -16,6 +17,7 @@ import { Notification } from './_models/Notification';
 })
 
 export class WarehouseComponent implements OnInit{
+  ssewarehouseService: SseWarehouseService = inject(SseWarehouseService);
   warehouseService: WarehouseService = inject(WarehouseService);
   warehouses: Warehouse[] = [];
   selectedWarehouse: Warehouse | null = null;
@@ -25,6 +27,7 @@ export class WarehouseComponent implements OnInit{
   selectedPartIndex: number | null = null;
   warehouseModels: WarehouseModel[] = [];
   notification: Notification | null = null;
+  
 
 
 
@@ -37,8 +40,18 @@ export class WarehouseComponent implements OnInit{
       error: (error) => {
         console.error('No Warehouses', error);
       }
-
+      
     }); 
+    this.ssewarehouseService.subsribeToWarehouseSse().subscribe({
+      next: (data: Warehouse[]) => {
+        this.warehouses = data;
+        console.log('SSE data received:', data);
+        
+      },
+      error : (error) => {
+        console.error('SSE error:', error);
+      }
+    });
   }
 
   async showNotification(): Promise<void> {

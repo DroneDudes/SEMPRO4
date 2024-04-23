@@ -7,8 +7,9 @@ import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
-import org.dronedudes.backend.Warehouse.sse.SseEmitterManager;
+import org.dronedudes.backend.Warehouse.sse.SseWarehouseUpdateEvent;
 import org.dronedudes.backend.item.Item;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,18 +19,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WarehouseService{
     private final WarehouseRepository warehouseRepository;
     private final SoapService soapService;
-    private final SseEmitterManager sseEmitterManager;
+
+    private final ApplicationEventPublisher eventPublisher;
     private Map<Long, Warehouse> warehouses = new ConcurrentHashMap<>();
+
 
     @PostConstruct
     public void initializeBaseWarehouse(){
 
     }
     public WarehouseService(WarehouseRepository warehouseRepository,
-                            SoapService soapService, SseEmitterManager sseEmitterManager) {
-        this.sseEmitterManager = sseEmitterManager;
+                            SoapService soapService, ApplicationEventPublisher eventPublisher) {
         this.warehouseRepository = warehouseRepository;
         this.soapService = soapService;
+        this.eventPublisher = eventPublisher;
     }
 
 
@@ -51,7 +54,7 @@ public class WarehouseService{
         } catch(Exception e){
             System.out.println("Could not remove");
         }
-        sseEmitterManager.sendSseEventToClients(item);
+        eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;
     }
 
@@ -65,6 +68,7 @@ public class WarehouseService{
         }
         warehouseRepository.delete(warehouse);
         warehouses.remove(warehouse.getId());
+        eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return true;
     }
 

@@ -7,7 +7,6 @@ import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
-import org.dronedudes.backend.Warehouse.sse.SseEmitterManager;
 import org.dronedudes.backend.item.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.*;
 
@@ -32,7 +32,7 @@ public class WarehouseServiceTest {
     @Mock
     private SoapService soapService;
     @Mock
-    private SseEmitterManager sseEmitterManager;
+    private ApplicationEventPublisher eventPublisher;
     @InjectMocks
     private WarehouseService warehouseService;
 
@@ -40,7 +40,7 @@ public class WarehouseServiceTest {
     void setUp() {
         warehouseRepository = mock(WarehouseRepository.class);
         soapService = mock(SoapService.class);
-        warehouseService = new WarehouseService(warehouseRepository, soapService, sseEmitterManager);
+        warehouseService = new WarehouseService(warehouseRepository, soapService, eventPublisher);
     }
 
     @Test
