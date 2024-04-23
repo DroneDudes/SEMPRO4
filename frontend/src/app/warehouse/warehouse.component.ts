@@ -24,6 +24,8 @@ export class WarehouseComponent implements OnInit{
   selectedPart: Part | null = null;
   selectedPartIndex: number | null = null;
   warehouseModels: WarehouseModel[] = [];
+  notification: Notification | null = null;
+
   ngOnInit() {
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
@@ -70,6 +72,10 @@ export class WarehouseComponent implements OnInit{
       }
       }
     )
+  }
+
+  showNotification(color: string, message: string) {
+    this.notification = new Notification()
   }
 
   updateParts() {
