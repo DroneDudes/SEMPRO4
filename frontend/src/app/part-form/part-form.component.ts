@@ -48,7 +48,7 @@ export class PartFormComponent {
           },
           error => {
             if(error.status === 409){
-              const successDiv = document.getElementById('successAlert');
+            const successDiv = document.getElementById('successAlert');
             const successNotification = document.createElement('span');
             successNotification.innerHTML = error.error;
   
