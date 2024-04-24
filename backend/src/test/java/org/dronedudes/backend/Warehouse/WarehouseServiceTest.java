@@ -44,13 +44,24 @@ public class WarehouseServiceTest {
     }
 
     @Test
-    public void testCreateWarehouse(){
+    public void testCreateWarehouse() {
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         int port = 8081;
         String name = "W01";
-        warehouseService.createWarehouse(model, port, name);
+        Warehouse warehouse = new Warehouse(model, port, name);
+        warehouse.setId(1L);
+
+        when(warehouseRepository.save(any(Warehouse.class))).thenAnswer(invocation -> {
+            Warehouse savedWarehouse = invocation.getArgument(0);
+            if (savedWarehouse.getId() == null) savedWarehouse.setId(1L);
+            return savedWarehouse;
+        });
+
+        Warehouse createdWarehouse = warehouseService.createWarehouse(model, port, name);
 
         verify(warehouseRepository, times(1)).save(any(Warehouse.class));
+        assertNotNull(createdWarehouse);
+        assertEquals(1L, createdWarehouse.getId().longValue());
     }
     @Test
     public void testGetAllWarehouses() {
@@ -84,13 +95,16 @@ public class WarehouseServiceTest {
     @Test
     public void testRemoveWarehouseSuccess() throws WarehouseNotFoundException, NonEmptyWarehouseException {
         Warehouse warehouse = new Warehouse();
+        warehouse.setId(1L);
         warehouse.setItems(new HashMap<>());
+
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
 
         boolean result = warehouseService.removeWarehouse(1L);
         assertTrue(result);
         verify(warehouseRepository, times(1)).delete(warehouse);
     }
+
 
 
     @Test
@@ -121,6 +135,7 @@ public class WarehouseServiceTest {
     public void testAddItemToWarehouseSuccess() throws WarehouseFullException, WarehouseNotFoundException {
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         Warehouse warehouse = new Warehouse(model, 8081, "W01");
+        warehouse.setId(1L); 
         warehouse.setItems(new HashMap<>());
         Item item = new Part();
         Long trayId = 1L;
@@ -135,6 +150,7 @@ public class WarehouseServiceTest {
         assertEquals(item, updatedWarehouse.getItems().get(trayId));
         verify(warehouseRepository).save(warehouse);
     }
+
 
 
     @Test
@@ -166,6 +182,7 @@ public class WarehouseServiceTest {
     public void testRemoveItemFromWarehouseSuccess() throws WarehouseNotFoundException, ItemNotFoundInWarehouse {
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         Warehouse warehouse = new Warehouse(model, 8081, "W01");
+        warehouse.setId(1L); // Ensure ID is set
         warehouse.setItems(new HashMap<>());
 
         Long trayId = 1L;
@@ -181,6 +198,7 @@ public class WarehouseServiceTest {
         assertNull(updatedWarehouse.getItems().get(trayId));
         verify(warehouseRepository).save(warehouse);
     }
+
 
 
     @Test

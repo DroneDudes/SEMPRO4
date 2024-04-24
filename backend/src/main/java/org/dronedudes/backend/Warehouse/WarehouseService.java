@@ -2,10 +2,7 @@ package org.dronedudes.backend.Warehouse;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.dronedudes.backend.Warehouse.exceptions.ItemNotFoundInWarehouse;
-import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
-import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
-import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
+import org.dronedudes.backend.Warehouse.exceptions.*;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
 import org.dronedudes.backend.Warehouse.sse.SseWarehouseUpdateEvent;
 import org.dronedudes.backend.item.Item;
@@ -82,18 +79,24 @@ public class WarehouseService{
 
     @Transactional
     public Warehouse addItemToWarehouse(Long warehouseId, Item item, Long trayId)
-            throws WarehouseNotFoundException, WarehouseFullException {
+            throws WarehouseNotFoundException, WarehouseFullException, TrayOccupiedException {
 
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
 
-        if (checkWarehouseCapacity(warehouse)) {
-            warehouse.getItems().put(trayId, item);
+        checkWarehouseCapacity(warehouse);
+
+        // Check if the tray is already occupied
+        if (warehouse.getItems().containsKey(trayId)) {
+            throw new TrayOccupiedException(warehouseId, trayId);
         }
+
+        warehouse.getItems().put(trayId, item);
         warehouseRepository.save(warehouse);
         warehouses.put(warehouse.getId(), warehouse);
         soapService.insertItem(warehouse, trayId.intValue(), item);
         eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
+
         return warehouse;
     }
 
@@ -104,7 +107,6 @@ public class WarehouseService{
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
 
-        //TODO fix check at pladsen er tom?!
         Long trayId = findFirstAvailableSlot(warehouse);
         if (checkWarehouseCapacity(warehouse)) {
             warehouse.getItems().put(trayId, item);
