@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, Signal, effect } from '@angular/core';
 import { WarehouseService } from './_services/warehouse.service';
 import { Warehouse } from './_models/Warehouse';
 import { Part } from './_models/Part';
@@ -21,6 +21,7 @@ export class WarehouseComponent implements OnInit{
   warehouseService: WarehouseService = inject(WarehouseService);
   warehouses: Warehouse[] = [];
   selectedWarehouse: Warehouse | null = null;
+  selectedWarehhouseIndex: number = 1;
   selectedWarehouseTrayId: number[] = [];
   parts: Part[] = [];
   selectedPart: Part | null = null;
@@ -28,8 +29,14 @@ export class WarehouseComponent implements OnInit{
   warehouseModels: WarehouseModel[] = [];
   notification: Notification | null = null;
   
+  mahwarehouses: Signal<Warehouse[]> = this.ssewarehouseService.getWarehouses();
 
-
+  constructor() {
+    effect(() => {
+      this.warehouses = this.mahwarehouses();
+      this.selectedWarehouse = this.warehouses[this.selectedWarehhouseIndex];
+    });
+  }
 
   ngOnInit() {
     this.warehouseService.getWarehouses().subscribe({
@@ -64,6 +71,7 @@ export class WarehouseComponent implements OnInit{
   }
 
   showWarehouse(index: number): void {
+    this.selectedWarehhouseIndex = index;
     this.selectedWarehouse = this.warehouses[index];
     this.selectedWarehouseTrayId = new Array(this.selectedWarehouse.size + 1);
   }
@@ -131,7 +139,7 @@ export class WarehouseComponent implements OnInit{
     } else {
       this.warehouseService.addItemToWarehouseWithTrayId(id, trayId, part).subscribe(
         response => {
-            this.warehouseService.getWarehouses();
+            // this.warehouseService.getWarehouses();
             this.createAndDisplayNotification("success","Successfully added part!");
         },
         error => {

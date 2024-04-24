@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal, effect, computed, Signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Warehouse } from '../_models/Warehouse';
 
@@ -7,7 +7,11 @@ import { Warehouse } from '../_models/Warehouse';
   providedIn: 'root'
 })
 export class SseWarehouseService {
-  
+  private $warehouses: WritableSignal<Warehouse[]> = signal([]);
+
+
+
+
   private eventSource: EventSource | null = null;
   private sseDataSubject: Subject<Warehouse[]> = new Subject<Warehouse[]>();
   constructor(private httpClient: HttpClient) { }
@@ -15,6 +19,7 @@ export class SseWarehouseService {
   private connectToSSE() {
     this.eventSource = new EventSource('http://localhost:8080/sse/v1/warehouses');
     this.eventSource.onmessage = (event) => {
+      this.$warehouses.set((JSON.parse(event.data) as Warehouse[]));
       this.sseDataSubject.next(event.data);
     };
     this.eventSource.onerror = (error) => {
@@ -30,4 +35,8 @@ export class SseWarehouseService {
     return this.sseDataSubject.asObservable();
   }
 
+
+  getWarehouses(){
+    return this.$warehouses.asReadonly();
+  }
 }
