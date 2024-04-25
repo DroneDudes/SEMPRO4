@@ -63,7 +63,7 @@
                     @for (tray of selectedWarehouseTrayId.slice(1); track $index) {
                         @if (isItemPresent($index + 1)) {
                           <button class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-red-500 p-4 px-6 py-3 
-                          font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-4 hover:border-double" (click)="showModal($index+1)">
+                          font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-2 hover:border-double" (click)="showModal($index+1)">
                             <span class="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-red-500 text-white duration-300 group-hover:translate-x-0">
                               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </span>
@@ -104,7 +104,7 @@
                               </dialog>
                         }
                         @else {
-                          <button (click)="showModalAndGetParts($index+1)" class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-green-500 p-4 px-6 py-3 font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-4 hover:border-double" >
+                          <button (click)="showModalAndGetParts($index+1)" class="group relative inline-flex items-center justify-center overflow-hidden border-2 border-green-500 p-4 px-6 py-3 font-medium text-indigo-600 shadow-md transition duration-300 ease-out hover:border-2" >
                             <span class="ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-green-500 text-white duration-300 group-hover:translate-x-0">
                               <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </span>
