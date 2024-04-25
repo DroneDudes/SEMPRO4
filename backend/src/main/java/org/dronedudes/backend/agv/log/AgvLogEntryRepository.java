@@ -12,4 +12,6 @@ import java.util.List;
 public interface AgvLogEntryRepository extends JpaRepository<AgvLogEntry, Long> {
         List<AgvLogEntry> findTop10ByOrderByTimestampDesc();
 
+
+
 }
