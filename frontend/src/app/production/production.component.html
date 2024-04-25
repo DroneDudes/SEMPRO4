@@ -1,1 +1,28 @@
-<p>production works!</p>
+<div class="h-[100vh] flex flex-col justify-start p-5">
+    <div class="flex justify-left">
+        <table class="table-auto divide-y divide-gray-200 border border-gray-200">
+            <caption class="py-5 font-bold uppercase">Ongoing production(s)</caption>
+                <tr class="divide-x">
+                    @for (tableHeader of tableHeaders; track tableHeader) {
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">{{tableHeader}}</th>
+                    }
+                </tr>
+            <tbody class="divide-y divide-gray-200">
+                <tr class="divide-x">
+                    @for (productionBatch of productionBatches; track productionBatch) {
+                        <td class="px-6 py-4 text-end whitespace-nowrap text-sm font-medium text-gray-800">
+                            {{productionBatch.batchNumber}}</td>
+                        <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                            {{productionBatch.startTime}}</td>
+                        <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                            {{productionBatch.elapsedTime}}</td>
+                        <td class="px-6 py-4 text-center whitespace-nowrap text-sm font-medium text-gray-800">
+                            {{productionBatch.completionTime}}</td>
+                        <td class="px-6 py-4 text-end whitespace-nowrap text-sm font-medium text-gray-800">
+                            {{productionBatch.employeeId}}</td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
