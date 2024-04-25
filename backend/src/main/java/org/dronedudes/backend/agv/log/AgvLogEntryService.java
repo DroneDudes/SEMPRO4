@@ -9,8 +9,6 @@ import org.dronedudes.backend.agv.AgvService;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.SubscriberInterface;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,14 +22,10 @@ public class AgvLogEntryService implements SubscriberInterface {
     private final AgvService agvService;
 
     @PostConstruct
-    public void subscribe() {
+    public void subscribeToAgvObserverService() {
         for (Map.Entry<UUID, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
             observerService.subscribe(agvEntry.getValue().getUuid(), this);
         }
-    }
-
-    public List<AgvLogEntry> return10NewestAgvLogs() {
-        return agvLogEntryRepository.findTop10ByOrderByTimestampDesc();
     }
 
     @Override
