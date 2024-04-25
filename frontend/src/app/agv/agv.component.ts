@@ -1,5 +1,5 @@
 import { Component, Signal, inject } from '@angular/core';
-import { AgvEvent, AgvService } from '../agv/agv.service';
+import { AgvEvent, AgvService } from '../shared/_services/sse.service';
 import { AgvStatusComponent } from './agv-status/agv-status.component';
 
 @Component({

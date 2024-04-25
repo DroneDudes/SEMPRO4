@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AgvService } from './agv.service';
+import { AgvService } from '../shared/_services/sse.service';
 
 describe('AgvService', () => {
   let service: AgvService;

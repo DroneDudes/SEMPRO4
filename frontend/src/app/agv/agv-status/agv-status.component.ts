@@ -1,5 +1,6 @@
 import { Component, Signal, inject } from '@angular/core';
-import { AgvEvent, AgvService } from '../agv.service'
+import { SseService} from '../../shared/_services/sse.service'
+import { AgvEvent } from '../_models/AgvEvent.entity';
 
 @Component({
   selector: 'app-agv-status',
@@ -9,6 +10,6 @@ import { AgvEvent, AgvService } from '../agv.service'
   styleUrl: './agv-status.component.css'
 })
 export class AgvStatusComponent {
-  private agvService: AgvService = inject(AgvService);
-  public agvEvent$: Signal<AgvEvent|null> = this.agvService.getAgvEvents$();
+  private sseService: SseService = inject(SseService);
+  public agvEvent$: Signal<AgvEvent|null> = this.sseService.getAgvEvents$();
 }

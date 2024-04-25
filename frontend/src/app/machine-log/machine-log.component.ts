@@ -1,5 +1,5 @@
 import { Component, Signal, inject } from '@angular/core';
-import { AgvLog, AgvService } from '../agv/agv.service';
+import { AgvLog, AgvService } from '../shared/_services/sse.service';
 @Component({
   selector: 'app-machine-log',
   standalone: true,
