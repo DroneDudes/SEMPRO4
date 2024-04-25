@@ -42,7 +42,8 @@ export class WarehouseComponent implements OnInit{
     this.warehouseService.getWarehouses().subscribe({
       next:(warehouses: Warehouse[]) => {
         this.warehouses= warehouses;
-        
+        this.showWarehouse(0);
+        this.selectFirstWarehouse(0);
       },
       error: (error) => {
         console.error('No Warehouses', error);
@@ -90,6 +91,18 @@ export class WarehouseComponent implements OnInit{
     console.log(this.parts);
     const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
     modal?.showModal();
+  }
+
+  selectFirstWarehouse(warehouseIndex: number): void {
+    const warehouseTab = document.getElementById(`tab-${warehouseIndex}`);
+    if(warehouseTab) {
+      warehouseTab.classList.add("tab-active");
+      console.log("Warehouse tab selected");
+    } else {
+      
+      console.error("Warehouse tab not found" + warehouseTab);
+    }
+    //warehouseTab?.classList.add("tab-active");
   }
 
 
