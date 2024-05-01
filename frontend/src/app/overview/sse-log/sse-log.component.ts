@@ -12,4 +12,8 @@ import { SseLog } from '../../shared/_models/sse-log';
 export class SseLogComponent {
   private sseService: SseService = inject(SseService);
   public machineLogs$: Signal<SseLog[]> = this.sseService.getLogs$();
+
+  ngOnInit() {
+    console.log('SSE Log component initialized');
+  }
 }

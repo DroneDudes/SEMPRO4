@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*") //TODO: CHANGE CORS FOR SECURITY
 @RequestMapping("/api/v1/agv")
 @AllArgsConstructor
 public class AgvController {

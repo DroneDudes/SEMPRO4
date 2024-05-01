@@ -20,7 +20,6 @@ public class LoggerService {
     private Map<String, LoggerInterface> loggerInterfaceImplementations;
     private List<LogEntry> newlyFetchedLogs = new ArrayList<>();
     private List<LogEntry> newestLogsSorted = new ArrayList<>();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 2021-10-10 10:10:10 example
 
     /*
     @PostConstruct
@@ -48,7 +47,6 @@ public class LoggerService {
             System.out.println("Fetching logs from " + loggerImplementation.getClass().getSimpleName());
             this.newlyFetchedLogs.addAll(loggerImplementation.getLast10Logs());
         }
-        System.out.println(this.newlyFetchedLogs);
         this.newestLogsSorted = this.newlyFetchedLogs.stream()
                 .sorted(Comparator.comparing(LogEntry::getTimestamp).reversed())
                 .limit(10)
