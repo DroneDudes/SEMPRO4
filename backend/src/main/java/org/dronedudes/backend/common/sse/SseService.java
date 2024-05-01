@@ -1,20 +1,12 @@
 package org.dronedudes.backend.common.sse;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.dronedudes.backend.agv.Agv;
-import org.dronedudes.backend.agv.AgvService;
 import org.dronedudes.backend.common.ObserverService;
-import org.dronedudes.backend.common.SubscriberInterface;
 import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service

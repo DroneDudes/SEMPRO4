@@ -5,10 +5,7 @@ import lombok.Getter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
 import java.util.*;
-
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -20,21 +17,6 @@ public class LoggerService {
     private Map<String, LoggerInterface> loggerInterfaceImplementations;
     private List<LogEntry> newlyFetchedLogs = new ArrayList<>();
     private List<LogEntry> newestLogsSorted = new ArrayList<>();
-
-    /*
-    @PostConstruct
-    private void createDummyLogs() {
-        List<LogEntry> dummyList = new ArrayList<>();
-        Random random = new Random();
-        System.out.println("Creating dummy logs");
-        for (int i = 0; i < 12; i++) {
-            String time = "2021-10-10 10:10:" + random.nextInt(60);
-            dummyList.add(new LogEntry(time, "Dummy"+i, "Dummy"+i));
-        }
-        this.fetchLast10LogsFromAllInterfaceImplementationsAndSort();
-        //this.newestLogsSorted.forEach(System.out::println);
-    }
-     */
 
     @PostConstruct
     private void getApplicationContextFromSpringBoot() {

@@ -1,8 +1,6 @@
 package org.dronedudes.backend.common.logging;
 
 import lombok.AllArgsConstructor;
-import org.dronedudes.backend.agv.log.AgvLogEntry;
-import org.dronedudes.backend.agv.log.AgvLogEntryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
