@@ -38,14 +38,6 @@ export class SseService {
     });
   }
 
-  /*
-  private fetchInitialAgvStatus() {
-    this.httpClient.get<AgvEvent>("http://localhost:8080/api/v1/agv/").subscribe((agvEvent) => {
-      this.agvEvents$.set(agvEvent);
-      console.log(agvEvent);
-    });
-  }
-  */
   public getLogs$() {
     return this.sseLogs$.asReadonly();
   }

@@ -10,6 +10,4 @@ import { AgvEvent } from '../_models/AgvEvent.entity';
   styleUrl: './agv-status.component.css'
 })
 export class AgvStatusComponent {
-  private sseService: SseService = inject(SseService);
-  public agvEvent$: Signal<AgvEvent|null> = this.sseService.getAgvEvents$();
 }

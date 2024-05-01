@@ -1,5 +1,4 @@
 import { Component, Signal, inject } from '@angular/core';
-import { AgvLog, AgvService } from '../shared/_services/sse.service';
 @Component({
   selector: 'app-machine-log',
   standalone: true,
@@ -8,6 +7,4 @@ import { AgvLog, AgvService } from '../shared/_services/sse.service';
   styleUrl: './machine-log.component.css'
 })
 export class MachineLogComponent {
-  private agvService: AgvService = inject(AgvService);
-  public agvLogs$: Signal<AgvLog[]|null> = this.agvService.getAgvLogs$();
 }

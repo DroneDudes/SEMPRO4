@@ -2,14 +2,14 @@ package org.dronedudes.backend.agv.log;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.dronedudes.backend.agv.Agv;
 import org.dronedudes.backend.agv.AgvService;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.SubscriberInterface;
 import org.dronedudes.backend.common.logging.LogEntry;
 import org.dronedudes.backend.common.logging.LoggerInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +37,8 @@ public class AgvLogEntryService implements SubscriberInterface, LoggerInterface 
         return agvLogEntryRepository.findTop10ByOrderByTimestampDesc();
     }
 
+
+    @Override
     public List<LogEntry> getLast10Logs() {
         List<AgvLogEntry> fullLogs = this.agvLogEntryRepository.findTop10ByOrderByTimestampDesc();
         List<LogEntry> returnableLogs = new ArrayList<>();
