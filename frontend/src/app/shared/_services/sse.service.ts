@@ -11,20 +11,21 @@ export class SseService {
   private sseLogs$: WritableSignal<SseLog[]> = signal([]);
 
   constructor() { 
-    //this.subscribeToSse();
     this.getLast10Logs();
+    this.subscribeToSse();
   }
 
-  /*
+  
   private subscribeToSse() {
-    console.log('Subscribing to AGV SSE');
-    const eventSource = new EventSource('http://localhost:8080/api/v1/agv/sse');
-    eventSource.addEventListener("Agv Event", (e) => {
-      this.agvEvents$.set(JSON.parse(e.data));
-      this.getLast10Logs();
+    console.log('Subscribing to SSE');
+    const eventSource = new EventSource('http://localhost:8080/api/v1/sse/log');
+    eventSource.addEventListener("LogEntry", (e) => {
+      this.sseLogs$().unshift(JSON.parse(e.data));
+      this.sseLogs$().splice(10);
+      console.log("New log entry: ", JSON.parse(e.data));
     })
   };
-  */
+  
 
 
   private getLast10Logs() {

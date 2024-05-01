@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface LoggerInterface {
     public List<LogEntry> getLast10Logs();
+    public void publishNewLog(LogEntry logEntry);
 }

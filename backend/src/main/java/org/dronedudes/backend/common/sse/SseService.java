@@ -1,4 +1,4 @@
-package org.dronedudes.backend.agv.sse;
+package org.dronedudes.backend.common.sse;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -7,6 +7,7 @@ import org.dronedudes.backend.agv.Agv;
 import org.dronedudes.backend.agv.AgvService;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.SubscriberInterface;
+import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -18,9 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 @RequiredArgsConstructor
-public class AgvSseService implements SubscriberInterface {
-
-    private final AgvService agvService;
+public class SseService {
     private final ObserverService observerService;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
@@ -30,18 +29,10 @@ public class AgvSseService implements SubscriberInterface {
         emitter.onTimeout(() -> emitters.remove(emitter));
     }
 
-    @PostConstruct
-    public void subscribe() {
-        for (Map.Entry<UUID, Agv> agvEntry : agvService.getAgvMap().entrySet()) {
-            observerService.subscribe(agvEntry.getValue().getUuid(), this);
-        }
-    }
-
-    public void update(UUID machineId) {
+    public void update(LogEntry logEntry) {
         for (SseEmitter emitter: emitters) {
             try {
-                Agv agv = agvService.getAgvMap().get(machineId);
-                SseEmitter.SseEventBuilder event = SseEmitter.event().data(agv).name("Agv Event");
+                SseEmitter.SseEventBuilder event = SseEmitter.event().data(logEntry).name("LogEntry");
                 emitter.send(event);
             } catch (IOException e) {
                 emitter.complete();

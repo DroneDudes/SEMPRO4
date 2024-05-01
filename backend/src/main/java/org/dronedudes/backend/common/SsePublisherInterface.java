@@ -4,6 +4,6 @@ import org.dronedudes.backend.common.logging.LogEntry;
 
 import java.util.UUID;
 
-public interface PublisherInterface {
-    void notifyChange(UUID machineId);
+public interface SsePublisherInterface {
+    LogEntry publishNewLog(UUID machineId);
 }

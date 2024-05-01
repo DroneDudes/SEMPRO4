@@ -7,23 +7,24 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.dronedudes.backend.agv.log.AgvLogEntry;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
+import org.dronedudes.backend.common.SsePublisherInterface;
+import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Getter
 @Transactional
-public class AgvService implements PublisherInterface {
+public class AgvService implements PublisherInterface, SsePublisherInterface {
     private final AgvRepository agvRepository;
     private Map<UUID, Agv> agvMap = new HashMap<>();
 
@@ -102,6 +103,19 @@ public class AgvService implements PublisherInterface {
     public void notifyChange(UUID machineId) {
         observerService.updateSubscribers(machineId);
     }
+
+    @Override
+    public LogEntry publishNewLog(UUID machineId) {
+        Optional<Agv> agvQuery = agvRepository.findFirstById(agvMap.get(machineId).getId());
+        if (agvQuery.isEmpty()) {
+            throw new RuntimeException("No AGV was found by that ID");
+        }
+        Agv agv = agvQuery.get();
+        System.out.println("AGV: " + agv.getName());
+        return null;
+    }
+
+
 
 /*
     public void giveComand(AgvProgramEnum program, Long agvId) {

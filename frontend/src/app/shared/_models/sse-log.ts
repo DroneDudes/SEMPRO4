@@ -1,5 +1,5 @@
 export interface SseLog {
     timestamp: string;
-    machine_name: string;
+    name: string;
     action: string;
 }

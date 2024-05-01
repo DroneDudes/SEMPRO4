@@ -7,4 +7,5 @@ import java.util.Optional;
 @Repository
 public interface AgvRepository extends JpaRepository<Agv, Long> {
     Optional<Agv> findFirstByOrderById();
+    Optional<Agv> findFirstById(Long id);
 }
