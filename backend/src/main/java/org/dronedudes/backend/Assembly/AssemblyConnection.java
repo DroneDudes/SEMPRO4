@@ -2,16 +2,8 @@ package org.dronedudes.backend.Assembly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.*;
 
-import java.util.Arrays;
-
-@Data
 public class AssemblyConnection {
 
     private MqttClient client;
@@ -51,7 +43,7 @@ public class AssemblyConnection {
             String jsonPayload = mapper.writeValueAsString(payload);
             message.setPayload(jsonPayload.getBytes());
             client.publish(topic, message);
-        } catch (MqttException | JsonProcessingException e) {
+        } catch (JsonProcessingException | MqttException e) {
             throw new RuntimeException(e);
         }
     }
