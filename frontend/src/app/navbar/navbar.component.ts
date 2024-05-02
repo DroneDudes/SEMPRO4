@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, WritableSignal, signal } from '@angular/core';
 import {RouterLink, RouterLinkActive} from "@angular/router";
 
 @Component({
@@ -12,5 +12,7 @@ import {RouterLink, RouterLinkActive} from "@angular/router";
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  public routingButtons: string[] = ["Overview", "Production", "Blueprints", "Parts", "Management"];
+  public routingButtons: string[] = ["Overview", "Production", "Blueprints", "Parts"];
+
+  public isManagementAuthorized: WritableSignal<boolean> = signal(false);
 }
