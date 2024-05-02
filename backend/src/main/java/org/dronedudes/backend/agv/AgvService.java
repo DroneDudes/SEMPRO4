@@ -23,7 +23,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Getter
 @Transactional
-public class AgvService implements PublisherInterface, SsePublisherInterface {
+public class AgvService implements PublisherInterface {
     private final AgvRepository agvRepository;
     private Map<UUID, Agv> agvMap = new HashMap<>();
 
@@ -33,10 +33,6 @@ public class AgvService implements PublisherInterface, SsePublisherInterface {
     @PostConstruct
     public void fetchAllSystemAgvs() {
         saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
-        for (Agv agv: agvRepository.findAll()) {
-            //agvMap.put(agv.getUuid(), agv);
-            //notifyChange(agv.getUuid());
-        }
         System.out.println("CURRENT AGV MAP SIZE: " + agvMap.size());
     }
 
@@ -103,22 +99,4 @@ public class AgvService implements PublisherInterface, SsePublisherInterface {
         observerService.updateSubscribers(machineId);
     }
 
-    @Override
-    public LogEntry publishNewLog(UUID machineId) {
-        Optional<Agv> agvQuery = agvRepository.findFirstById(agvMap.get(machineId).getId());
-        if (agvQuery.isEmpty()) {
-            throw new RuntimeException("No AGV was found by that ID");
-        }
-        Agv agv = agvQuery.get();
-        System.out.println("AGV: " + agv.getName());
-        return null;
-    }
-
-
-
-/*
-    public void giveComand(AgvProgramEnum program, Long agvId) {
-        agvMap.get(agvId).setAgvProgram();
-    }
-    */
 }

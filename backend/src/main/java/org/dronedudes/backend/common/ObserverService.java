@@ -29,12 +29,7 @@ public class ObserverService {
             subscriber.update(machineId);
         }
     }
-
-    public void subscribeToAllTopics(SubscriberInterface subscriber) {
-        for (UUID machineId : topicsSubscribersMap.keySet()) {
-            subscribe(machineId, subscriber);
-        }
-    }
+    
 
     public List<SubscriberInterface> getSubscribersForTopic(UUID machineId) {
         return topicsSubscribersMap.get(machineId);
