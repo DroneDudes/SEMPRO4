@@ -29,11 +29,11 @@ export class WarehouseComponent implements OnInit{
   warehouseModels: WarehouseModel[] = [];
   notification: Notification | null = null;
   
-  mahwarehouses: Signal<Warehouse[]> = this.ssewarehouseService.getWarehouses();
+  observableWarehouses: Signal<Warehouse[]> = this.ssewarehouseService.getWarehouses();
 
   constructor() {
     effect(() => {
-      this.warehouses = this.mahwarehouses();
+      this.warehouses = this.observableWarehouses();
       this.selectedWarehouse = this.warehouses[this.selectedWarehhouseIndex];
     });
   }
