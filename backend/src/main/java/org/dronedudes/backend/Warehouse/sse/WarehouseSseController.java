@@ -1,10 +1,7 @@
 package org.dronedudes.backend.Warehouse.sse;
 
-import org.dronedudes.backend.Warehouse.WarehouseService;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -16,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/sse/v1/warehouses")
-public class SseController {
+public class WarehouseSseController {
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final long TIMEOUT_HALF_AN_HOUR = 1800000;
