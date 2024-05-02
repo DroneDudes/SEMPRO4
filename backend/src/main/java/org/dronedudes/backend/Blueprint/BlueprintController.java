@@ -43,4 +43,10 @@ public class BlueprintController {
     public Blueprint newBlueprint(@RequestBody BlueprintCreateRequest createRequest) {
         return blueprintService.createAndSaveBlueprint(createRequest);
     }
+
+    @DeleteMapping("/delete/{blueprintId}")
+        public void deleteBlueprint(@PathVariable (value = "blueprintId") Long blueprintId) {
+        blueprintService.deleteBlueprint(blueprintId);
+    }
 }
+

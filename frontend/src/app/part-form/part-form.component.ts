@@ -36,7 +36,7 @@ export class PartFormComponent {
     if (this.partForm.valid) {
       const partData = this.partForm.value;
       console.log(partData);
-      this.http.post<any>('http://localhost:8080/api/v1/parts/createFromAngular', partData)
+      this.http.post<any>('http://localhost:8080/api/v1/parts/createPart', partData)
         .subscribe(
           response => {
             console.log("Success! Response:", response); 
@@ -47,12 +47,19 @@ export class PartFormComponent {
             successDiv?.append(successNotification);
           },
           error => {
-            console.log(partData)
-            console.log("Mahiba!", error);
+            if(error.status === 409){
+            const successDiv = document.getElementById('successAlert');
+            const successNotification = document.createElement('span');
+            successNotification.innerHTML = error.error;
+  
+            successDiv?.append(successNotification);
+            }
           }
         );
     }
   }
+
+  
 
   get f(){
     return this.partForm.controls;
