@@ -3,14 +3,11 @@ package org.dronedudes.backend.Assembly;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import io.swagger.v3.core.util.Json;
-import lombok.NoArgsConstructor;
 import org.eclipse.paho.client.mqttv3.*;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class AssemblyConnection {
@@ -66,13 +63,16 @@ public class AssemblyConnection {
         }
     }
 
-    public void subscribeToStatus() {
-        try {
 
-            JSONObject jsonObject = new JSONObject();
-            String status = (String) jsonObject.get("status");
-            System.out.println(status);
-        } catch (JSONException e) {
+    public void subscribeToState() {
+        try {
+            client.subscribeWithResponse("emulator/status", (topic, message) -> {
+                byte[] payload = message.getPayload();
+                String payloadString = new String(payload, StandardCharsets.UTF_8);
+                JsonNode jsonPayload = mapper.readTree(payloadString);
+                System.out.println(jsonPayload.get("State"));
+            });
+        } catch (JSONException | MqttException e) {
             throw new RuntimeException(e);
         }
     }

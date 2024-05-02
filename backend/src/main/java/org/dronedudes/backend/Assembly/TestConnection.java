@@ -19,6 +19,6 @@ public class TestConnection {
          */
 
         AssemblyConnection connection = new AssemblyConnection();
-        connection.subscribeToStatus();
+        connection.subscribeToState();
     }
 }
