@@ -23,14 +23,10 @@ public class PartController {
     public List<Part> getAllParts() {
         return partService.getAll();
     }
-    @PostMapping("/create")
-    public Part newPart(@RequestBody Part part){
-        return partService.createPart(part);
-    }
 
-    @PostMapping("/createFromAngular")
-    public Part newBlueprint(@RequestBody PartDTO partDTO) {
-        return partService.createPartFromAngular(partDTO);
+    @PostMapping("/createPart")
+    public Part newPart(@RequestBody PartDTO partDTO) {
+        return partService.createPart(partDTO);
     }
 
     @PostConstruct

@@ -36,7 +36,7 @@ export class PartFormComponent {
     if (this.partForm.valid) {
       const partData = this.partForm.value;
       console.log(partData);
-      this.http.post<any>('http://localhost:8080/api/v1/parts/createFromAngular', partData)
+      this.http.post<any>('http://localhost:8080/api/v1/parts/createPart', partData)
         .subscribe(
           response => {
             console.log("Success! Response:", response); 
