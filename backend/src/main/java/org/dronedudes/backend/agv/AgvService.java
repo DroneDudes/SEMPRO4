@@ -11,13 +11,13 @@ import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
+import org.dronedudes.backend.common.SsePublisherInterface;
+import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +32,8 @@ public class AgvService implements PublisherInterface {
 
     @PostConstruct
     public void fetchAllSystemAgvs() {
-//        saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
-        for (Agv agv: agvRepository.findAll()) {
-            agvMap.put(agv.getUuid(), agv);
-            notifyChange(agv.getUuid());
-        }
+        saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
+        System.out.println("CURRENT AGV MAP SIZE: " + agvMap.size());
     }
 
     public Agv saveAgvToDatabase(Agv agv) {
@@ -102,9 +99,4 @@ public class AgvService implements PublisherInterface {
         observerService.updateSubscribers(machineId);
     }
 
-/*
-    public void giveComand(AgvProgramEnum program, Long agvId) {
-        agvMap.get(agvId).setAgvProgram();
-    }
-    */
 }

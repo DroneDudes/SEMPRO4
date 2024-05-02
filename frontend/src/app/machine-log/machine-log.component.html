@@ -1,0 +1,20 @@
+<div class="overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of machineLogs$(); track $index) {
+        <tr>
+          <th>{{log.timestamp}}</th>
+          <td>{{log.name}}</td>
+          <td>{{log.action}}</td>
+        </tr>
+    }
+      </tbody>
+    </table>
+  </div>
