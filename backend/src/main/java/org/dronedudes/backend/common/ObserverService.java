@@ -29,7 +29,7 @@ public class ObserverService {
             subscriber.update(machineId);
         }
     }
-    
+
 
     public List<SubscriberInterface> getSubscribersForTopic(UUID machineId) {
         return topicsSubscribersMap.get(machineId);
