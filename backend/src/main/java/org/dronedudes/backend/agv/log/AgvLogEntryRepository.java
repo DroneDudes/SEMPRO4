@@ -8,6 +8,7 @@ import java.util.List;
 @Repository
 public interface AgvLogEntryRepository extends JpaRepository<AgvLogEntry, Long> {
         List<AgvLogEntry> findTop10ByOrderByTimestampDesc();
+        AgvLogEntry  findTopByOrderByTimestampDesc();
 
 
 

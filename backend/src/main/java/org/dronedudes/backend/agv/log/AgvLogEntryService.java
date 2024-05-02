@@ -68,4 +68,8 @@ public class AgvLogEntryService implements SubscriberInterface, LoggerInterface 
         newestLog = new LogEntry(agvLogEntry.getTimestamp(), updatedAgv.getName(), updatedAgv.getAgvProgram().getProgramName());
         this.publishNewLog(newestLog);
     }
+
+    public AgvLogEntry getLastAgvLog() {
+        return agvLogEntryRepository.findTopByOrderByTimestampDesc();
+    }
 }

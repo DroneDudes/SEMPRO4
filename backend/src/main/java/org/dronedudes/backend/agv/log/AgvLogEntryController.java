@@ -15,4 +15,8 @@ public class AgvLogEntryController {
         return agvLogEntryService.return10NewestAgvLogs();
     }
 
+    @GetMapping("/lastlog")
+    public AgvLogEntry getlastAgvLog() {
+        return this.agvLogEntryService.getLastAgvLog();
+    }
 }
