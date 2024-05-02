@@ -5,10 +5,10 @@ import org.springframework.context.ApplicationEvent;
 
 import java.util.List;
 
-public class WarehouseUpdateEvent extends ApplicationEvent {
+public class SseWarehouseUpdateEvent extends ApplicationEvent {
     private final List<Warehouse> warehouses;
 
-    public WarehouseUpdateEvent(Object source, List<Warehouse> warehouses) {
+    public SseWarehouseUpdateEvent(Object source, List<Warehouse> warehouses) {
         super(source);
         this.warehouses = warehouses;
     }
