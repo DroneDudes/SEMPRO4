@@ -35,4 +35,13 @@ export class PartsListComponent {
       }
     });
   }
+
+  public deletePart(partId: string) {
+    console.log(partId);
+    this.http.delete(`http://localhost:8080/api/v1/parts/delete/${partId}`).subscribe({
+      next: (response: any) => {
+        this.getResponse();
+      }
+    });
+  }
 }

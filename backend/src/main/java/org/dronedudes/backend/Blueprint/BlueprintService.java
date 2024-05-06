@@ -62,6 +62,10 @@ public class BlueprintService {
         return blueprintRepository.findBlueprintsByPartsId(Id);
     }
 
+    public void deleteBlueprintById(Long blueprintId) {
+        blueprintRepository.deleteById(blueprintId);
+    }
+
     /*
     @Transactional()
     public boolean addPartToBlueprint(long blueprint_ID,long part_ID) {

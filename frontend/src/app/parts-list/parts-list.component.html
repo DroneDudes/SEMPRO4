@@ -18,6 +18,7 @@
             <td> {{ part.description }} </td>
             <td> {{ part.supplierDetails }} </td>
             <td> {{ part.price }} </td>
+            <td><button class="bg-red-700 text-white p-1 rounded-sm" (click)="deletePart(part.id)">Delete</button></td>
         </tr>
         }
     </tbody>

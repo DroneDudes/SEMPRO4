@@ -14,6 +14,7 @@
                   <td> {{ blueprint.id }} </td>
                   <td> {{ blueprint.productTitle }} </td>
                   <td> {{ blueprint.description }} </td>
+                  <td><button class="bg-red-700 text-white p-1 rounded-sm" (click)="deleteBlueprint(blueprint.id)">Delete</button></td>
               </tr>
           }
   </table>

@@ -48,4 +48,7 @@ public class PartService {
         return part;
     }
 
+    public void deletePartById(Long partId) {
+        partRepository.deleteById(partId);
+    }
 }
