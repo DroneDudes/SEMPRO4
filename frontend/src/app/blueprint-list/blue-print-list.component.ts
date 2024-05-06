@@ -60,11 +60,12 @@ export class BluePrintListComponent implements OnInit {
       next: (response: any) => {
         this.refreshBlueprints();
         this.deleteCheck = true;
-        const confirmationMessageDiv = document.getElementById("confirmationDiv");
+        const confirmationMessageDiv = document.getElementById("confirmationDiv1");
         const message = document.createElement("h2");
         confirmationMessageDiv?.appendChild(message);
         if(message){
-        message.className = "bg-green-700 flex-grow h-10 text-white flex justify-center rounded-sm";
+        message.style.backgroundColor = "green";
+        message.className = "flex-grow text-white h-10 flex justify-center rounded-lg";
         message.innerHTML = "Deleted Successfully";
         }
         
