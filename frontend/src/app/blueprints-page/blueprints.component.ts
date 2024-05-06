@@ -10,4 +10,5 @@ import { BluePrintListComponent } from '../blueprint-list/blue-print-list.compon
   templateUrl: './blueprints.component.html',
 })
 export class BlueprintsComponent{
+  
 }

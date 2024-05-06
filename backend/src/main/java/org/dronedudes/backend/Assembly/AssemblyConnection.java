@@ -92,5 +92,5 @@ public class AssemblyConnection {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    } 
+    }
 }

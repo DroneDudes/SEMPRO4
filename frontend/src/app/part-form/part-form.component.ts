@@ -45,6 +45,7 @@ export class PartFormComponent {
             successNotification.innerHTML = "Success";
   
             successDiv?.append(successNotification);
+            location.reload();
           },
           error => {
             console.log(partData)

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NgIf } from '@angular/common';
@@ -11,6 +11,9 @@ import { NgIf } from '@angular/common';
   styleUrl: './blueprint-form.component.css'
 })
 export class BlueprintFormComponent {
+
+@Output() blueprintAdded = new EventEmitter<void>();
+
 [x: string]: any;
 
 partsList:number[] = []; 
@@ -87,6 +90,8 @@ public jsonResponse: any;
             successNotification.innerHTML = "Success";
   
             successDiv?.append(successNotification);
+            this.blueprintAdded.emit();
+            location.reload();
           },
           error => {
             console.log("Mahiba!")
