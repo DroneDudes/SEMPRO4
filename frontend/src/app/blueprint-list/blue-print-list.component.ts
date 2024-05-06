@@ -60,7 +60,7 @@ export class BluePrintListComponent implements OnInit {
       next: (response: any) => {
         this.refreshBlueprints();
         this.deleteCheck = true;
-        const confirmationMessageDiv = document.getElementById("123");
+        const confirmationMessageDiv = document.getElementById("confirmationDiv");
         const message = document.createElement("h2");
         confirmationMessageDiv?.appendChild(message);
         if(message){
@@ -92,4 +92,6 @@ export class BluePrintListComponent implements OnInit {
       }
     });
   }
+
+  
 }

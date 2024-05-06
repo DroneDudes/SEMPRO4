@@ -11,6 +11,9 @@ export class PartsListComponent {
 
   public partResponse: any;
   public blueprintResponse: any;
+
+  public deleteCheck:boolean = true;
+
   constructor(private http: HttpClient) {
 
   }
@@ -36,12 +39,56 @@ export class PartsListComponent {
     });
   }
 
-  public deletePart(partId: string) {
-    console.log(partId);
+  public deletePart(partName: string, partId: string) {
+    
+    const confirmationElement = document.getElementById(partName);
+    const span = document.createElement("span");
+    span.innerHTML = "Are you sure?";
+    const yesButton = document.createElement("button");
+    yesButton.innerHTML = "Yes";
+    const noButton = document.createElement("button");
+    noButton.innerHTML = "No";
+    if (confirmationElement && this.deleteCheck) {
+      confirmationElement.appendChild(span);
+      confirmationElement.appendChild(yesButton);
+      confirmationElement.appendChild(noButton);
+    }
+    this.deleteCheck = false;
+    yesButton.addEventListener("click", () => {
     this.http.delete(`http://localhost:8080/api/v1/parts/delete/${partId}`).subscribe({
       next: (response: any) => {
-        this.getResponse();
+        this.refreshParts();
+        this.deleteCheck = true;
+        const confirmationMessageDiv = document.getElementById("confirmationDiv");
+        const message = document.createElement("h2");
+        confirmationMessageDiv?.appendChild(message);
+        if(message){
+        message.className = "bg-green-700 flex-grow h-10 text-white flex justify-center rounded-sm";
+        message.innerHTML = "Deleted Successfully";
+        }
+        
+        setTimeout(() => {
+          message.remove();
+        }, 2000);
+      }
+    });
+  });
+
+  noButton.addEventListener("click", () => {
+    span.remove();
+    yesButton.remove();
+    noButton.remove();
+    this.deleteCheck = true;
+    return; 
+  });
+  }
+
+  public refreshParts() {
+    this.http.get('http://localhost:8080/api/v1/parts').subscribe({
+      next: (data) => {
+        this.partResponse = data;
       }
     });
   }
+
 }

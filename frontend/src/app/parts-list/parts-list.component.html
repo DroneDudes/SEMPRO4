@@ -1,4 +1,5 @@
 <div class="overflow-x-auto border-2 border-slate-500 border-solid p-4 rounded-xl">
+    <div id="confirmationDiv"></div>
     <h2 class="text-center font-bold mb-4">Parts Information</h2>  
     <table class="table">
         <thead>
@@ -18,7 +19,8 @@
             <td> {{ part.description }} </td>
             <td> {{ part.supplierDetails }} </td>
             <td> {{ part.price }} </td>
-            <td><button class="bg-red-700 text-white p-1 rounded-sm" (click)="deletePart(part.id)">Delete</button></td>
+            <td id="{{part.name}}" class="flex flex-row items-center space-x-4">
+                <button class="bg-red-700 text-white p-1 rounded-sm" (click)="deletePart(part.name, part.id)">Delete</button></td>
         </tr>
         }
     </tbody>
