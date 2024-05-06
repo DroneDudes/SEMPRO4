@@ -10,4 +10,9 @@ import java.util.UUID;
 @Data
 public class AssemblyStation extends Machine {
 
+    private int state;
+
+    public AssemblyStation(int state){
+        this.state = state;
+    }
 }

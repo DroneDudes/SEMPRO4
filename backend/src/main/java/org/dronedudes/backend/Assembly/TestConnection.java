@@ -20,5 +20,10 @@ public class TestConnection {
 
         AssemblyConnection connection = new AssemblyConnection();
         connection.subscribeToState();
+
+        new Thread(connection::printState).start();
+
+        AssemblyService as = new AssemblyService(connection);
+        as.startProduction();
     }
 }

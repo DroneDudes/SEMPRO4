@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.paho.client.mqttv3.*;
-import org.json.JSONException;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 @Configuration
 public class AssemblyConnection {
@@ -15,8 +15,9 @@ public class AssemblyConnection {
     private MqttClient client;
     private ObjectMapper mapper = new ObjectMapper();
     private MqttMessage message = new MqttMessage();
-    private final String brokerURL = "tcp://localhost:1883";
+    private final String brokerURL = "tcp://localhost:9001";
 
+    private AssemblyStation assemblyStation = new AssemblyStation(0);
 
     public AssemblyConnection() {
         try {
@@ -66,14 +67,30 @@ public class AssemblyConnection {
 
     public void subscribeToState() {
         try {
-            client.subscribeWithResponse("emulator/status", (topic, message) -> {
-                byte[] payload = message.getPayload();
-                String payloadString = new String(payload, StandardCharsets.UTF_8);
-                JsonNode jsonPayload = mapper.readTree(payloadString);
-                System.out.println(jsonPayload.get("State"));
+            client.subscribeWithResponse("emulator/status", new IMqttMessageListener() {
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    byte[] payload = message.getPayload();
+                    String payloadString = new String(payload, StandardCharsets.UTF_8);
+                    JsonNode jsonPayload = mapper.readTree(payloadString);
+                    String state = String.valueOf(jsonPayload.get("State"));
+                    assemblyStation.setState(Integer.parseInt(state));
+                }
             });
-        } catch (JSONException | MqttException e) {
+        } catch (MqttException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public void printState(){
+        try {
+            while (true) {
+                Thread.sleep(3000);
+                System.out.println(assemblyStation.getState());
+            }
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    } 
 }

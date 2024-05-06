@@ -12,27 +12,16 @@ import static java.lang.Thread.sleep;
 public class AssemblyService {
 
 
-    AssemblyConnection assemblyConnection;
+    private AssemblyConnection assemblyConnection;
 
     @Autowired
     public AssemblyService(AssemblyConnection assemblyConnection) {
         this.assemblyConnection = assemblyConnection;
     }
 
-    public void startProduction(Blueprint blueprint, int amount) {
-        //String status = assemblyConnection.subscribeToStatus();
-
-        int[] productAmount = new int[amount];
-        for (int i : productAmount) {
-            System.out.println();
+    public void startProduction() {
+        assemblyConnection.publish("emulator/operation", new Process(12345));
         }
-
-
-    }
-
-    public void stopProduction() {
-
-    }
 
 
 }
