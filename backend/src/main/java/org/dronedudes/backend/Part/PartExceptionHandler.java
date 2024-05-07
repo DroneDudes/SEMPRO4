@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
         @ExceptionHandler(DataIntegrityViolationException.class)
         public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
 
-            return new ResponseEntity<>("A item with the same name already exists.", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("A part with the same name already exists.", HttpStatus.CONFLICT);
         }
     }
 

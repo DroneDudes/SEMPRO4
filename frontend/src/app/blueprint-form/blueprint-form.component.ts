@@ -85,22 +85,29 @@ public jsonResponse: any;
           response => {
             console.log("Inshallah!")
             console.log("Success! Response:", response); 
-            const successDiv = document.getElementById('successAlert');
-            const successNotification = document.createElement('span');
-            successNotification.innerHTML = "Success";
-  
-            successDiv?.append(successNotification);
-            this.blueprintAdded.emit();
-            location.reload();
+            const confirmationMessageDiv = document.getElementById("successAlertBlueprints");
+            const message = document.createElement("h2");
+            confirmationMessageDiv?.appendChild(message);
+            if(message){
+            message.style.backgroundColor = "green";
+            message.className = "flex-grow text-white h-10 flex justify-center rounded-lg";
+            message.innerHTML = "Success";
+            }
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           },
           error => {
             console.log("Mahiba!")
             if(error.status === 409){
-              const successDiv = document.getElementById('successAlert');
+              const successDiv = document.getElementById('successAlertBlueprints');
               const successNotification = document.createElement('span');
               successNotification.innerHTML = error.error;
-
+              successNotification.style.color = "red";
               successDiv?.append(successNotification);
+              setTimeout(() => {
+                successNotification.remove();
+              }, 2500);
               }
           }
         );
