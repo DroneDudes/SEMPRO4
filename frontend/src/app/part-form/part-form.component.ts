@@ -63,8 +63,10 @@ export class PartFormComponent {
             const successNotification = document.createElement('span');
             successNotification.innerHTML = error.error;
             successNotification.style.color = "red";
-
             successDiv?.append(successNotification);
+            setTimeout(() => {
+              successNotification.remove();
+            }, 2500);
             }
           }
         );
