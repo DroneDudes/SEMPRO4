@@ -95,6 +95,13 @@ public jsonResponse: any;
           },
           error => {
             console.log("Mahiba!")
+            if(error.status === 409){
+              const successDiv = document.getElementById('successAlert');
+              const successNotification = document.createElement('span');
+              successNotification.innerHTML = error.error;
+
+              successDiv?.append(successNotification);
+              }
           }
         );
     } 

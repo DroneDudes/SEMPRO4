@@ -23,6 +23,7 @@ public class Blueprint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true)
     private String productTitle;
     private String description;
 
