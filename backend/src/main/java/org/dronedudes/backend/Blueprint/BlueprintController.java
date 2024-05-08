@@ -48,5 +48,7 @@ public class BlueprintController {
     public ResponseEntity<Void> deleteBlueprint(@PathVariable("blueprintId") Long blueprintId){
         blueprintService.deleteBlueprintById(blueprintId);
         return ResponseEntity.ok().build();
+
     }
 }
+

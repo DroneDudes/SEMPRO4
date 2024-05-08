@@ -13,33 +13,33 @@ import { NgIf } from '@angular/common';
 export class PartFormComponent {
   partForm: FormGroup = new FormGroup({
     name: new FormControl('', [
-      Validators.required,  
+      Validators.required,
     ]),
     description: new FormControl('',[
-      Validators.required,  
+      Validators.required,
     ]),
     specifications: new FormControl('',[
-      Validators.required,  
+      Validators.required,
     ]),
     supplierDetails: new FormControl('',[
-      Validators.required,  
+      Validators.required,
     ]),
     price: new FormControl('',[
-      Validators.required 
+      Validators.required
     ])
   })
-  
+
   constructor(private http: HttpClient) { }
-  
+
   onSubmit() {
     console.log(this.partForm);
     if (this.partForm.valid) {
       const partData = this.partForm.value;
       console.log(partData);
-      this.http.post<any>('http://localhost:8080/api/v1/parts/createFromAngular', partData)
+      this.http.post<any>('http://localhost:8080/api/v1/parts/createPart', partData)
         .subscribe(
           response => {
-            console.log("Success! Response:", response); 
+            console.log("Success! Response:", response);
 
             const confirmationMessageDiv = document.getElementById("successAlertParts");
             const message = document.createElement("h2");
@@ -52,8 +52,8 @@ export class PartFormComponent {
             setTimeout(() => {
               location.reload();
             }, 1000);
-  
-            
+
+            successDiv?.append(successNotification);
           },
           error => {
             console.log(partData)

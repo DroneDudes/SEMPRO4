@@ -1,6 +1,10 @@
-<div class="navbar bg-stone-200">
+<div class="navbar bg-stone-200 flex flex-wrap">
     @for (routingButton of routingButtons; track routingButton) {
       <a class="btn btn-ghost text-xl translate-y-2 hover:rounded-b-none"
          routerLink={{routingButton.toLowerCase()}} routerLinkActive="bg-base-100 rounded-b-none">{{routingButton}}</a>
+    }
+    @if (isManagementAuthorized()) {
+      <a class="btn btn-ghost text-xl translate-y-2 hover:rounded-b-none"
+         routerLink="management" routerLinkActive="bg-base-100 rounded-b-none">Management</a>
     }
   </div>

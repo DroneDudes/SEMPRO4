@@ -40,7 +40,7 @@ export class PartsListComponent {
   }
 
   public deletePart(partName: string, partId: string) {
-    
+
     const confirmationElement = document.getElementById(partName);
     const span = document.createElement("span");
     span.innerHTML = "Are you sure?";
@@ -67,7 +67,7 @@ export class PartsListComponent {
           message.className = "flex-grow text-white h-10 flex justify-center rounded-lg";
           message.innerHTML = "Deleted Successfully";
         }
-        
+
         setTimeout(() => {
           message.remove();
         }, 2000);
@@ -80,7 +80,7 @@ export class PartsListComponent {
     yesButton.remove();
     noButton.remove();
     this.deleteCheck = true;
-    return; 
+    return;
   });
   }
 

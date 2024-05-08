@@ -4,6 +4,7 @@ import { Item } from '../_models/Item';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Part } from '../_models/Part';
+import { WarehouseModel } from '../_models/WarehouseModel';
 
 
 @Injectable({
@@ -12,6 +13,7 @@ import { Part } from '../_models/Part';
 export class WarehouseService {
   private warehouseUrl = "http://localhost:8080/api/v1/warehouses";
   private partUrl = "http://localhost:8080/api/v1/parts";
+  private modelUrl = "http://localhost:8080/api/v1/warehouses/models";
   httpClient: HttpClient = inject(HttpClient);
 
   getWarehouses(): Observable<Warehouse[]>{
@@ -29,5 +31,9 @@ export class WarehouseService {
 
   getParts(): Observable<Part[]> {
     return this.httpClient.get<Part[]>(this.partUrl);
+  }
+
+  getWarehouseModels(): Observable<WarehouseModel[]> {
+    return this.httpClient.get<WarehouseModel[]>(this.modelUrl);
   }
 }

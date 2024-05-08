@@ -28,8 +28,8 @@ public class ObserverService {
         for (SubscriberInterface subscriber : subscriberList) {
             subscriber.update(machineId);
         }
-
     }
+
 
     public List<SubscriberInterface> getSubscribersForTopic(UUID machineId) {
         return topicsSubscribersMap.get(machineId);

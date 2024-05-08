@@ -57,6 +57,13 @@ public class SoapServiceTest {
         InsertItemResponse mockResponse = new InsertItemResponse();
         mockResponse.setInsertItemResult("Item Inserted");
 
+
+        Item item = new Part();
+        item.setId(1L);
+
+        Warehouse warehouse = new Warehouse();
+        warehouse.setUri("http://www.test.com");
+
         when(webServiceTemplate.marshalSendAndReceive(anyString(), any(InsertItem.class)))
                 .thenReturn(mockResponse);
 
@@ -65,6 +72,7 @@ public class SoapServiceTest {
         assertEquals("Item Inserted", result.getInsertItemResult());
         verify(webServiceTemplate).marshalSendAndReceive(eq(warehouse.getUri()), any(InsertItem.class));
     }
+
 
     // TODO Create test for getInventory()
 }

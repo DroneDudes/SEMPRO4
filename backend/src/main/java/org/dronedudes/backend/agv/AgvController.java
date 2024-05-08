@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*") //TODO: CHANGE CORS FOR SECURITY
 @RequestMapping("/api/v1/agv")
 @AllArgsConstructor
 public class AgvController {
     private final AgvService agvService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<Optional<Agv>> getAgv() {
         return new ResponseEntity<>(agvService.returnSingleAgv(), HttpStatus.OK);
     }

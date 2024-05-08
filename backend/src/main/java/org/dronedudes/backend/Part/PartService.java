@@ -35,7 +35,7 @@ public class PartService {
     }
 
     @Transactional
-    public Part createPartFromAngular(PartDTO partDTO) {
+    public Part createPart(PartDTO partDTO) {
         Part part = new Part();
         part.setName(partDTO.getName());
         part.setDescription(partDTO.getDescription());

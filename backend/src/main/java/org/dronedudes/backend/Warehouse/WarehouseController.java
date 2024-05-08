@@ -1,9 +1,6 @@
 package org.dronedudes.backend.Warehouse;
 
-import org.dronedudes.backend.Warehouse.exceptions.ItemNotFoundInWarehouse;
-import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
-import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
-import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
+import org.dronedudes.backend.Warehouse.exceptions.*;
 import org.dronedudes.backend.item.Item;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +80,7 @@ public class WarehouseController {
             return ResponseEntity.ok(warehouse);
         } catch (WarehouseNotFoundException warehouseNotFoundException){
             return ResponseEntity.notFound().build();
-        } catch (WarehouseFullException warehouseFullException) {
+        } catch (WarehouseFullException | TrayOccupiedException warehouseFullException) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -98,6 +95,11 @@ public class WarehouseController {
         } catch (ItemNotFoundInWarehouse e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("/models")
+    public ResponseEntity<List<WarehouseModel>> getWarehouseModels(){
+        return ResponseEntity.ok(warehouseService.getWarehouseModels());
     }
 
 }

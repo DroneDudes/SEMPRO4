@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NgIf } from '@angular/common';
@@ -11,12 +11,9 @@ import { NgIf } from '@angular/common';
   styleUrl: './blueprint-form.component.css'
 })
 export class BlueprintFormComponent {
-
-@Output() blueprintAdded = new EventEmitter<void>();
-
 [x: string]: any;
 
-partsList:number[] = []; 
+partsList:number[] = [];
 
 
 addNewPart(partId:number){
@@ -58,33 +55,33 @@ public jsonResponse: any;
 
   blueprintForm: FormGroup = new FormGroup({
     productTitle: new FormControl('', [
-      Validators.required,  
-      // Validators.minLength(4), 
-      // Validators.maxLength(20), 
+      Validators.required,
+      // Validators.minLength(4),
+      // Validators.maxLength(20),
     ]),
     description: new FormControl('', [
-      Validators.required,  
-      // Validators.minLength(50), 
-      // Validators.maxLength(200), 
+      Validators.required,
+      // Validators.minLength(50),
+      // Validators.maxLength(200),
     ]),
     partsList: new FormControl(this.partsList, [
       // Validators.required,
     ])
   })
-  
+
   constructor(private http: HttpClient) { }
 
-  
+
   onSubmit() {
     if (this.blueprintForm.valid) {
       const blueprintData = this.blueprintForm.value;
       console.log(blueprintData);
-      
+
       this.http.post<any>('http://localhost:8080/api/v1/blueprints/create', blueprintData)
         .subscribe(
           response => {
             console.log("Inshallah!")
-            console.log("Success! Response:", response); 
+            console.log("Success! Response:", response);
             const confirmationMessageDiv = document.getElementById("successAlertBlueprints");
             const message = document.createElement("h2");
             confirmationMessageDiv?.appendChild(message);
@@ -111,7 +108,7 @@ public jsonResponse: any;
               }
           }
         );
-    } 
+    }
   }
 
 }

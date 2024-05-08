@@ -15,7 +15,7 @@ export class BluePrintListComponent implements OnInit {
   public partsResponse: any
 
   public deleteCheck:boolean = true;
-  
+
   constructor(private http: HttpClient) {
   }
 
@@ -41,7 +41,7 @@ export class BluePrintListComponent implements OnInit {
   }
 
   public deleteBlueprint(blueprintProductTitle: string, blueprintId: string) {
-    
+
     const confirmationElement = document.getElementById(blueprintProductTitle);
     const span = document.createElement("span");
     span.innerHTML = "Are you sure?";
@@ -68,7 +68,7 @@ export class BluePrintListComponent implements OnInit {
         message.className = "flex-grow text-white h-10 flex justify-center rounded-lg";
         message.innerHTML = "Deleted Successfully";
         }
-        
+
         setTimeout(() => {
           message.remove();
         }, 2000);
@@ -81,7 +81,7 @@ export class BluePrintListComponent implements OnInit {
     yesButton.remove();
     noButton.remove();
     this.deleteCheck = true;
-    return; 
+    return;
   });
   }
 
@@ -94,5 +94,5 @@ export class BluePrintListComponent implements OnInit {
     });
   }
 
-  
+
 }

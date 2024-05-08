@@ -1,31 +1,40 @@
 package org.dronedudes.backend.Warehouse.sse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-@Controller
-public class WarehouseSseController
-{
-    private static final Logger logger = LoggerFactory.getLogger(WarehouseSseController.class);
-    private final ConcurrentMap<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    @GetMapping(value = "/sse/v1/warehouses", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamWarehouses() {
-        String id = "warehouseStream";
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+@RestController
+@RequestMapping("/sse/v1/warehouses")
+public class WarehouseSseController {
+
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final long TIMEOUT_HALF_AN_HOUR = 1800000;
+
+
+
+    @GetMapping
+    public SseEmitter streamSse() {
+        String id = UUID.randomUUID().toString();
+        SseEmitter emitter = new SseEmitter(TIMEOUT_HALF_AN_HOUR);
         emitters.put(id, emitter);
-
-        emitter.onCompletion(() -> emitters.remove(id));
+        // Set a timeout for the SSE connection (optional)
         emitter.onTimeout(() -> {
+
             emitter.complete();
+            emitters.remove(id);
+        });
+
+        // Set a handler for client disconnect (optional)
+        emitter.onCompletion(() -> {
+
             emitters.remove(id);
         });
 
@@ -33,16 +42,22 @@ public class WarehouseSseController
     }
 
     @EventListener
-    public void onWarehouseUpdateEvent(WarehouseUpdateEvent event) {
-        SseEmitter emitter = emitters.get("warehouseStream");
-        if (emitter != null) {
+    public void onSseWarehouseUpdate(SseWarehouseUpdateEvent event) {
+        Map<String, SseEmitter> deadEmitters = new HashMap<>();
+        emitters.forEach((id, emitter) -> {
             try {
-                emitter.send(SseEmitter.event().name("warehouse-update").data(event.getWarehouses()));
+                emitter.send(event.getWarehouses());
+                System.out.println("Sending data");
             } catch (Exception e) {
-                logger.error("Error sending SSE for warehouses", e);
-                emitter.completeWithError(e);
+                deadEmitters.put(id, emitter);
             }
-        }
+        });
+
+        deadEmitters.forEach((id, emitter) -> {
+            emitter.complete();
+            emitters.remove(id);
+        });
+
     }
 }
 
