@@ -157,6 +157,7 @@ public class WarehouseService{
         soapService.pickItem(warehouse, trayId.intValue());
         warehouses.put(warehouse.getId(), warehouse);
         eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
+        warehouseLogEntryService.saveWarehouseLog(new WarehouseLogEntry(warehouses.get(warehouseId).getName(), getWarehouseInventory(warehouseId).get(Math.toIntExact(trayId)) + " removed from tray " + trayId));
         return warehouse;
     }
 
