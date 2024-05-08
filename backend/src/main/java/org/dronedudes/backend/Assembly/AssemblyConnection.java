@@ -13,15 +13,15 @@ import java.util.ArrayList;
 public class AssemblyConnection {
 
     private MqttClient client;
-    private ObjectMapper mapper = new ObjectMapper();
-    private MqttMessage message = new MqttMessage();
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final MqttMessage message = new MqttMessage();
     private final String brokerURL = "tcp://localhost:9001";
 
     private AssemblyStation assemblyStation = new AssemblyStation(0);
 
     public AssemblyConnection() {
         try {
-            client = new MqttClient(brokerURL, MqttClient.generateClientId());
+            client = new MqttClient(brokerURL, MqttClient.generateClientId(),null);
             client.setCallback(new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable cause) {
