@@ -15,19 +15,4 @@ export class ProductionService {
         return this.httpClient.get<ProductionBatch[]>(this.productionUrl);
     }
 
-    // getProductionBatch(batchNumber: number): Observable<ProductionBatch> {
-    //     return this.httpClient.get<ProductionBatch>(this.productionUrl + "/" + batchNumber);
-    // }
-
-    // createProductionBatch(productionBatch: ProductionBatch): Observable<ProductionBatch> {
-    //     return this.httpClient.post<ProductionBatch>(this.productionUrl, productionBatch);
-    // }
-
-    // updateProductionBatch(productionBatch: ProductionBatch): Observable<ProductionBatch> {
-    //     return this.httpClient.put<ProductionBatch>(this.productionUrl, productionBatch);
-    // }
-
-    // deleteProductionBatch(batchNumber: number): Observable<ProductionBatch> {
-    //     return this.httpClient.delete<ProductionBatch>(this.productionUrl + "/" + batchNumber);
-    // }
 }
