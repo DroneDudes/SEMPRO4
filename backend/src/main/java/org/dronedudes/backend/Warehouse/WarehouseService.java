@@ -3,8 +3,11 @@ package org.dronedudes.backend.Warehouse;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.dronedudes.backend.Warehouse.exceptions.*;
+import org.dronedudes.backend.Warehouse.log.WarehouseLogEntry;
+import org.dronedudes.backend.Warehouse.log.WarehouseLogEntryService;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
 import org.dronedudes.backend.Warehouse.sse.SseWarehouseUpdateEvent;
+import org.dronedudes.backend.agv.log.AgvLogEntryService;
 import org.dronedudes.backend.item.Item;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WarehouseService{
     private final WarehouseRepository warehouseRepository;
     private final SoapService soapService;
+    private final WarehouseLogEntryService warehouseLogEntryService;
 
     private final ApplicationEventPublisher eventPublisher;
     private Map<Long, Warehouse> warehouses = new ConcurrentHashMap<>();
@@ -26,10 +30,11 @@ public class WarehouseService{
 
     }
     public WarehouseService(WarehouseRepository warehouseRepository,
-                            SoapService soapService, ApplicationEventPublisher eventPublisher) {
+                            SoapService soapService, ApplicationEventPublisher eventPublisher, WarehouseLogEntryService warehouseLogEntryService) {
         this.warehouseRepository = warehouseRepository;
         this.soapService = soapService;
         this.eventPublisher = eventPublisher;
+        this.warehouseLogEntryService = warehouseLogEntryService;
     }
 
 
@@ -96,7 +101,7 @@ public class WarehouseService{
         warehouses.put(warehouse.getId(), warehouse);
         soapService.insertItem(warehouse, trayId.intValue(), item);
         eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
-
+        warehouseLogEntryService.saveWarehouseLog(new WarehouseLogEntry(warehouses.get(warehouseId).getName(), item.getName() + " added to tray " + trayId));
         return warehouse;
     }
 
