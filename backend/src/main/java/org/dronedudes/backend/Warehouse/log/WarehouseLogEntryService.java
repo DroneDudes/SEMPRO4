@@ -25,7 +25,6 @@ import java.util.UUID;
 public class WarehouseLogEntryService implements LoggerInterface {
     private final WarehouseLogEntryRepository warehouseLogEntryRepository;
     private final ObserverService observerService;
-    private final WarehouseService warehouseService;
     private final SseService sseService;
     private LogEntry newestLog;
 
