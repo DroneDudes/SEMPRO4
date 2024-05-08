@@ -21,6 +21,7 @@ public class AssemblyService {
 
     public void startProduction() {
         assemblyConnection.publish("emulator/operation", new Process(12345));
+
         }
 
 

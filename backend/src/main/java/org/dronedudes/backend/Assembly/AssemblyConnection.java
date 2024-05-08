@@ -3,6 +3,7 @@ package org.dronedudes.backend.Assembly;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.context.annotation.Configuration;
 
@@ -64,7 +65,7 @@ public class AssemblyConnection {
         }
     }
 
-
+    @PostConstruct
     public void subscribeToState() {
         try {
             client.subscribeWithResponse("emulator/status", new IMqttMessageListener() {
@@ -81,7 +82,7 @@ public class AssemblyConnection {
             throw new RuntimeException(e);
         }
     }
-
+    @PostConstruct
     public void printState(){
         try {
             while (true) {
