@@ -45,10 +45,12 @@ public class WarehouseLogEntryService implements LoggerInterface {
 
     public void saveWarehouseLog(WarehouseLogEntry warehouseLogEntry) {
         warehouseLogEntryRepository.save(warehouseLogEntry);
+        LogEntry logEntry = new LogEntry(warehouseLogEntry.getTimestamp(), warehouseLogEntry.getName(), warehouseLogEntry.getAction());
+        publishNewLog(logEntry);
     }
 
     @Override
     public void publishNewLog(LogEntry logEntry) {
-
+        sseService.update(logEntry);
     }
 }
