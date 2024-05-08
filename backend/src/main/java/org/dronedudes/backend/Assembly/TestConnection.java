@@ -12,9 +12,9 @@ public class TestConnection {
 //        Process process = new Process(12345);
 //        connectionPublish.publish(topic1,process);
 
-        AssemblyConnection connectionStatus = new AssemblyConnection();
-        String topic2 = "emulator/status";
-        System.out.println(connectionStatus.subscribe(topic2));
+//        AssemblyConnection connectionStatus = new AssemblyConnection();
+//        String topic2 = "emulator/status";
+//        System.out.println(connectionStatus.subscribe(topic2));
 
 
 

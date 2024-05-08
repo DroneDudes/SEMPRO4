@@ -63,7 +63,7 @@ public class ControllerTest {
         partDTO.setSupplierDetails("part1");
         partDTO.setPrice(1L);
 
-        when(partService.createPartFromAngular(any(PartDTO.class))).thenReturn(part);
+        when(partService.createPart(any(PartDTO.class))).thenReturn(part);
 
         mockMvc.perform(post("/api/v1/parts/createFromAngular")
                         .contentType(MediaType.APPLICATION_JSON)

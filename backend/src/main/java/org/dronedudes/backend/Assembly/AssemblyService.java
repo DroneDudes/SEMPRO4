@@ -1,10 +1,9 @@
 package org.dronedudes.backend.Assembly;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.annotation.PostConstruct;
-import org.dronedudes.backend.Blueprint.Blueprint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static java.lang.Thread.sleep;
 
@@ -12,17 +11,19 @@ import static java.lang.Thread.sleep;
 public class AssemblyService {
 
 
-    private AssemblyConnection assemblyConnection;
+    private final AssemblyRepository assemblyRepository;
+
 
     @Autowired
-    public AssemblyService(AssemblyConnection assemblyConnection) {
-        this.assemblyConnection = assemblyConnection;
+    public AssemblyService(AssemblyRepository assemblyRepository) {
+        this.assemblyRepository = assemblyRepository;
     }
 
-    public void startProduction() {
-        assemblyConnection.publish("emulator/operation", new Process(12345));
+    public void save(AssemblyStation assemblyStation) {
+        assemblyRepository.save(assemblyStation);
+    }
 
-        }
-
-
+    public Optional<AssemblyStation> getAssemblyStationById(Long id) {
+    return assemblyRepository.findById(id);
+    }
 }

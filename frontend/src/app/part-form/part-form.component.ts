@@ -53,7 +53,6 @@ export class PartFormComponent {
               location.reload();
             }, 1000);
 
-            successDiv?.append(successNotification);
           },
           error => {
             console.log(partData)

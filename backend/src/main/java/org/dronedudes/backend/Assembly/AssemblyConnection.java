@@ -4,10 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+import lombok.Getter;
+import org.dronedudes.backend.Assembly.log.AssemblyLog;
+import org.dronedudes.backend.Assembly.log.AssemblyLogService;
 import org.eclipse.paho.client.mqttv3.*;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Configuration
@@ -18,9 +24,13 @@ public class AssemblyConnection {
     private final MqttMessage message = new MqttMessage();
     private final String brokerURL = "tcp://localhost:9001";
 
-    private AssemblyStation assemblyStation = new AssemblyStation(0);
+    @Getter
+    String state;
+    @Getter
+    String currentOperation;
 
     public AssemblyConnection() {
+
         try {
             client = new MqttClient(brokerURL, MqttClient.generateClientId(),null);
             client.setCallback(new MqttCallback() {
@@ -65,8 +75,8 @@ public class AssemblyConnection {
         }
     }
 
-    @PostConstruct
-    public void subscribeToState() {
+
+    public void subscribeToStateAndCurrentOperation() {
         try {
             client.subscribeWithResponse("emulator/status", new IMqttMessageListener() {
                 @Override
@@ -74,24 +84,14 @@ public class AssemblyConnection {
                     byte[] payload = message.getPayload();
                     String payloadString = new String(payload, StandardCharsets.UTF_8);
                     JsonNode jsonPayload = mapper.readTree(payloadString);
-                    String state = String.valueOf(jsonPayload.get("State"));
-                    assemblyStation.setState(Integer.parseInt(state));
+                    state = String.valueOf(jsonPayload.get("State"));
+                    currentOperation = String.valueOf(jsonPayload.get("CurrentOperation"));
+
                 }
             });
         } catch (MqttException e) {
             throw new RuntimeException(e);
         }
     }
-    @PostConstruct
-    public void printState(){
-        try {
-            while (true) {
-                Thread.sleep(3000);
-                System.out.println(assemblyStation.getState());
-            }
 
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

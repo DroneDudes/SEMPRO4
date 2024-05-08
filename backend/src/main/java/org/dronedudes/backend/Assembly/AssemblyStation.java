@@ -1,8 +1,6 @@
 package org.dronedudes.backend.Assembly;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,18 +11,12 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity(name = "assembly")
 public class AssemblyStation extends Machine {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Transient
-    private int state;
-
-
-    public AssemblyStation(int state){
-        this.state = state;
-    }
 }
