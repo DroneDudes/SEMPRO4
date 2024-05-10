@@ -47,6 +47,32 @@ public class AgvService implements PublisherInterface {
         return agvRepository.findFirstByOrderById();
     }
 
+    public Agv getAgvStatusFromSimulation(Agv agv) {
+        try {
+            String agvJson = restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
+            JsonNode agvNode = new ObjectMapper().readTree(agvJson);
+            int battery = agvNode.get("battery").intValue();
+            String programName = agvNode.get("program name").textValue();
+            int state = agvNode.get("state").intValue();
+
+            AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
+            AgvStateEnum agvState = AgvStateEnum.find(state);
+            if (agvProgram == null) {
+                throw new Exception("No program was found by that name");
+            }
+            if (agvState == null) {
+                throw new Exception("No state was found by that name");
+            }
+            agv.setBattery(battery);
+            agv.setAgvProgram(agvProgram);
+            agv.setAgvState(agvState);
+            return agv;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Scheduled(fixedDelay = 1000)
     public boolean pollAgvSimulation() {
         for (Agv agv : agvMap.values()) {
@@ -73,8 +99,6 @@ public class AgvService implements PublisherInterface {
                 agv.setAgvState(agvState);
 
                 notifyChange(agv.getUuid());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
