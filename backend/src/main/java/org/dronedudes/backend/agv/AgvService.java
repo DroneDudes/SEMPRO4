@@ -14,8 +14,11 @@ import org.dronedudes.backend.common.PublisherInterface;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
@@ -107,15 +110,21 @@ public class AgvService implements PublisherInterface {
         Agv agv = agvMap.get(agvId);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("AGV-Id", String.valueOf(agvId));
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, String> param = new HashMap<>();
-        param.put("Program name", "MoveToAssemblyOperation");
-        param.put("State", "1");
-        HttpEntity<Agv>
+        //Load command
+        MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<>();
+        postParameters.add("Program name", "MoveToAssemblyOperation");
+        postParameters.add("State", "1");
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(postParameters, headers);
+        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, requestEntity, Void.class);
 
-        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, );
+        //Execute command
+        postParameters.clear();
+        postParameters.add("State", "2");
+        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, requestEntity, Void.class);
 
+        //Update the observer
         notifyChange(agv.getUuid());
 
         return false;
