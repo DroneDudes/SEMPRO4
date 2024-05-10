@@ -46,7 +46,7 @@ public class AgvService implements PublisherInterface {
         return agvRepository.findFirstByOrderById();
     }
 
-    public String getAgvStatusFromSimulation(Agv agv) {
+    public String retrieveAgvStatus(Agv agv) {
         try {
             return restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
         } catch (Exception e) {
@@ -56,9 +56,9 @@ public class AgvService implements PublisherInterface {
     }
 
     @Scheduled(fixedDelay = 1000)
-    public boolean pollAgvSimulation() {
+    public boolean pollAllAgvForStatusUpdates() {
         for (Agv agv : agvMap.values()) {
-            String agvJson = getAgvStatusFromSimulation(agv);
+            String agvJson = retrieveAgvStatus(agv);
             try {
                 JsonNode agvNode = new ObjectMapper().readTree(agvJson);
                 int battery = agvNode.get("battery").intValue();

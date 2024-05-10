@@ -56,32 +56,32 @@ class AgvServiceTest {
     }
 
     @Test
-    void pollAgvSimulation() {
-        assert agvService.pollAgvSimulation();
+    void pollAllAgvForStatusUpdatesAvoidsExceptions() {
+        assert agvService.pollAllAgvForStatusUpdates();
     }
 
     @Test
     void agvCanLoadAndExecuteChargeProgram() {
         agvService.agvMoveToChargingStation(agv1.getUuid(), new UUID(0, 0));
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("MoveToChargerOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("MoveToChargerOperation");
     }
 
     @Test
     void agvCanLoadAndExecuteMoveToAssemblyProgram() {
         agvService.agvMoveToAssemblyStation(agv1.getUuid(), new UUID(0, 0));
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("MoveToAssemblyOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("MoveToAssemblyOperation");
     }
 
     @Test
     void agvCanLoadAndExecuteMoveToWarehouseProgram() {
         agvService.agvMoveToWarehouse(agv1.getUuid(), new UUID(0, 0));
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("MoveToStorageOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("MoveToStorageOperation");
     }
 
     @Test
     void agvCanLoadAndExecutePickUpItemFromAssemblyStationProgram() {
         agvService.agvPickUpItemFromAssemblyStation(agv1.getUuid(), new UUID(0, 0), part1);
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("PickAssemblyOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("PickAssemblyOperation");
         assert agv1.getInventory().equals(part1);
     }
 
@@ -89,14 +89,14 @@ class AgvServiceTest {
     void agvCanLoadAndExecutePutItemOnAssemblyStationProgram() {
         agv1.setInventory(part1);
         agvService.agvPutItemOnAssemblyStation(agv1.getUuid(), new UUID(0, 0));
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("PutAssemblyOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("PutAssemblyOperation");
         assert agv1.getInventory() == null;
     }
 
     @Test
     void agvCanLoadAndExecutePickUpItemFromWarehouseProgram() {
         agvService.agvPickUpItemFromWarehouse(agv1.getUuid(), new UUID(0, 0), part1);
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("PickWarehouseOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("PickWarehouseOperation");
         assert agv1.getInventory().equals(part1);
     }
 
@@ -104,7 +104,7 @@ class AgvServiceTest {
     void agvCanLoadAndExecutePutItemIntoWarehouseProgram() {
         agv1.setInventory(part1);
         agvService.agvPutItemIntoWarehouse(agv1.getUuid(), new UUID(0, 0));
-        assert agvService.getAgvStatusFromSimulation(agv1).contains("PutWarehouseOperation");
+        assert agvService.retrieveAgvStatus(agv1).contains("PutWarehouseOperation");
         assert agv1.getInventory() == null;
     }
 }
