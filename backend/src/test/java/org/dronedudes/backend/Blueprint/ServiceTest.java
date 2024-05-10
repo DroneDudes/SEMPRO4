@@ -9,8 +9,7 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ServiceTest {
@@ -68,4 +67,31 @@ public class ServiceTest {
 
         assertEquals(2, blueprintService.getBlueprintsByPartId(1L).size());
     }
+
+    @Test
+    public void testCreateAndDeleteBlueprint() {
+
+        BlueprintCreateRequest createRequest = new BlueprintCreateRequest();
+        createRequest.setProductTitle("Test Product");
+        createRequest.setDescription("Test Description");
+        createRequest.setPartsList(Arrays.asList(1L, 2L));
+
+        Part part1 = new Part("part1", "part1", "part1", "part1", 1L);
+        Part part2 = new Part("part2", "part2", "part2", "part2", 2L);
+        when(partRepository.findById(1L)).thenReturn(Optional.of(part1));
+        when(partRepository.findById(2L)).thenReturn(Optional.of(part2));
+
+        Blueprint blueprint = blueprintService.createAndSaveBlueprint(createRequest);
+
+        assertNotNull(blueprint);
+        assertEquals("Test Product", blueprint.getProductTitle());
+        assertEquals("Test Description", blueprint.getDescription());
+        assertEquals(2, blueprint.getParts().size());
+
+        blueprintService.deleteBlueprintById(blueprint.getId());
+        Blueprint deletedBlueprint = blueprintService.getById(blueprint.getId());
+        assertNull(deletedBlueprint);
+    }
+
+
 }

@@ -55,7 +55,7 @@ public class BlueprintService {
     }
 
     public Blueprint getById(Long Id) {
-        return blueprintRepository.findById(Id).get();
+        return blueprintRepository.findById(Id).orElse(null);
     }
 
     public List<Blueprint> getBlueprintsByPartId(Long Id) {
