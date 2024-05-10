@@ -1,12 +1,9 @@
 package org.dronedudes.backend.Product;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 @Entity
 @Table(name = "products")

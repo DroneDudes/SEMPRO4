@@ -103,7 +103,7 @@ public class AgvService implements PublisherInterface {
     /** AGV COMMAND METHODS
      *
      */
-    public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId) {
+    /*public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId) {
         Agv agv = agvMap.get(agvId);
 
         HttpHeaders headers = new HttpHeaders();
@@ -119,7 +119,7 @@ public class AgvService implements PublisherInterface {
         notifyChange(agv.getUuid());
 
         return false;
-    }
+    }*/
 
     public boolean agvMoveToWarehouse(UUID agvMachineId, UUID destinationMachineId) {
         return false;

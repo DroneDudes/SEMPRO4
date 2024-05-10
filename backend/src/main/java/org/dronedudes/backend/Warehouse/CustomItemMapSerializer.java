@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.dronedudes.backend.Part.Part;
 import org.dronedudes.backend.Product.Product;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 import java.io.IOException;
 import java.util.Map;

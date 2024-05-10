@@ -1,7 +1,7 @@
 package org.dronedudes.backend.Warehouse;
 
 import org.dronedudes.backend.Warehouse.exceptions.*;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

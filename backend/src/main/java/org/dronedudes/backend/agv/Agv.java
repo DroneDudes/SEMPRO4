@@ -8,10 +8,9 @@ import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.Machine;
 import org.dronedudes.backend.common.MachineType;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper=true)

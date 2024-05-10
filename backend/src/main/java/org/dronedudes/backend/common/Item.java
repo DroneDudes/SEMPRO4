@@ -1,4 +1,4 @@
-package org.dronedudes.backend.item;
+package org.dronedudes.backend.common;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

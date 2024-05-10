@@ -7,7 +7,7 @@ import org.dronedudes.backend.Warehouse.exceptions.NonEmptyWarehouseException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseFullException;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

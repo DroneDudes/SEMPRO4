@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 import java.util.HashMap;
 import java.util.*;

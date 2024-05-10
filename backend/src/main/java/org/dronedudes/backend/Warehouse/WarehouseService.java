@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional;
 import org.dronedudes.backend.Warehouse.exceptions.*;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
 import org.dronedudes.backend.Warehouse.sse.SseWarehouseUpdateEvent;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
