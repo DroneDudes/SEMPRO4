@@ -46,26 +46,9 @@ public class AgvService implements PublisherInterface {
         return agvRepository.findFirstByOrderById();
     }
 
-    public Agv getAgvStatusFromSimulation(Agv agv) {
+    public String getAgvStatusFromSimulation(Agv agv) {
         try {
-            String agvJson = restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
-            JsonNode agvNode = new ObjectMapper().readTree(agvJson);
-            int battery = agvNode.get("battery").intValue();
-            String programName = agvNode.get("program name").textValue();
-            int state = agvNode.get("state").intValue();
-
-            AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
-            AgvStateEnum agvState = AgvStateEnum.find(state);
-            if (agvProgram == null) {
-                throw new Exception("No program was found by that name");
-            }
-            if (agvState == null) {
-                throw new Exception("No state was found by that name");
-            }
-            agv.setBattery(battery);
-            agv.setAgvProgram(agvProgram);
-            agv.setAgvState(agvState);
-            return agv;
+            return restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -75,7 +58,7 @@ public class AgvService implements PublisherInterface {
     @Scheduled(fixedDelay = 1000)
     public boolean pollAgvSimulation() {
         for (Agv agv : agvMap.values()) {
-            String agvJson = restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
+            String agvJson = getAgvStatusFromSimulation(agv);
             try {
                 JsonNode agvNode = new ObjectMapper().readTree(agvJson);
                 int battery = agvNode.get("battery").intValue();
@@ -113,10 +96,7 @@ public class AgvService implements PublisherInterface {
         if (agvProgram != comparisonAgv.getAgvProgram()) {
             return true;
         }
-        if (agvState != comparisonAgv.getAgvState()) {
-            return true;
-        }
-        return false;
+        return agvState != comparisonAgv.getAgvState();
     }
 
     @Override

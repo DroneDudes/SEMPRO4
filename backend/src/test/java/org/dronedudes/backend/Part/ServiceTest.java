@@ -65,7 +65,7 @@ public class ServiceTest {
 
         when(partRepository.save(any(Part.class))).thenReturn(part);
 
-        Part createdPart = partService.createPartFromAngular(partDTO);
+        Part createdPart = partService.createPart(partDTO);
 
         assertEquals(part, createdPart);
     }
