@@ -11,8 +11,6 @@ import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
-import org.dronedudes.backend.common.SsePublisherInterface;
-import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
