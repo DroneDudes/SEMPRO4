@@ -11,14 +11,13 @@ import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
+import org.dronedudes.backend.item.Item;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
@@ -106,51 +105,128 @@ public class AgvService implements PublisherInterface {
     /** AGV COMMAND METHODS
      *
      */
-    public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId) {
-        Agv agv = agvMap.get(agvId);
-
+    public HttpHeaders getHeadersForPutCommand() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
 
-        //Load command
-        MultiValueMap<String, String> postParameters = new LinkedMultiValueMap<>();
-        postParameters.add("Program name", "MoveToAssemblyOperation");
-        postParameters.add("State", "1");
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(postParameters, headers);
-        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, requestEntity, Void.class);
+    public boolean loadAndExecutePutCommand(Agv agv, String command) {
+        try {
+            String endpointUrl = agv.getEndpointUrl();
+            HttpHeaders headers = getHeadersForPutCommand();
+            Map<String, String> postParameters = new HashMap<>();
+            postParameters.put("Program name", command);
+            postParameters.put("State", "1");
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonParams = mapper.writeValueAsString(postParameters);
+            HttpEntity<String> requestEntity = new HttpEntity<>(jsonParams, headers);
+            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
 
-        //Execute command
-        postParameters.clear();
-        postParameters.add("State", "2");
-        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, requestEntity, Void.class);
+            postParameters.clear();
+            postParameters.put("State", "2");
+            requestEntity = new HttpEntity<>(jsonParams, headers);
+            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            return true;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+//    @Scheduled(initialDelay = 1000)
+//    public void testCommandMethod() {
+//        Optional<UUID> agvIdOptional = agvMap.keySet().stream().findFirst();
+//
+//        if (agvIdOptional.isPresent()) {
+//            UUID agvId = agvIdOptional.get();
+//            agvMoveToChargingStation(agvId, new UUID(0, 0));
+//        } else {
+//            // Handle the case when there is no AGV available
+//            System.out.println("No AGV available");
+//        }
+//    }
+
+    public boolean agvMoveToAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "MoveToAssemblyOperation");
 
         //Update the observer
         notifyChange(agv.getUuid());
 
-        return false;
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Assembly Station with Id: " + assemblyStationMachineId);
+        return true;
     }
 
-    public boolean agvMoveToWarehouse(UUID agvMachineId, UUID destinationMachineId) {
-        return false;
+    public boolean agvMoveToWarehouse(UUID agvMachineId, UUID warehouseMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "MoveToStorageOperation");
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Warehouse with Id: " + warehouseMachineId);
+        return true;
     }
 
-    public boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, Long itemId) {
-        return false;
+    public boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId, Item item) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PickAssemblyOperation");
+        agv.setInventory(item);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Assembly Station with Id: " + assemblyStationMachineId);
+        return true;
     }
 
-    public boolean agvPutDownItemOnAssemblyStation(UUID agvMachineId) {
-        return false;
+    public boolean agvPutItemOnAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PutAssemblyOperation");
+        Item item = agv.getInventory();
+        agv.setInventory(null);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Assembly Station with Id: " + assemblyStationMachineId);
+        return true;
     }
 
-    public boolean agvPickUpItemFromWarehouse(UUID agvMachineId, Long itemId) {
-        return false;
+    public boolean agvPickUpItemFromWarehouse(UUID agvMachineId, UUID warehouseMachineId, Item item) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PickWarehouseOperation");
+        agv.setInventory(item);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Warehouse with Id: " + warehouseMachineId);
+        return true;
     }
 
-    public boolean agvPutDownItemInWarehouse(UUID agvMachineId) {
-        return false;
+    public boolean agvPutItemIntoWarehouse(UUID agvMachineId, UUID warehouseMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PutWarehouseOperation");
+        Item item = agv.getInventory();
+        agv.setInventory(null);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Warehouse with Id: " + warehouseMachineId);
+        return true;
     }
 
-    public boolean agvMoveToChargingStation(UUID agvMachineId) {
-        return false;
+    public boolean agvMoveToChargingStation(UUID agvMachineId, UUID chargerId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "MoveToChargerOperation");
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Charger with Id: " + chargerId);
+        return true;
     }
 }
