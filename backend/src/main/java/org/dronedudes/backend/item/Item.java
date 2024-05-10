@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.dronedudes.backend.Part.Part;
-import org.dronedudes.backend.Product.Product;
+import org.dronedudes.backend.Part.*;
+import org.dronedudes.backend.Product.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

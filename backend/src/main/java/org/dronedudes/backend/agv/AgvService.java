@@ -11,12 +11,9 @@ import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
-import org.dronedudes.backend.common.SsePublisherInterface;
-import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.*;
 
 @Service
@@ -99,4 +96,43 @@ public class AgvService implements PublisherInterface {
         observerService.updateSubscribers(machineId);
     }
 
+
+    /** AGV COMMAND METHODS
+     *
+     */
+    public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId) {
+        Agv agv = agvMap.get(agvId);
+
+        String programName =
+
+        restTemplate.put(agv.getEndpointUrl(), );
+
+        notifyChange(agv.getUuid());
+
+        return false;
+    }
+
+    public boolean agvMoveToWarehouse(UUID agvMachineId, UUID destinationMachineId) {
+        return false;
+    }
+
+    public boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, Long itemId) {
+        return false;
+    }
+
+    public boolean agvPutDownItemOnAssemblyStation(UUID agvMachineId) {
+        return false;
+    }
+
+    public boolean agvPickUpItemFromWarehouse(UUID agvMachineId, Long itemId) {
+        return false;
+    }
+
+    public boolean agvPutDownItemInWarehouse(UUID agvMachineId) {
+        return false;
+    }
+
+    public boolean agvMoveToChargingStation(UUID agvMachineId) {
+        return false;
+    }
 }

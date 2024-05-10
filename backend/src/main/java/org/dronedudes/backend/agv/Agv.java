@@ -7,7 +7,11 @@ import org.dronedudes.backend.agv.log.AgvLogEntry;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.Machine;
+import org.dronedudes.backend.common.MachineType;
+import org.dronedudes.backend.item.Item;
+
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
@@ -20,7 +24,7 @@ public class Agv extends Machine {
     private Long id;
 
     @Column(name = "endpoint_url", nullable = false)
-    private String endpointUrl = "http://localhost:8082/v1/status/";
+    private String endpointUrl;
 
     @Transient
     private int battery;
@@ -31,6 +35,9 @@ public class Agv extends Machine {
     @Transient
     private AgvStateEnum agvState;
 
+    @Transient
+    private Item inventory;
+
     @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "agv", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -39,6 +46,7 @@ public class Agv extends Machine {
     private String name;
 
     public Agv(String name, String endpointUrl) {
+        super(MachineType.AGV);
         this.name = name;
         this.endpointUrl = endpointUrl;
     }
