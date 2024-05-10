@@ -11,6 +11,9 @@ import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -103,9 +106,15 @@ public class AgvService implements PublisherInterface {
     public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId) {
         Agv agv = agvMap.get(agvId);
 
-        String programName =
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("AGV-Id", String.valueOf(agvId));
 
-        restTemplate.put(agv.getEndpointUrl(), );
+        Map<String, String> param = new HashMap<>();
+        param.put("Program name", "MoveToAssemblyOperation");
+        param.put("State", "1");
+        HttpEntity<Agv>
+
+        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, );
 
         notifyChange(agv.getUuid());
 
