@@ -10,9 +10,7 @@ import org.dronedudes.backend.common.SubscriberInterface;
 import org.dronedudes.backend.common.logging.LogEntry;
 import org.dronedudes.backend.common.logging.LoggerInterface;
 import org.dronedudes.backend.common.sse.SseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
