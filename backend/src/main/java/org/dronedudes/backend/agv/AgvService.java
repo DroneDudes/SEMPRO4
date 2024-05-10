@@ -134,19 +134,6 @@ public class AgvService implements PublisherInterface {
         }
     }
 
-//    @Scheduled(initialDelay = 1000)
-//    public void testCommandMethod() {
-//        Optional<UUID> agvIdOptional = agvMap.keySet().stream().findFirst();
-//
-//        if (agvIdOptional.isPresent()) {
-//            UUID agvId = agvIdOptional.get();
-//            agvMoveToChargingStation(agvId, new UUID(0, 0));
-//        } else {
-//            // Handle the case when there is no AGV available
-//            System.out.println("No AGV available");
-//        }
-//    }
-
     public boolean agvMoveToAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId) {
         Agv agv = agvMap.get(agvMachineId);
         loadAndExecutePutCommand(agv, "MoveToAssemblyOperation");
