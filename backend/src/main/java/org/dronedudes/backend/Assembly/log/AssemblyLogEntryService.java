@@ -1,28 +1,26 @@
 package org.dronedudes.backend.Assembly.log;
 
-import org.dronedudes.backend.agv.log.AgvLogEntry;
 import org.dronedudes.backend.common.logging.LogEntry;
 import org.dronedudes.backend.common.logging.LoggerInterface;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AssemblyLogService implements LoggerInterface {
+public class AssemblyLogEntryService implements LoggerInterface {
 
     @Autowired
-    public AssemblyLogService(AssemblyLogRepository assemblyLogRepository) {
-        this.assemblyLogRepository = assemblyLogRepository;
+    public AssemblyLogEntryService(AssemblyLogEntryRepository assemblyLogEntryRepository) {
+        this.assemblyLogEntryRepository = assemblyLogEntryRepository;
     }
 
-    AssemblyLogRepository assemblyLogRepository;
+    AssemblyLogEntryRepository assemblyLogEntryRepository;
 
     @Override
     public List<LogEntry> getLast10Logs() {
-        List<AssemblyLog> logs = assemblyLogRepository.findTop10ByOrderByTimestampDesc();
+        List<AssemblyLogEntry> logs = assemblyLogEntryRepository.findTop10ByOrderByTimestampDesc();
 
         ArrayList<LogEntry> returnableLogs = new ArrayList<>();
         logs.forEach((logEntry -> returnableLogs.add(new LogEntry(logEntry.getTimestamp(), "Assembly_" + logEntry.getAssemblyStation().getId(), String.valueOf(logEntry.getState())))));
@@ -34,7 +32,7 @@ public class AssemblyLogService implements LoggerInterface {
 
     }
 
-    public void save(AssemblyLog assemblyLog){
-        assemblyLogRepository.save(assemblyLog);
+    public void save(AssemblyLogEntry assemblyLogEntry){
+        assemblyLogEntryRepository.save(assemblyLogEntry);
     }
 }

@@ -3,18 +3,11 @@ package org.dronedudes.backend.Assembly;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
-import org.dronedudes.backend.Assembly.log.AssemblyLog;
-import org.dronedudes.backend.Assembly.log.AssemblyLogService;
 import org.eclipse.paho.client.mqttv3.*;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Configuration
 public class AssemblyConnection {

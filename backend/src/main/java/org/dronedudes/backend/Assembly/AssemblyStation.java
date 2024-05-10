@@ -19,4 +19,12 @@ public class AssemblyStation extends Machine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String endpointUrl = "tcp://localhost:9001";
+
+    @Transient
+    private int state;
+
+    @Transient
+    private int operationId;
 }

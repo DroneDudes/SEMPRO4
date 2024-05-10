@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.Assembly.AssemblyStation;
-import org.dronedudes.backend.agv.Agv;
-import org.dronedudes.backend.agv.program.AgvProgramEnum;
-import org.dronedudes.backend.agv.state.AgvStateEnum;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "assembly_log_entry")
-public class AssemblyLog {
+public class AssemblyLogEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +31,7 @@ public class AssemblyLog {
     @JoinColumn(name = "assembly_station")
     private AssemblyStation assemblyStation;
 
-    public AssemblyLog(int operationId, int state, AssemblyStation assemblyStation) {
+    public AssemblyLogEntry(int operationId, int state, AssemblyStation assemblyStation) {
         this.operationId = operationId;
         this.state = state;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
