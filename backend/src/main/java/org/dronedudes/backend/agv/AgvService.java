@@ -9,11 +9,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
+import org.dronedudes.backend.common.IAgvService;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
+import org.dronedudes.backend.common.Item;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +26,10 @@ import java.util.*;
 @RequiredArgsConstructor
 @Getter
 @Transactional
-public class AgvService implements PublisherInterface {
+public class AgvService implements PublisherInterface, IAgvService {
+    @Override public void test() {
+        System.out.println("test");
+    }
     private final AgvRepository agvRepository;
     private Map<UUID, Agv> agvMap = new HashMap<>();
 
@@ -33,7 +39,6 @@ public class AgvService implements PublisherInterface {
     @PostConstruct
     public void fetchAllSystemAgvs() {
         saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
-        System.out.println("CURRENT AGV MAP SIZE: " + agvMap.size());
     }
 
     public Agv saveAgvToDatabase(Agv agv) {
@@ -45,10 +50,19 @@ public class AgvService implements PublisherInterface {
         return agvRepository.findFirstByOrderById();
     }
 
+    public String retrieveAgvStatus(Agv agv) {
+        try {
+            return restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Scheduled(fixedDelay = 1000)
-    public boolean pollAgvSimulation() {
+    public boolean pollAllAgvForStatusUpdates() {
         for (Agv agv : agvMap.values()) {
-            String agvJson = restTemplate.getForEntity(agv.getEndpointUrl(), String.class).getBody();
+            String agvJson = retrieveAgvStatus(agv);
             try {
                 JsonNode agvNode = new ObjectMapper().readTree(agvJson);
                 int battery = agvNode.get("battery").intValue();
@@ -71,8 +85,6 @@ public class AgvService implements PublisherInterface {
                 agv.setAgvState(agvState);
 
                 notifyChange(agv.getUuid());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -88,10 +100,7 @@ public class AgvService implements PublisherInterface {
         if (agvProgram != comparisonAgv.getAgvProgram()) {
             return true;
         }
-        if (agvState != comparisonAgv.getAgvState()) {
-            return true;
-        }
-        return false;
+        return agvState != comparisonAgv.getAgvState();
     }
 
     @Override
@@ -103,45 +112,129 @@ public class AgvService implements PublisherInterface {
     /** AGV COMMAND METHODS
      *
      */
-    /*public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId) {
-        Agv agv = agvMap.get(agvId);
-
+    public HttpHeaders getHeadersForPutCommand() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("AGV-Id", String.valueOf(agvId));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
 
-        Map<String, String> param = new HashMap<>();
-        param.put("Program name", "MoveToAssemblyOperation");
-        param.put("State", "1");
-        HttpEntity<Agv>
+    public boolean loadAndExecutePutCommand(Agv agv, String command) {
+        try {
+            String endpointUrl = agv.getEndpointUrl();
+            HttpHeaders headers = getHeadersForPutCommand();
+            Map<String, String> postParameters = new HashMap<>();
+            postParameters.put("Program name", command);
+            postParameters.put("State", "1");
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonParams = mapper.writeValueAsString(postParameters);
+            HttpEntity<String> requestEntity = new HttpEntity<>(jsonParams, headers);
+            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
 
-        restTemplate.exchange(agv.getEndpointUrl(), HttpMethod.PUT, );
+            postParameters.clear();
+            postParameters.put("State", "2");
+            requestEntity = new HttpEntity<>(jsonParams, headers);
+            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            return true;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    @Override
+    public boolean agvMoveToAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "MoveToAssemblyOperation");
+
+        //Update the observer
         notifyChange(agv.getUuid());
 
-        return false;
-    }*/
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Assembly Station with Id: " + assemblyStationMachineId);
+        return true;
+    }
+    @Override
+    public boolean agvMoveToWarehouse(UUID agvMachineId, UUID warehouseMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "MoveToStorageOperation");
 
-    public boolean agvMoveToWarehouse(UUID agvMachineId, UUID destinationMachineId) {
-        return false;
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Warehouse with Id: " + warehouseMachineId);
+        return true;
     }
 
-    public boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, Long itemId) {
-        return false;
+    @Override
+    public boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId, Item item) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PickAssemblyOperation");
+        agv.setInventory(item);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Assembly Station with Id: " + assemblyStationMachineId);
+        return true;
     }
 
-    public boolean agvPutDownItemOnAssemblyStation(UUID agvMachineId) {
-        return false;
+    @Override
+    public boolean agvPutItemOnAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PutAssemblyOperation");
+        Item item = agv.getInventory();
+        agv.setInventory(null);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Assembly Station with Id: " + assemblyStationMachineId);
+        return true;
     }
 
-    public boolean agvPickUpItemFromWarehouse(UUID agvMachineId, Long itemId) {
-        return false;
+    @Override
+    public boolean agvPickUpItemFromWarehouse(UUID agvMachineId, UUID warehouseMachineId, Item item) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PickWarehouseOperation");
+        agv.setInventory(item);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Warehouse with Id: " + warehouseMachineId);
+        return true;
     }
 
-    public boolean agvPutDownItemInWarehouse(UUID agvMachineId) {
-        return false;
+    @Override
+    public boolean agvPutItemIntoWarehouse(UUID agvMachineId, UUID warehouseMachineId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "PutWarehouseOperation");
+        Item item = agv.getInventory();
+        agv.setInventory(null);
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Warehouse with Id: " + warehouseMachineId);
+        return true;
     }
 
-    public boolean agvMoveToChargingStation(UUID agvMachineId) {
-        return false;
+    @Override
+    public boolean agvMoveToChargingStation(UUID agvMachineId, UUID chargerId) {
+        Agv agv = agvMap.get(agvMachineId);
+        loadAndExecutePutCommand(agv, "MoveToChargerOperation");
+
+        //Update the observer
+        notifyChange(agv.getUuid());
+
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Charger with Id: " + chargerId);
+        return true;
+    }
+
+    @Override
+    public UUID getAvailableAgv(){
+        if(returnSingleAgv().isEmpty()){
+            return null;
+        }
+        return returnSingleAgv().get().getUuid();
     }
 }

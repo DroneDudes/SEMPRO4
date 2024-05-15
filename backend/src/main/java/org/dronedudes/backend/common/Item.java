@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.dronedudes.backend.Part.*;
 import org.dronedudes.backend.Product.*;
 
 @Entity
@@ -12,7 +11,7 @@ import org.dronedudes.backend.Product.*;
 @DiscriminatorColumn(name = "item_type", discriminatorType = DiscriminatorType.STRING)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Part.class, name = "part"),
+        @JsonSubTypes.Type(value = org.dronedudes.backend.Part.Part.class, name = "part"),
         @JsonSubTypes.Type(value = Product.class, name = "product")
 })
 @Data

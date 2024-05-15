@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.dronedudes.backend.common.Item;
+import org.dronedudes.backend.common.Machine;
+import org.dronedudes.backend.common.MachineType;
 
 import java.util.HashMap;
 import java.util.*;
@@ -12,7 +14,7 @@ import java.util.*;
 @Entity
 @Data
 @NoArgsConstructor
-public class Warehouse {
+public class Warehouse extends Machine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,6 +37,7 @@ public class Warehouse {
 
 
     public Warehouse(WarehouseModel model, int port, String name) {
+        super(MachineType.WAREHOUSE);
         this.model = model;
         this.uri = model.getBaseUri() + port + model.getSuffixUri();
         this.name = name;
