@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.dronedudes.backend.agv.program.AgvProgramEnum;
 import org.dronedudes.backend.agv.state.AgvStateEnum;
-import org.dronedudes.backend.common.IAgvService;
-import org.dronedudes.backend.common.ObserverService;
-import org.dronedudes.backend.common.PublisherInterface;
-import org.dronedudes.backend.common.Item;
+import org.dronedudes.backend.common.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,10 +18,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -33,18 +30,18 @@ import java.util.concurrent.TimeoutException;
 @RequiredArgsConstructor
 @Getter
 @Transactional
-public class AgvService implements PublisherInterface, IAgvService {
+public class AgvService implements PublisherInterface, IAgvService, SubscriberInterface {
     private final AgvRepository agvRepository;
     private Map<UUID, Agv> agvMap = new HashMap<>();
 
     private final ObserverService observerService;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final Object agvStateLock = new Object();
-    private CountDownLatch latch = new CountDownLatch(1);
+    private Map<UUID, CountDownLatch> agvLatchMap = new HashMap<>();
 
     @PostConstruct
     public void fetchAllSystemAgvs() {
         saveAgvToDatabase(new Agv("Storeroom AGV", "http://localhost:8082/v1/status/"));
+        subscribe();
     }
 
     public Agv saveAgvToDatabase(Agv agv) {
@@ -52,6 +49,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         notifyChange(agv.getUuid());
         return agvRepository.save(agv);
     }
+
     public Optional<Agv> returnSingleAgv() {
         return agvRepository.findFirstByOrderById();
     }
@@ -73,9 +71,7 @@ public class AgvService implements PublisherInterface, IAgvService {
                 JsonNode agvNode = new ObjectMapper().readTree(agvJson);
                 int battery = agvNode.get("battery").intValue();
                 String programName = agvNode.get("program name").textValue();
-                System.out.println(programName);
                 int state = agvNode.get("state").intValue();
-
 
                 AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
                 AgvStateEnum agvState = AgvStateEnum.find(state);
@@ -91,15 +87,10 @@ public class AgvService implements PublisherInterface, IAgvService {
                 agv.setBattery(battery);
                 agv.setAgvProgram(agvProgram);
                 agv.setAgvState(agvState);
-                if(agvState.equals(AgvStateEnum.EXECUTING_STATE) && latch.getCount()==2L){
-                    latch.countDown();
-                    System.out.println("Latch counted down. AGV state = " + agv.getAgvState() + "time: " + Timestamp.from(Instant.now()));
-                }
-                if(agvState.equals(AgvStateEnum.IDLE_STATE) && latch.getCount()==1L){
-                    latch.countDown();
-                    System.out.println("Latch counted down. AGV state = " + agv.getAgvState() + "time: " + Timestamp.from(Instant.now()));
-                }
+
                 notifyChange(agv.getUuid());
+                System.out.println("notify called for " + agv.getName() + " with Id: " + agv.getUuid());
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -107,6 +98,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         }
         return true;
     }
+
 
     public boolean agvIsChanged(int battery, AgvProgramEnum agvProgram, AgvStateEnum agvState, Agv comparisonAgv) {
         if (battery != comparisonAgv.getBattery()) {
@@ -123,10 +115,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         observerService.updateSubscribers(machineId);
     }
 
-
-    /** AGV COMMAND METHODS
-     *
-     */
+    /** AGV COMMAND METHODS */
     public HttpHeaders getHeadersForPutCommand() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -135,54 +124,58 @@ public class AgvService implements PublisherInterface, IAgvService {
 
     public boolean loadAndExecutePutCommand(Agv agv, String command) {
         try {
-            AgvStateEnum agvStateEnum = agv.getAgvState();
             String endpointUrl = agv.getEndpointUrl();
             HttpHeaders headers = getHeadersForPutCommand();
+            ObjectMapper mapper = new ObjectMapper();
+
+            // Prepare the first PUT request to set the command
             Map<String, String> postParameters = new HashMap<>();
             postParameters.put("Program name", command);
             postParameters.put("State", "1");
-            ObjectMapper mapper = new ObjectMapper();
             String jsonParams = mapper.writeValueAsString(postParameters);
             HttpEntity<String> requestEntity = new HttpEntity<>(jsonParams, headers);
-            Object o = null;
-            o = restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
-            while (!agvStateEnum.equals(AgvStateEnum.IDLE_STATE)) {
 
-            }
-            agvStateEnum = agv.getAgvState();
-            Instant now = Instant.now();
-            Instant end = now.plus(1000, ChronoUnit.MILLIS);
+            // Initialize latch for the program change
+            CountDownLatch programLatch = new CountDownLatch(1);
+            agvLatchMap.put(agv.getUuid(), programLatch);
 
+            // Send the first PUT request
+            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+
+            // Wait for the program to change
+            waitForAgvState(agv.getUuid(), programLatch);
+
+            // Prepare the second PUT request to execute the command
             postParameters.clear();
             postParameters.put("State", "2");
+            jsonParams = mapper.writeValueAsString(postParameters);
             requestEntity = new HttpEntity<>(jsonParams, headers);
-            Object o1 = null;
-            o1 = restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
-            while (!agvStateEnum.equals(AgvStateEnum.IDLE_STATE)) {
-            }
-            agvStateEnum = agv.getAgvState();
-            while (o1=="Already executing a task." || o1==null) {
-            }
-            Instant now1 = Instant.now();
-            Instant end1 = now.plus(10000, ChronoUnit.MILLIS);
 
-            while (Instant.now().isBefore(end1)) {
-            }
-            waitForAgvToBeIdle(agv.getUuid());
+            // Initialize latch for the state change (IDLE -> EXECUTING -> IDLE)
+            CountDownLatch stateLatch = new CountDownLatch(1);
+            agvLatchMap.put(agv.getUuid(), stateLatch);
+            System.out.println("sending execute command to " + agv.getName() + " with Id: " + agv.getUuid());
+
+            // Send the second PUT request
+            System.out.println(restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class));
+
+            // Wait for the AGV to become idle again after executing the command
+            waitForAgvState(agv.getUuid(), stateLatch);
+
             return true;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return false;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
+        } catch (InterruptedException | TimeoutException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Scheduled(fixedDelay = 10000)
-    public void movetowh(){
-        agvMoveToWarehouse(agvMap.values().stream().findFirst().get().getUuid(),new UUID(0,0));
+    private void waitForAgvState(UUID agvUuid, CountDownLatch latch) throws InterruptedException, TimeoutException {
+        System.out.println("Waiting for AGV with Id: " + agvUuid + " to reach the desired state");
+        if (!latch.await(10, TimeUnit.SECONDS)) {
+
+        }
     }
 
     @Override
@@ -190,18 +183,19 @@ public class AgvService implements PublisherInterface, IAgvService {
         Agv agv = agvMap.get(agvMachineId);
         loadAndExecutePutCommand(agv, "MoveToAssemblyOperation");
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Assembly Station with Id: " + assemblyStationMachineId);
         return true;
     }
+
     @Override
     public boolean agvMoveToWarehouse(UUID agvMachineId, UUID warehouseMachineId) {
         Agv agv = agvMap.get(agvMachineId);
         loadAndExecutePutCommand(agv, "MoveToStorageOperation");
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Warehouse with Id: " + warehouseMachineId);
@@ -214,7 +208,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         loadAndExecutePutCommand(agv, "PickAssemblyOperation");
         agv.setInventory(item);
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Assembly Station with Id: " + assemblyStationMachineId);
@@ -228,7 +222,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         Item item = agv.getInventory();
         agv.setInventory(null);
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Assembly Station with Id: " + assemblyStationMachineId);
@@ -241,7 +235,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         loadAndExecutePutCommand(agv, "PickWarehouseOperation");
         agv.setInventory(item);
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Warehouse with Id: " + warehouseMachineId);
@@ -255,7 +249,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         Item item = agv.getInventory();
         agv.setInventory(null);
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Warehouse with Id: " + warehouseMachineId);
@@ -267,7 +261,7 @@ public class AgvService implements PublisherInterface, IAgvService {
         Agv agv = agvMap.get(agvMachineId);
         loadAndExecutePutCommand(agv, "MoveToChargerOperation");
 
-        //Update the observer
+        // Update the observer
         notifyChange(agv.getUuid());
 
         System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Charger with Id: ??");
@@ -275,31 +269,36 @@ public class AgvService implements PublisherInterface, IAgvService {
     }
 
     @Override
-    public UUID getAvailableAgv(){
-        if(returnSingleAgv().isEmpty()){
+    public UUID getAvailableAgv() {
+        if (returnSingleAgv().isEmpty()) {
             return null;
         }
         return returnSingleAgv().get().getUuid();
     }
 
     @Override
-    public AgvStateEnum getAgvState(UUID agvMachineId){
+    public AgvStateEnum getAgvState(UUID agvMachineId) {
         return agvMap.get(agvMachineId).getAgvState();
     }
 
-    private void waitForAgvToBeIdle(UUID agvMachineId) throws InterruptedException, TimeoutException {
-        latch = new CountDownLatch(2);
+    public boolean isAgvIdle(UUID agvMachineId) {
+        return getAgvState(agvMachineId).equals(AgvStateEnum.IDLE_STATE);
+    }
 
-        synchronized (agvStateLock) {
-            while (!isAgvIdle(agvMachineId)) {
-                if (!latch.await(10, TimeUnit.SECONDS)) {
-                    throw new TimeoutException("AGV did not become idle within the timeout period");
-                }
-            }
-            System.out.println(getAgvState(agvMachineId) + " time: " + Timestamp.from(Instant.now()));
+    @Override
+    public void subscribe() {
+        for (Agv agv : agvMap.values()) {
+            observerService.subscribe(agv.getUuid(), this);
         }
     }
-    public boolean isAgvIdle(UUID agvMachineId){
-        return getAgvState(agvMachineId).equals(AgvStateEnum.IDLE_STATE);
+
+    @Override
+    public void update(UUID machineId) {
+        System.out.println("AgvService received an update for " + machineId);
+        if (agvLatchMap.containsKey(machineId)) {
+            if(agvMap.get(machineId).getAgvState() == AgvStateEnum.IDLE_STATE) {
+                agvLatchMap.get(machineId).countDown();
+            }
+        }
     }
 }

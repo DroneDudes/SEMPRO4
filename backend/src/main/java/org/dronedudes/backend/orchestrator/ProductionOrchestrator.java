@@ -3,20 +3,13 @@ package org.dronedudes.backend.orchestrator;
 import jakarta.annotation.PostConstruct;
 import org.dronedudes.backend.Warehouse.exceptions.ItemNotFoundInWarehouse;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
-import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.*;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Service
 public class ProductionOrchestrator implements IMachineOrchestrator, ApplicationListener<ApplicationReadyEvent> {
@@ -60,14 +53,8 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
                 UUID availableAgvUuid = agvService.getAvailableAgv();
                 //move avaible agv to warehouse with item
                 agvService.agvMoveToWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
-                /*try {
-                    waitForAgvToBeIdle(availableAgvUuid);
-                } catch (InterruptedException | TimeoutException e) {
-                    throw new RuntimeException("Failed to wait for AGV to be idle", e);
-                }
 
-                 */
-                //pick item from warehouse
+                //pick item from warehouse to tray
                 try {
                     warehouseService.pickItemFromWarehouse(warehouseUuidForWarehouseWithItem, part.getId());
                 } catch (WarehouseNotFoundException e) {
@@ -77,12 +64,7 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
                 }
                 //pick item to agv
                 agvService.agvPickUpItemFromWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem, (Item) part);
-                /*try {
-                    waitForAgvToBeIdle(availableAgvUuid);
-                } catch (InterruptedException | TimeoutException e) {
-                    throw new RuntimeException("Failed to wait for AGV to be idle", e);
-                }
-                 */
+
                 //get available assembly station
                 //UUID availableAssemblyStationUuid = assemblyStationService.getAvailableAssemblyId();
                 //move agv to assembly station
