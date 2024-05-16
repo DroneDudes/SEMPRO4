@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.common.Machine;
 
-import java.util.UUID;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -26,8 +24,8 @@ public class AssemblyStation extends Machine {
     private int state;
 
     @Transient
-    private int operationId;
+    private int processId;
 
     @Transient
-    private String product;
+    private String blueprintName;
 }

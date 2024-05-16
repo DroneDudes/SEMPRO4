@@ -3,32 +3,29 @@ package org.dronedudes.backend.Assembly;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.dronedudes.backend.Assembly.log.AssemblyLogEntryService;
-import org.dronedudes.backend.Assembly.sse.AssemblySseService;
+import org.dronedudes.backend.Blueprint.Blueprint;
+import org.dronedudes.backend.common.IAssemblyService;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import static java.lang.Thread.sleep;
 
 @Service
 @Transactional
 @Data
-public class AssemblyService implements PublisherInterface {
+public class AssemblyService implements PublisherInterface, IAssemblyService {
 
     private Map<UUID, AssemblyStation> assemblyMap = new HashMap<>();
     private final AssemblyRepository assemblyRepository;
     private final AssemblyConnection assemblyConnection;
     private final ObserverService observerService;
+    private final Object assemblyLock = new Object();
 
     int priorState = 0;
     int currentState = 0;
@@ -59,16 +56,25 @@ public class AssemblyService implements PublisherInterface {
         return assemblyRepository.findFirstByOrderById();
     }
 
+    @Scheduled(fixedDelay = 10000)
+    public void testStartProduction(){
+        UUID assemblyStationUuid = getAvailableAssemblyId();
+        Blueprint blueprint = new Blueprint();
+        blueprint.setProductTitle("Test name");
+            assembleItem(assemblyStationUuid, blueprint);
+        }
+
+
     @Scheduled(fixedDelay = 1000)
     public void pollAllAssemblyStations(){
         for(AssemblyStation assemblyStation: assemblyMap.values()){
             currentState = Integer.parseInt(assemblyConnection.getState());
             operationId = Integer.parseInt(assemblyConnection.getCurrentOperation());
-            if(assemblyStation.getState() != currentState || assemblyStation.getOperationId() != operationId){
+            if(assemblyStation.getState() != currentState || assemblyStation.getProcessId() != operationId){
                 assemblyStation.setState(currentState);
-                assemblyStation.setOperationId(operationId);
+                assemblyStation.setProcessId(operationId);
                 notifyChange(assemblyStation.getUuid());
-                System.out.println("ALLLAHU AKKHBAAAAR");
+                System.out.println("Change registered in observer");
             }
         }
     }
@@ -78,9 +84,61 @@ public class AssemblyService implements PublisherInterface {
         observerService.updateSubscribers(machineId);
     }
 
-//    public void startProduction(int processId) {
-//        assemblyConnection.publish("emulator/operation", new Process(processId));
-//    }
+    @Override
+    public UUID getAvailableAssemblyId() {
+        for (Map.Entry<UUID, AssemblyStation> entry : assemblyMap.entrySet()) {
+            if (entry.getValue().getState() == 0) {
+                return entry.getValue().getUuid();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<UUID> getAllAssemblyStationUuids() {
+        List<UUID> allAssemblyUuids = new ArrayList<>();
+        for(AssemblyStation assemblyStation: assemblyRepository.findAll()){
+            allAssemblyUuids.add(assemblyStation.getUuid());
+        }
+        return allAssemblyUuids;
+    }
+
+    @Override
+    public boolean assembleItem(UUID availableAssemblyStationUuid, Blueprint blueprint) {
+        if(availableAssemblyStationUuid != null){
+            AssemblyStation assemblyStation = assemblyMap.get(availableAssemblyStationUuid);
+            int processId = assemblyStation.getProcessId();
+            assemblyStation.setBlueprintName("Assembling blueprint " + blueprint.getProductTitle());
+            startProduction(processId + 1);
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if(checkIfProcessing()) {
+                System.out.println("Assembly stopped");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkIfProcessing(){
+        while(Integer.parseInt(assemblyConnection.getState()) != 0){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } return true;
+    }
+
+    public void startProduction(int processId) {
+        System.out.println("Assembly started");
+        assemblyConnection.publish("emulator/operation", new Process(processId));
+    }
 
 //    public void save(AssemblyStation assemblyStation) {
 //        assemblyRepository.save(assemblyStation);
