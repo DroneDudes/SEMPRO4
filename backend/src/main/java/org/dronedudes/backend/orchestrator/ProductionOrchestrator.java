@@ -3,33 +3,47 @@ package org.dronedudes.backend.orchestrator;
 import jakarta.annotation.PostConstruct;
 import org.dronedudes.backend.Warehouse.exceptions.ItemNotFoundInWarehouse;
 import org.dronedudes.backend.Warehouse.exceptions.WarehouseNotFoundException;
+import org.dronedudes.backend.agv.state.AgvStateEnum;
 import org.dronedudes.backend.common.*;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class ProductionOrchestrator implements IMachineOrchestrator, ApplicationListener<ApplicationReadyEvent> {
 
     private final ApplicationContext applicationContext;
-    private IAgvService agvService;
+    private final IAgvService agvService;
     private IAssemblyService assemblyStationService;
-    private IWarehouseService warehouseService;
+    private final IWarehouseService warehouseService;
+    private final ObserverService observerService;
+
+
     public ProductionOrchestrator(ApplicationContext applicationContext,
-                                  IAgvService agvService/*,
+                                  IAgvService agvService,
+                                  IWarehouseService warehouseService,
+                                  ObserverService observerService/*,
                                   IAssemblyService assemblyStationService*/) {
         this.applicationContext = applicationContext;
         this.agvService = agvService;
+        this.warehouseService = warehouseService;
+        this.observerService = observerService;
         //this.assemblyStationService = assemblyStationService;
     }
 
     @PostConstruct
     private void init() {
         //IAgvService = applicationContext.getBeansOfType(IAgvService.class).values().stream().toList().get(0); // get(0) da vi kun har én service klasse per machine
-        warehouseService = applicationContext.getBeansOfType(IWarehouseService.class).values().stream().toList().get(0);
+        //warehouseService = applicationContext.getBeansOfType(IWarehouseService.class).values().stream().toList().get(0);
     }
 
     @Override
@@ -46,6 +60,13 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
                 UUID availableAgvUuid = agvService.getAvailableAgv();
                 //move avaible agv to warehouse with item
                 agvService.agvMoveToWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
+                /*try {
+                    waitForAgvToBeIdle(availableAgvUuid);
+                } catch (InterruptedException | TimeoutException e) {
+                    throw new RuntimeException("Failed to wait for AGV to be idle", e);
+                }
+
+                 */
                 //pick item from warehouse
                 try {
                     warehouseService.pickItemFromWarehouse(warehouseUuidForWarehouseWithItem, part.getId());
@@ -56,20 +77,26 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
                 }
                 //pick item to agv
                 agvService.agvPickUpItemFromWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem, (Item) part);
+                /*try {
+                    waitForAgvToBeIdle(availableAgvUuid);
+                } catch (InterruptedException | TimeoutException e) {
+                    throw new RuntimeException("Failed to wait for AGV to be idle", e);
+                }
+                 */
                 //get available assembly station
-                UUID availableAssemblyStationUuid = assemblyStationService.getAvailableAssemblyId();
+                //UUID availableAssemblyStationUuid = assemblyStationService.getAvailableAssemblyId();
                 //move agv to assembly station
-                agvService.agvMoveToAssemblyStation(availableAgvUuid,availableAssemblyStationUuid);
+                //agvService.agvMoveToAssemblyStation(availableAgvUuid,availableAssemblyStationUuid);
                 //drop item at assembly station
-                agvService.agvPutItemOnAssemblyStation(availableAgvUuid, availableAssemblyStationUuid);
+                //agvService.agvPutItemOnAssemblyStation(availableAgvUuid, availableAssemblyStationUuid);
                 //assemble item
-                assemblyStationService.assembleItem(availableAssemblyStationUuid, (Item) part);
+                //assemblyStationService.assembleItem(availableAssemblyStationUuid, (Item) part);
                 //pick item from assembly station
-                agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, availableAssemblyStationUuid, (Item) part);
+                //agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, availableAssemblyStationUuid, (Item) part);
                 //move agv to warehouse
-                agvService.agvMoveToWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
+                //agvService.agvMoveToWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
                 //put item in warehouse
-                agvService.agvPutItemIntoWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
+                //agvService.agvPutItemIntoWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
             }
         }
     }
@@ -83,5 +110,9 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
     public void onApplicationEvent(ApplicationReadyEvent event) {
         System.out.println(warehouseService.getWarehousesWithEmptySpace());
     }
+
+
+
+
 
 }

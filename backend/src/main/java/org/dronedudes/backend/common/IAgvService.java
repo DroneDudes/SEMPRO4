@@ -1,15 +1,18 @@
 package org.dronedudes.backend.common;
 
+import org.dronedudes.backend.agv.state.AgvStateEnum;
+
 import java.util.UUID;
 
 public interface IAgvService {
-    public boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId);
-    public boolean agvMoveToWarehouse(UUID agvMachineId, UUID destinationMachineId);
-    public boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId, Item item);
-    public boolean agvPutItemOnAssemblyStation(UUID agvMachineId,UUID assemblyStationMachineId);
-    public boolean agvPickUpItemFromWarehouse(UUID agvMachineId, UUID warehouseMachineId, Item item);
-    public boolean agvPutItemIntoWarehouse(UUID agvMachineId, UUID warehouseMachineId);
-    public boolean agvMoveToChargingStation(UUID agvMachineId, UUID chargerId);
-    public UUID getAvailableAgv();
-    public void test();
+    boolean agvMoveToAssemblyStation(UUID agvId, UUID destinationMachineId);
+    boolean agvMoveToWarehouse(UUID agvMachineId, UUID destinationMachineId);
+    boolean agvPickUpItemFromAssemblyStation(UUID agvMachineId, UUID assemblyStationMachineId, Item item);
+    boolean agvPutItemOnAssemblyStation(UUID agvMachineId,UUID assemblyStationMachineId);
+    boolean agvPickUpItemFromWarehouse(UUID agvMachineId, UUID warehouseMachineId, Item item);
+    boolean agvPutItemIntoWarehouse(UUID agvMachineId, UUID warehouseMachineId);
+    boolean agvMoveToChargingStation(UUID agvMachineId, UUID chargerId);
+    UUID getAvailableAgv();
+    AgvStateEnum getAgvState(UUID agvMachineId);
+
 }

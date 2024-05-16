@@ -21,20 +21,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Service
 @RequiredArgsConstructor
 @Getter
 @Transactional
 public class AgvService implements PublisherInterface, IAgvService {
-    @Override public void test() {
-        System.out.println("test");
-    }
     private final AgvRepository agvRepository;
     private Map<UUID, Agv> agvMap = new HashMap<>();
 
     private final ObserverService observerService;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final Object agvStateLock = new Object();
 
     @PostConstruct
     public void fetchAllSystemAgvs() {
@@ -134,10 +135,15 @@ public class AgvService implements PublisherInterface, IAgvService {
             postParameters.put("State", "2");
             requestEntity = new HttpEntity<>(jsonParams, headers);
             restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            waitForAgvToBeIdle(agv.getUuid());
             return true;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return false;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -236,5 +242,25 @@ public class AgvService implements PublisherInterface, IAgvService {
             return null;
         }
         return returnSingleAgv().get().getUuid();
+    }
+
+    @Override
+    public AgvStateEnum getAgvState(UUID agvMachineId){
+        return agvMap.get(agvMachineId).getAgvState();
+    }
+
+    private void waitForAgvToBeIdle(UUID agvMachineId) throws InterruptedException, TimeoutException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        synchronized (agvStateLock) {
+            while (!isAgvIdle(agvMachineId)) {
+                if (!latch.await(10, TimeUnit.SECONDS)) {
+                    throw new TimeoutException("AGV did not become idle within the timeout period");
+                }
+            }
+        }
+    }
+    public boolean isAgvIdle(UUID agvMachineId){
+        return getAgvState(agvMachineId).equals(AgvStateEnum.IDLE_STATE);
     }
 }
