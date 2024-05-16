@@ -47,7 +47,7 @@ public class AssemblySseService implements SubscriberInterface {
     @PostConstruct
     public void subscribe() {
         for(UUID machineId: assemblyService.getAssemblyMap().keySet()){
-            observerService.subscribe((machineId), this);
+            observerService.subscribe(machineId, this);
         }
     }
 
@@ -58,6 +58,7 @@ public class AssemblySseService implements SubscriberInterface {
         for (SseEmitter emitter: emitters) {
             try {
                 SseEmitter.SseEventBuilder event = SseEmitter.event().data(assemblyStation).name("assemblyEvent");
+                System.out.println("SSE Event " + event);
                 emitter.send(event);
             } catch (IOException e) {
                 emitter.complete();

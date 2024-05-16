@@ -27,4 +27,7 @@ public class AssemblyStation extends Machine {
 
     @Transient
     private int operationId;
+
+    @Transient
+    private String product;
 }
