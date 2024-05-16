@@ -11,7 +11,7 @@ public interface IAgvService {
     boolean agvPutItemOnAssemblyStation(UUID agvMachineId,UUID assemblyStationMachineId);
     boolean agvPickUpItemFromWarehouse(UUID agvMachineId, UUID warehouseMachineId, Item item);
     boolean agvPutItemIntoWarehouse(UUID agvMachineId, UUID warehouseMachineId);
-    boolean agvMoveToChargingStation(UUID agvMachineId, UUID chargerId);
+    boolean agvMoveToChargingStation(UUID agvMachineId);
     UUID getAvailableAgv();
     AgvStateEnum getAgvState(UUID agvMachineId);
 

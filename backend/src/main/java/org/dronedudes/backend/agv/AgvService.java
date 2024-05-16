@@ -20,6 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +40,7 @@ public class AgvService implements PublisherInterface, IAgvService {
     private final ObserverService observerService;
     private final RestTemplate restTemplate = new RestTemplate();
     private final Object agvStateLock = new Object();
+    private CountDownLatch latch = new CountDownLatch(1);
 
     @PostConstruct
     public void fetchAllSystemAgvs() {
@@ -68,7 +73,9 @@ public class AgvService implements PublisherInterface, IAgvService {
                 JsonNode agvNode = new ObjectMapper().readTree(agvJson);
                 int battery = agvNode.get("battery").intValue();
                 String programName = agvNode.get("program name").textValue();
+                System.out.println(programName);
                 int state = agvNode.get("state").intValue();
+
 
                 AgvProgramEnum agvProgram = AgvProgramEnum.find(programName);
                 AgvStateEnum agvState = AgvStateEnum.find(state);
@@ -84,7 +91,14 @@ public class AgvService implements PublisherInterface, IAgvService {
                 agv.setBattery(battery);
                 agv.setAgvProgram(agvProgram);
                 agv.setAgvState(agvState);
-
+                if(agvState.equals(AgvStateEnum.EXECUTING_STATE) && latch.getCount()==2L){
+                    latch.countDown();
+                    System.out.println("Latch counted down. AGV state = " + agv.getAgvState() + "time: " + Timestamp.from(Instant.now()));
+                }
+                if(agvState.equals(AgvStateEnum.IDLE_STATE) && latch.getCount()==1L){
+                    latch.countDown();
+                    System.out.println("Latch counted down. AGV state = " + agv.getAgvState() + "time: " + Timestamp.from(Instant.now()));
+                }
                 notifyChange(agv.getUuid());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,6 +135,7 @@ public class AgvService implements PublisherInterface, IAgvService {
 
     public boolean loadAndExecutePutCommand(Agv agv, String command) {
         try {
+            AgvStateEnum agvStateEnum = agv.getAgvState();
             String endpointUrl = agv.getEndpointUrl();
             HttpHeaders headers = getHeadersForPutCommand();
             Map<String, String> postParameters = new HashMap<>();
@@ -129,12 +144,30 @@ public class AgvService implements PublisherInterface, IAgvService {
             ObjectMapper mapper = new ObjectMapper();
             String jsonParams = mapper.writeValueAsString(postParameters);
             HttpEntity<String> requestEntity = new HttpEntity<>(jsonParams, headers);
-            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            Object o = null;
+            o = restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            while (!agvStateEnum.equals(AgvStateEnum.IDLE_STATE)) {
+
+            }
+            agvStateEnum = agv.getAgvState();
+            Instant now = Instant.now();
+            Instant end = now.plus(1000, ChronoUnit.MILLIS);
 
             postParameters.clear();
             postParameters.put("State", "2");
             requestEntity = new HttpEntity<>(jsonParams, headers);
-            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            Object o1 = null;
+            o1 = restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
+            while (!agvStateEnum.equals(AgvStateEnum.IDLE_STATE)) {
+            }
+            agvStateEnum = agv.getAgvState();
+            while (o1=="Already executing a task." || o1==null) {
+            }
+            Instant now1 = Instant.now();
+            Instant end1 = now.plus(10000, ChronoUnit.MILLIS);
+
+            while (Instant.now().isBefore(end1)) {
+            }
             waitForAgvToBeIdle(agv.getUuid());
             return true;
         } catch (JsonProcessingException e) {
@@ -145,6 +178,11 @@ public class AgvService implements PublisherInterface, IAgvService {
         } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Scheduled(fixedDelay = 10000)
+    public void movetowh(){
+        agvMoveToWarehouse(agvMap.values().stream().findFirst().get().getUuid(),new UUID(0,0));
     }
 
     @Override
@@ -225,14 +263,14 @@ public class AgvService implements PublisherInterface, IAgvService {
     }
 
     @Override
-    public boolean agvMoveToChargingStation(UUID agvMachineId, UUID chargerId) {
+    public boolean agvMoveToChargingStation(UUID agvMachineId) {
         Agv agv = agvMap.get(agvMachineId);
         loadAndExecutePutCommand(agv, "MoveToChargerOperation");
 
         //Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Charger with Id: " + chargerId);
+        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Charger with Id: ??");
         return true;
     }
 
@@ -250,7 +288,7 @@ public class AgvService implements PublisherInterface, IAgvService {
     }
 
     private void waitForAgvToBeIdle(UUID agvMachineId) throws InterruptedException, TimeoutException {
-        CountDownLatch latch = new CountDownLatch(1);
+        latch = new CountDownLatch(2);
 
         synchronized (agvStateLock) {
             while (!isAgvIdle(agvMachineId)) {
@@ -258,6 +296,7 @@ public class AgvService implements PublisherInterface, IAgvService {
                     throw new TimeoutException("AGV did not become idle within the timeout period");
                 }
             }
+            System.out.println(getAgvState(agvMachineId) + " time: " + Timestamp.from(Instant.now()));
         }
     }
     public boolean isAgvIdle(UUID agvMachineId){
