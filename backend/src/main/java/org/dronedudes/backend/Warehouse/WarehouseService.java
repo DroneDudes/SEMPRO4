@@ -122,6 +122,7 @@ public class WarehouseService implements IWarehouseService {
     public Warehouse addItemToWarehouse(Long warehouseId, Item item)
             throws WarehouseNotFoundException, WarehouseFullException {
 
+
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new WarehouseNotFoundException(warehouseId));
 
@@ -134,6 +135,15 @@ public class WarehouseService implements IWarehouseService {
         warehouses.put(warehouse.getId(), warehouse);
         eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;
+    }
+
+    @Transactional
+    public Warehouse addItemToWarehouse(UUID warehouseUUID, Item item) throws WarehouseNotFoundException, WarehouseFullException {
+        Optional<Warehouse> warehouseOptional = findWarehouseByUUID(warehouseUUID);
+        if(warehouseOptional.isPresent()){
+            return addItemToWarehouse(warehouseOptional.get().getId(), item);
+        }
+        return null;
     }
 
     private Long findFirstAvailableSlot(Warehouse warehouse) throws WarehouseFullException {
@@ -213,5 +223,11 @@ public class WarehouseService implements IWarehouseService {
             }
         });
         return warehousesWithEmptySpace;
+    }
+
+    public Optional<Warehouse> findWarehouseByUUID(UUID warehouseUuid) {
+        return warehouses.values().stream()
+                .filter(warehouse -> warehouse.getUuid().equals(warehouseUuid))
+                .findFirst();
     }
 }

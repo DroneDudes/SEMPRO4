@@ -56,8 +56,9 @@ public class Blueprint implements IBlueprint {
         }
         this.parts.add((Part) IPart);
     }
+
     @Override
-    public Set<IPart> getParts() {
+    public Set<IPart> getIParts() {
         return parts.stream().map(part -> (IPart) part).collect(Collectors.toSet());
     }
 }

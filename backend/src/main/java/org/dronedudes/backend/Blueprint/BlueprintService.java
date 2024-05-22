@@ -42,7 +42,6 @@ public class BlueprintService {
             }
         }
         blueprintRepository.save(blueprint);
-
         return blueprint;
     }
 
@@ -66,23 +65,4 @@ public class BlueprintService {
         blueprintRepository.deleteById(blueprintId);
     }
 
-    /*
-    @Transactional()
-    public boolean addPartToBlueprint(long blueprint_ID,long part_ID) {
-        Optional<Blueprint> blueprintOpt = blueprintRepository.findById(blueprint_ID);
-        Optional<Part> partOpt = partRepository.findById(part_ID);
-
-        if (blueprintOpt.isPresent() && partOpt.isPresent()) {
-            Blueprint blueprint = blueprintOpt.get();
-            Part part = partOpt.get();
-            blueprint.getBlueprintParts().add(part);
-            System.out.println(blueprint);
-            System.out.println(blueprintRepository.save(blueprint));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-     */
 }

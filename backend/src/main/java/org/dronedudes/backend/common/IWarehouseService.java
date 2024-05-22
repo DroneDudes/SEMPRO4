@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IWarehouseService {
-    Warehouse addItemToWarehouse(Long warehouseId, Item item) throws WarehouseNotFoundException, WarehouseFullException;
+    Warehouse addItemToWarehouse(UUID warehouseId, Item item) throws WarehouseNotFoundException, WarehouseFullException;
     List<UUID> getWarehousesWithEmptySpace();
     Warehouse removeItemFromWarehouse(Long warehouseId, Long trayId) throws WarehouseNotFoundException, ItemNotFoundInWarehouse;
     UUID findWarehouseWithItem(Long itemId);

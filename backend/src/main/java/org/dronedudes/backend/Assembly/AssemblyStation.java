@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.common.Machine;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

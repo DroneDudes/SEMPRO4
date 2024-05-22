@@ -6,6 +6,6 @@ public interface IBlueprint {
     Long getId();
     String getProductTitle();
     String getDescription();
-    Set<IPart> getParts();
+    Set<IPart> getIParts();
     void addPart(IPart IPart);
 }
