@@ -4,9 +4,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.dronedudes.backend.Blueprint.Blueprint;
+import org.dronedudes.backend.Product.Product;
 import org.dronedudes.backend.common.IAssemblyService;
 import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.PublisherInterface;
+import org.dronedudes.backend.item.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -109,6 +111,10 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
             AssemblyStation assemblyStation = assemblyMap.get(availableAssemblyStationUuid);
             int processId = assemblyStation.getProcessId();
             assemblyStation.setBlueprintName("Assembling blueprint " + blueprint.getProductTitle());
+            Product product = new Product();
+            product.setName(blueprint.getProductTitle());
+            product.setDescription(blueprint.getDescription());
+            assemblyStation.setProduct(product);
             startProduction(processId + 1);
 
             try {
@@ -123,6 +129,11 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
             }
         }
         return false;
+    }
+
+    @Override
+    public Item getFinishedProductInAssemblyStation(UUID assemblyStationId) {
+        return assemblyMap.get(assemblyStationId).getProduct();
     }
 
     public boolean checkIfProcessing(){

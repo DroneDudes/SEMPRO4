@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.common.Machine;
+import org.dronedudes.backend.item.Item;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,4 +29,7 @@ public class AssemblyStation extends Machine {
 
     @Transient
     private String blueprintName;
+
+    @Transient
+    Item product;
 }
