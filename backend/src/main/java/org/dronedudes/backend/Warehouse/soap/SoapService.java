@@ -1,9 +1,8 @@
 package org.dronedudes.backend.Warehouse.soap;
 
 
-import jakarta.annotation.PostConstruct;
 import org.dronedudes.backend.Warehouse.Warehouse;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;

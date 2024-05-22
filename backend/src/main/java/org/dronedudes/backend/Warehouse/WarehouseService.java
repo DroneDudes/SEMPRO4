@@ -5,7 +5,8 @@ import jakarta.transaction.Transactional;
 import org.dronedudes.backend.Warehouse.exceptions.*;
 import org.dronedudes.backend.Warehouse.soap.SoapService;
 import org.dronedudes.backend.Warehouse.sse.SseWarehouseUpdateEvent;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.IWarehouseService;
+import org.dronedudes.backend.common.Item;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class WarehouseService{
+public class WarehouseService implements IWarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final SoapService soapService;
 
@@ -53,6 +54,23 @@ public class WarehouseService{
         }
         eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;
+    }
+
+    public UUID findWarehouseWithItem(Long itemId){
+        for(Warehouse warehouse : warehouses.values()){
+            for(Item item : warehouse.getItems().values()){
+                if(item.getId().equals(itemId)){
+                    return warehouse.getUuid();
+                }
+            }
+        }
+        return null;
+    }
+
+    public Optional<Warehouse> getWarehouseByUuid(UUID warehouseId) {
+        return warehouses.values().stream()
+                .filter(warehouse -> warehouse.getUuid().equals(warehouseId))
+                .findFirst();
     }
 
 
@@ -139,6 +157,25 @@ public class WarehouseService{
         return true;
     }
 
+    @Override
+    public boolean pickItemFromWarehouse(UUID warehouseId, Long itemId) throws WarehouseNotFoundException, ItemNotFoundInWarehouse {
+        Optional<Warehouse> warehouseOptional = getWarehouseByUuid(warehouseId);
+        if(warehouseOptional.isEmpty()){
+            throw new WarehouseNotFoundException(0L);
+        }
+        Long trayId = null;
+        for(Map.Entry<Long, Item> entry : warehouseOptional.get().getItems().entrySet()){
+            if(entry.getValue().getId().equals(itemId)){
+                trayId = entry.getKey();
+                break;
+            }
+        }
+        if(trayId == null) {
+            throw new ItemNotFoundInWarehouse(itemId, warehouseOptional.get().getId());
+        }
+        removeItemFromWarehouse(warehouseOptional.get().getId(), trayId);
+        return true;
+    }
     @Transactional
     public Warehouse removeItemFromWarehouse(Long warehouseId, Long trayId)
             throws WarehouseNotFoundException, ItemNotFoundInWarehouse {
@@ -164,4 +201,17 @@ public class WarehouseService{
         return List.of(WarehouseModel.EFFIMAT10);
     }
 
+    @Override
+    public List<UUID> getWarehousesWithEmptySpace() {
+        List<UUID> warehousesWithEmptySpace = new ArrayList<>();
+        warehouses.values().forEach(warehouse -> {
+            try {
+                findFirstAvailableSlot(warehouse);
+                warehousesWithEmptySpace.add(warehouse.getUuid());
+            } catch (WarehouseFullException ignored) {
+
+            }
+        });
+        return warehousesWithEmptySpace;
+    }
 }

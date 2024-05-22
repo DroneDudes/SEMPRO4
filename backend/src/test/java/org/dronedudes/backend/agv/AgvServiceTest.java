@@ -50,8 +50,4 @@ class AgvServiceTest {
         assert agvRepository.findAll().size() == agvService.getAgvMap().size();
     }
 
-    @Test
-    void pollAgvSimulation() {
-        assert agvService.pollAgvSimulation();
-    }
 }

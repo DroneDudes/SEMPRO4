@@ -1,9 +1,7 @@
 package org.dronedudes.backend.Warehouse.exceptions;
 
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NonEmptyWarehouseException extends Exception {

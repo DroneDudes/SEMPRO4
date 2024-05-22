@@ -2,7 +2,7 @@ package org.dronedudes.backend.Warehouse.soap;
 
 import org.dronedudes.backend.Part.Part;
 import org.dronedudes.backend.Warehouse.Warehouse;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

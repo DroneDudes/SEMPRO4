@@ -7,19 +7,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.Part.Part;
+import org.dronedudes.backend.common.IBlueprint;
+import org.dronedudes.backend.common.IPart;
 
 import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Blueprint {
+public class Blueprint implements IBlueprint {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -38,12 +38,26 @@ public class Blueprint {
             inverseJoinColumns = @JoinColumn(name = "part_id")
     )
     private Set<Part> parts = new HashSet<>();
-
+    /*
     public void addPart(Part part) {
         if (this.parts == null) {
             this.parts = new HashSet<>() {
             };
         }
         this.parts.add(part);
+    }
+    */
+
+    @Override
+    public void addPart(IPart IPart) {
+        if (this.parts == null) {
+            this.parts = new HashSet<>() {
+            };
+        }
+        this.parts.add((Part) IPart);
+    }
+    @Override
+    public Set<IPart> getParts() {
+        return parts.stream().map(part -> (IPart) part).collect(Collectors.toSet());
     }
 }

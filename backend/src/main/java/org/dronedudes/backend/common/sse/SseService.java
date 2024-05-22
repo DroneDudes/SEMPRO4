@@ -1,6 +1,6 @@
 package org.dronedudes.backend.common.sse;
+
 import lombok.RequiredArgsConstructor;
-import org.dronedudes.backend.common.ObserverService;
 import org.dronedudes.backend.common.logging.LogEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,7 +12,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @RequiredArgsConstructor
 public class SseService {
-    private final ObserverService observerService;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
     public void addEmitter(SseEmitter emitter) {

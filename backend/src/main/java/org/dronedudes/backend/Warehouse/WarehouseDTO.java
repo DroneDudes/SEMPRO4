@@ -3,7 +3,7 @@ package org.dronedudes.backend.Warehouse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 
 import java.util.Map;
 

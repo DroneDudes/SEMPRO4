@@ -1,11 +1,10 @@
 package org.dronedudes.backend.Warehouse;
 
-import org.dronedudes.backend.item.Item;
+import org.dronedudes.backend.common.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Map;
 
 @Repository
