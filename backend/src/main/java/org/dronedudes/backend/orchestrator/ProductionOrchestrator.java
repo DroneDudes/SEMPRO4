@@ -42,6 +42,9 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
     @Override
     public void startProduction(int amount, IBlueprint IBlueprint) {
         for(int i = 0; i < amount; i++) {
+            //get available assembly station
+            //UUID availableAssemblyStationUuid = assemblyStationService.getAvailableAssemblyId();
+
             for(IPart part : IBlueprint.getParts()){
                 //find warehouse that has the part
                 UUID warehouseUuidForWarehouseWithItem = warehouseService.findWarehouseWithItem(part.getId());
@@ -65,21 +68,20 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
                 //pick item to agv
                 agvService.agvPickUpItemFromWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem, (Item) part);
 
-                //get available assembly station
-                //UUID availableAssemblyStationUuid = assemblyStationService.getAvailableAssemblyId();
+
                 //move agv to assembly station
                 //agvService.agvMoveToAssemblyStation(availableAgvUuid,availableAssemblyStationUuid);
                 //drop item at assembly station
                 //agvService.agvPutItemOnAssemblyStation(availableAgvUuid, availableAssemblyStationUuid);
-                //assemble item
-                //assemblyStationService.assembleItem(availableAssemblyStationUuid, (Item) part);
-                //pick item from assembly station
-                //agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, availableAssemblyStationUuid, (Item) part);
-                //move agv to warehouse
-                //agvService.agvMoveToWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
-                //put item in warehouse
-                //agvService.agvPutItemIntoWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
+
             }
+            //assemble item
+            //assemblyStationService.assembleItem(availableAssemblyStationUuid, (Item) part);
+            //move agv to assembly station
+            //agvService.agvMoveToAssemblyStation(availableAgvUuid,availableAssemblyStationUuid);
+            //pick item from assembly station
+            //agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, availableAssemblyStationUuid, (Item) part);
+
         }
     }
 
