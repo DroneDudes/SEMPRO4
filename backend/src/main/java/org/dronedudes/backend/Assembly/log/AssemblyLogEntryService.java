@@ -32,6 +32,10 @@ public class AssemblyLogEntryService implements LoggerInterface {
 
     }
 
+    public AssemblyLogEntry getLastAssemblyLog() {
+        return assemblyLogEntryRepository.findTopByOrderByTimestampDesc();
+    }
+
     public void save(AssemblyLogEntry assemblyLogEntry){
         assemblyLogEntryRepository.save(assemblyLogEntry);
     }

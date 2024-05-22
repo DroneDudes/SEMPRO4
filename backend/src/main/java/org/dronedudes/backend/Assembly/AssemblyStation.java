@@ -21,8 +21,10 @@ public class AssemblyStation extends Machine {
 
     private String endpointUrl = "tcp://localhost:9001";
 
+    private String name;
+
     @Transient
-    private int state;
+    private AssemblyStateEnum state;
 
     @Transient
     private int processId;
@@ -32,4 +34,6 @@ public class AssemblyStation extends Machine {
 
     @Transient
     Item product;
+
+
 }

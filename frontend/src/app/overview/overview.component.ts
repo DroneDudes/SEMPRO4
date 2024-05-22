@@ -4,12 +4,13 @@ import { WarehouseComponent } from '../warehouse/warehouse.component';
 import { MachineLogComponent } from '../machine-log/machine-log.component';
 import { AgvStatusComponent } from '../agv/agv-status/agv-status.component';
 import { ProductionBatchComponent } from '../production/production-batch/production-batch.component';
+import { AssemblyComponent } from '../assembly/assembly.component';
 
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [AgvComponent, WarehouseComponent, MachineLogComponent, AgvStatusComponent, ProductionBatchComponent],
+  imports: [AgvComponent, WarehouseComponent, MachineLogComponent, AgvStatusComponent, ProductionBatchComponent, AssemblyComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.css'
 })

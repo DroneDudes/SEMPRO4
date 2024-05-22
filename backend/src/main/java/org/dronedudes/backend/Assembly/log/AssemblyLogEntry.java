@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dronedudes.backend.Assembly.AssemblyStation;
+import org.dronedudes.backend.agv.Agv;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +31,7 @@ public class AssemblyLogEntry {
     @ManyToOne()
     @JoinColumn(name = "assembly_station")
     private AssemblyStation assemblyStation;
+
 
     public AssemblyLogEntry(int operationId, int state, AssemblyStation assemblyStation) {
         this.operationId = operationId;

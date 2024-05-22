@@ -3,6 +3,9 @@ package org.dronedudes.backend.Assembly;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.Data;
+import org.dronedudes.backend.Assembly.log.AssemblyLogEntry;
+import org.dronedudes.backend.Assembly.log.AssemblyLogEntryRepository;
+import org.dronedudes.backend.Assembly.log.AssemblyLogEntryService;
 import org.dronedudes.backend.Blueprint.Blueprint;
 import org.dronedudes.backend.Product.Product;
 import org.dronedudes.backend.Product.ProductService;
@@ -23,7 +26,9 @@ import static java.lang.Thread.sleep;
 @Data
 public class AssemblyService implements PublisherInterface, IAssemblyService {
 
+    private final AssemblyLogEntryRepository assemblyLogEntryRepository;
     private Map<UUID, AssemblyStation> assemblyMap = new HashMap<>();
+    private final AssemblyLogEntryService assemblyLogEntryService;
     private final AssemblyRepository assemblyRepository;
     private final AssemblyConnection assemblyConnection;
     private final ProductService productService;
@@ -35,12 +40,14 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
     int operationId;
 
     @Autowired
-    public AssemblyService(AssemblyRepository assemblyRepository, AssemblyConnection assemblyConnection, ProductService productService, ObserverService observerService) {
+    public AssemblyService(AssemblyRepository assemblyRepository, AssemblyConnection assemblyConnection, ProductService productService, ObserverService observerService, AssemblyLogEntryRepository assemblyLogEntryRepository, AssemblyLogEntryService assemblyLogEntryService) {
         this.assemblyRepository = assemblyRepository;
         this.assemblyConnection = assemblyConnection;
         this.productService = productService;
         this.observerService = observerService;
+        this.assemblyLogEntryService = assemblyLogEntryService;
         this.assemblyConnection.subscribeToStateAndCurrentOperation();
+        this.assemblyLogEntryRepository = assemblyLogEntryRepository;
     }
 
 //    @PostConstruct
@@ -51,6 +58,8 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
     @PostConstruct
     public void saveAssemblyStationOnStart(){
         AssemblyStation assemblyStation = new AssemblyStation();
+        assemblyStation.setName("Assembly 1");
+        assemblyStation.setState(AssemblyStateEnum.IDLE);
         assemblyMap.put(assemblyStation.getUuid(), assemblyStation);
         notifyChange(assemblyStation.getUuid());
         assemblyRepository.save(assemblyStation);
@@ -65,10 +74,24 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
         for(AssemblyStation assemblyStation: assemblyMap.values()){
             currentState = Integer.parseInt(assemblyConnection.getState());
             operationId = Integer.parseInt(assemblyConnection.getCurrentOperation());
-            if(assemblyStation.getState() != currentState || assemblyStation.getProcessId() != operationId){
-                assemblyStation.setState(currentState);
+            if(assemblyStation.getState().getState() != currentState || assemblyStation.getProcessId() != operationId){
+                switch (currentState) {
+                    case 0:
+                        assemblyStation.setState(AssemblyStateEnum.IDLE);
+                        break;
+                    case 1:
+                        assemblyStation.setState(AssemblyStateEnum.EXECUTING);
+                        break;
+                    case 2:
+                        assemblyStation.setState(AssemblyStateEnum.ERROR);
+                        break;
+                    default:
+                        assemblyStation.setState(AssemblyStateEnum.IDLE);
+                        break;
+                }
                 assemblyStation.setProcessId(operationId);
                 notifyChange(assemblyStation.getUuid());
+                assemblyLogEntryService.save(new AssemblyLogEntry(assemblyStation.getState().getState(),assemblyStation.getProcessId(), assemblyStation));
                 System.out.println("Change registered in observer");
             }
         }
@@ -82,7 +105,7 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
     @Override
     public UUID getAvailableAssemblyId() {
         for (Map.Entry<UUID, AssemblyStation> entry : assemblyMap.entrySet()) {
-            if (entry.getValue().getState() == 0) {
+            if (entry.getValue().getState().getState() == 0) {
                 return entry.getValue().getUuid();
             }
         }
@@ -103,7 +126,7 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
         //if(availableAssemblyStationUuid != null){
             AssemblyStation assemblyStation = assemblyMap.get(availableAssemblyStationUuid);
             int processId = assemblyStation.getProcessId();
-            assemblyStation.setBlueprintName("Assembling blueprint " + blueprint.getProductTitle());
+            assemblyStation.setBlueprintName(blueprint.getProductTitle());
             Product product = productService.saveProduct(blueprint.getProductTitle(), blueprint.getDescription());
             assemblyStation.setProduct(product);
             startProduction(processId + 1);
