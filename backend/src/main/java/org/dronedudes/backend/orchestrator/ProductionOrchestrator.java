@@ -9,23 +9,24 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.*;
 
 @Service
-public class ProductionOrchestrator implements IMachineOrchestrator, ApplicationListener<ApplicationReadyEvent> {
+public class ProductionOrchestrator implements IMachineOrchestrator {
 
     private final ApplicationContext applicationContext;
     private final IAgvService agvService;
-    private IAssemblyService assemblyStationService;
+    //private final IAssemblyService assemblyStationService;
     private final IWarehouseService warehouseService;
     private final ObserverService observerService;
 
+    private final Map<UUID, ProductionState> productionStates = new HashMap<>();
 
     public ProductionOrchestrator(ApplicationContext applicationContext,
                                   IAgvService agvService,
                                   IWarehouseService warehouseService,
-                                  ObserverService observerService/*,
-                                  IAssemblyService assemblyStationService*/) {
+                                  ObserverService observerService
+                                  /*IAssemblyService assemblyStationService*/) {
         this.applicationContext = applicationContext;
         this.agvService = agvService;
         this.warehouseService = warehouseService;
@@ -41,6 +42,12 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
 
     @Override
     public void startProduction(int amount, IBlueprint IBlueprint) {
+        // creating a new production state with a new uuuid
+        UUID productionId = UUID.randomUUID();
+        ProductionState productionState = new ProductionState(productionId);
+        // saving it to the map
+        productionStates.put(productionId, productionState);
+
         for(int i = 0; i < amount; i++) {
             //get available assembly station
             //UUID availableAssemblyStationUuid = assemblyStationService.getAvailableAssemblyId();
@@ -54,49 +61,82 @@ public class ProductionOrchestrator implements IMachineOrchestrator, Application
                 }
                 //find available agv
                 UUID availableAgvUuid = agvService.getAvailableAgv();
-                //move avaible agv to warehouse with item
+                //move available agv to warehouse with item
                 agvService.agvMoveToWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem);
 
                 //pick item from warehouse to tray
                 try {
                     warehouseService.pickItemFromWarehouse(warehouseUuidForWarehouseWithItem, part.getId());
-                } catch (WarehouseNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (ItemNotFoundInWarehouse e) {
+                } catch (WarehouseNotFoundException | ItemNotFoundInWarehouse e) {
                     throw new RuntimeException(e);
                 }
                 //pick item to agv
                 agvService.agvPickUpItemFromWarehouse(availableAgvUuid, warehouseUuidForWarehouseWithItem, (Item) part);
-
+                productionState.addPartOnAgv(part.getId(), availableAgvUuid);
 
                 //move agv to assembly station
-                //agvService.agvMoveToAssemblyStation(availableAgvUuid,availableAssemblyStationUuid);
+                //agvService.agvMoveToAssemblyStation(availableAgvUuid, availableAssemblyStationUuid);
                 //drop item at assembly station
                 //agvService.agvPutItemOnAssemblyStation(availableAgvUuid, availableAssemblyStationUuid);
-
+                //productionState.removePartFromAgv(part.getId());
+                //productionState.addPartOnAssemblyStation(part.getId(), availableAssemblyStationUuid);
             }
+
             //assemble item
-            //assemblyStationService.assembleItem(availableAssemblyStationUuid, (Item) part);
+            //assemblyStationService.assembleItem(availableAssemblyStationUuid, (Item) IBlueprint);
+            //productionState.removePartFromAssemblyStation(IBlueprint.getParts().stream().toList().get(0).getId());
+
+            //UUID availableAgvUuid = agvService.getAvailableAgv();
             //move agv to assembly station
-            //agvService.agvMoveToAssemblyStation(availableAgvUuid,availableAssemblyStationUuid);
+            //agvService.agvMoveToAssemblyStation(availableAgvUuid, availableAssemblyStationUuid);
             //pick item from assembly station
-            //agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, availableAssemblyStationUuid, (Item) part);
+            //agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, availableAssemblyStationUuid, (Item) IBlueprint);
+            //productionState.addPartOnAgv(IBlueprint.getParts().stream().toList().get(0).getId(), availableAgvUuid);
 
+            // move item to warehouse
+            //UUID emptyWarehouseUuid = warehouseService.getWarehousesWithEmptySpace().get(0);
+            //agvService.agvMoveToWarehouse(availableAgvUuid, emptyWarehouseUuid);
+            //agvService.agvPutItemIntoWarehouse(availableAgvUuid, emptyWarehouseUuid);
+            //productionState.removePartFromAgv(IBlueprint.getParts().stream().toList().get(0).getId());
         }
+
+        //productionStates.remove(productionId);
     }
 
     @Override
-    public void stopProduction() {
+    public void stopProduction(UUID productionId) {
+        ProductionState productionState = productionStates.get(productionId);
+        if (productionState == null) {
+            System.out.println("Production not found");
+            return;
+        }
 
+        // empties the agv
+        for (Map.Entry<Long, UUID> entry : productionState.getPartsOnAgv().entrySet()) {
+            // get the agv uuid that carries a part tied to this production
+            UUID agvId = entry.getValue();
+
+            UUID emptyWarehouseUuid = warehouseService.getWarehousesWithEmptySpace().get(0);
+            agvService.agvMoveToWarehouse(agvId, emptyWarehouseUuid);
+            agvService.agvPutItemIntoWarehouse(agvId, emptyWarehouseUuid);
+        }
+
+        // empties the assembly station
+        for (Map.Entry<Long, UUID> entry : productionState.getPartsOnAssemblyStation().entrySet()) {
+            // get the assembly station uuid that has part(s) for this production
+            UUID assemblyStationId = entry.getValue();
+
+            UUID availableAgvUuid = agvService.getAvailableAgv();
+            agvService.agvMoveToAssemblyStation(availableAgvUuid, assemblyStationId);
+
+            //Item item = assemblyStationService.getFinishedProductInAssemblyStation(assemblyStationId);
+            //agvService.agvPickUpItemFromAssemblyStation(availableAgvUuid, assemblyStationId, item);
+
+            UUID emptyWarehouseUuid = warehouseService.getWarehousesWithEmptySpace().get(0);
+            agvService.agvMoveToWarehouse(availableAgvUuid, emptyWarehouseUuid);
+            agvService.agvPutItemIntoWarehouse(availableAgvUuid, emptyWarehouseUuid);
+        }
+
+        productionStates.remove(productionId);
     }
-
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
-        System.out.println(warehouseService.getWarehousesWithEmptySpace());
-    }
-
-
-
-
-
 }
