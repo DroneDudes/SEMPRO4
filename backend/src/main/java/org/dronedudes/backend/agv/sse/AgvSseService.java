@@ -16,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 @RequiredArgsConstructor
 public class AgvSseService implements SubscriberInterface {
+
     private final AgvService agvService;
     private final ObserverService observerService;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();

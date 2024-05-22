@@ -32,11 +32,13 @@ public class BlueprintService {
         Blueprint blueprint = new Blueprint();
         blueprint.setProductTitle(createRequest.getProductTitle());
         blueprint.setDescription(createRequest.getDescription());
+        System.out.println(createRequest.getPartsList());
         for (Long partID : createRequest.getPartsList()) {
             Optional<Part> partOpt = partRepository.findById(partID);
+            System.out.println(partOpt.get().getId());
             if (partOpt.isPresent()) {
                 Part part = partOpt.get();
-                blueprint.addPart(part);
+                blueprint.getParts().add(part);
             }
         }
         blueprintRepository.save(blueprint);
@@ -44,19 +46,23 @@ public class BlueprintService {
         return blueprint;
     }
 
+    public Blueprint saveBlueprint(Blueprint blueprint) {
+        return blueprintRepository.save(blueprint);
+    }
+
     public List<Blueprint> getAll() {
         return blueprintRepository.findAll();
     }
 
     public Blueprint getById(Long Id) {
-        return blueprintRepository.findById(Id).get();
+        return blueprintRepository.findById(Id).orElse(null);
     }
 
     public List<Blueprint> getBlueprintsByPartId(Long Id) {
         return blueprintRepository.findBlueprintsByPartsId(Id);
     }
 
-    public void deleteBlueprint(Long blueprintId){
+    public void deleteBlueprintById(Long blueprintId) {
         blueprintRepository.deleteById(blueprintId);
     }
 

@@ -1,6 +1,9 @@
+<div id="successAlertBlueprints"></div>
+
 <form [formGroup]="blueprintForm" (ngSubmit)="onSubmit()" class="h-auto w-auto flex flex-col gap-y-4 border-2 border-slate-500 border-solid p-4 rounded-xl sm:mx-1">
+
     <h1 class="font-bold">Add new blueprint</h1>
-  
+
     <div class="form-group">
       <label>Blueprint Name:</label>
       <input class="form-control w-full border-2 border-gray-400 rounded-lg p-3" type="text" id="blueprintName" formControlName="productTitle" placeholder="Enter blueprint Name">
@@ -16,13 +19,13 @@
       <div *ngIf="f['description'].errors && f['description'].errors['required']"> This field is required</div>
       <!-- <div *ngIf="f['description'].errors && f['description'].errors['minlength']"> Description to short. Has to be between 50-200 characters</div>
       <div *ngIf="f['description'].errors && f['description'].errors['maxlength']"> Description too long. Has to be between 50-200 characters</div> -->
-      
+
     </div>
     <hr>
   <div>
     <h1 class="m-0 p-0">Added Parts:</h1>
     @for(part of partsList; track part){
-       <h1 class="font-semibold">{{ part }}</h1> 
+       <h1 class="font-semibold">{{ part }}</h1>
     }
 </div>
 
@@ -33,7 +36,7 @@
       <table class="table">
           <thead>
               <tr>
-                <th scope="col">ID</th>  
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Supplier Details</th>
@@ -55,12 +58,11 @@
       </table>
   </div>
 
-    
+
     <button type="submit "class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
       Save blueprint
     </button>
-    <div id="successAlert"></div>
-    
-  
+
+
+
   </form>
-  

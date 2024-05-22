@@ -45,8 +45,10 @@ public class BlueprintController {
     }
 
     @DeleteMapping("/delete/{blueprintId}")
-        public void deleteBlueprint(@PathVariable (value = "blueprintId") Long blueprintId) {
-        blueprintService.deleteBlueprint(blueprintId);
+    public ResponseEntity<Void> deleteBlueprint(@PathVariable("blueprintId") Long blueprintId){
+        blueprintService.deleteBlueprintById(blueprintId);
+        return ResponseEntity.ok().build();
+
     }
 }
 

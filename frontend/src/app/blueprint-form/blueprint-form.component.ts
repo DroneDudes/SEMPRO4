@@ -13,7 +13,7 @@ import { NgIf } from '@angular/common';
 export class BlueprintFormComponent {
 [x: string]: any;
 
-partsList:number[] = []; 
+partsList:number[] = [];
 
 
 addNewPart(partId:number){
@@ -55,50 +55,60 @@ public jsonResponse: any;
 
   blueprintForm: FormGroup = new FormGroup({
     productTitle: new FormControl('', [
-      Validators.required,  
-      // Validators.minLength(4), 
-      // Validators.maxLength(20), 
+      Validators.required,
+      // Validators.minLength(4),
+      // Validators.maxLength(20),
     ]),
     description: new FormControl('', [
-      Validators.required,  
-      // Validators.minLength(50), 
-      // Validators.maxLength(200), 
+      Validators.required,
+      // Validators.minLength(50),
+      // Validators.maxLength(200),
     ]),
     partsList: new FormControl(this.partsList, [
       // Validators.required,
     ])
   })
-  
+
   constructor(private http: HttpClient) { }
 
-  
+
   onSubmit() {
     if (this.blueprintForm.valid) {
       const blueprintData = this.blueprintForm.value;
       console.log(blueprintData);
-      
+
       this.http.post<any>('http://localhost:8080/api/v1/blueprints/create', blueprintData)
         .subscribe(
           response => {
             console.log("Inshallah!")
-            console.log("Success! Response:", response); 
-            const successDiv = document.getElementById('successAlert');
-            const successNotification = document.createElement('span');
-            successNotification.innerHTML = "Success";
-  
-            successDiv?.append(successNotification);
+            console.log("Success! Response:", response);
+            const confirmationMessageDiv = document.getElementById("successAlertBlueprints");
+            const message = document.createElement("h2");
+            confirmationMessageDiv?.appendChild(message);
+            if(message){
+            message.style.backgroundColor = "green";
+            message.className = "flex-grow text-white h-10 flex justify-center rounded-lg";
+            message.innerHTML = "Success";
+            }
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           },
           error => {
+            console.log("Mahiba!")
             if(error.status === 409){
-              const successDiv = document.getElementById('successAlert');
+              const successDiv = document.getElementById('successAlertBlueprints');
               const successNotification = document.createElement('span');
               successNotification.innerHTML = error.error;
-    
+              successNotification.style.color = "red";
               successDiv?.append(successNotification);
+              setTimeout(() => {
+                successNotification.remove();
+              }, 2500);
               }
           }
         );
-    } 
+    }
   }
 
 }

@@ -1,6 +1,6 @@
 package org.dronedudes.backend.Part;
 
-// Java
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,3 +16,4 @@ public class PartExceptionHandler {
         return new ResponseEntity<>("A item with the same name already exists.", HttpStatus.CONFLICT);
     }
 }
+
