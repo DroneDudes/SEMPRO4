@@ -31,5 +31,5 @@ public class AssemblyStation extends Machine {
     private String blueprintName;
 
     @Transient
-    Item product;
+    private Item product;
 }
