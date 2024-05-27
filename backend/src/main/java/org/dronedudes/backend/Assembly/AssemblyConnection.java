@@ -18,9 +18,9 @@ public class AssemblyConnection {
     private final String brokerURL = "tcp://localhost:9001";
 
     @Getter
-    String state;
+    private String state;
     @Getter
-    String currentOperation;
+    private String currentOperation;
 
     public AssemblyConnection() {
 
