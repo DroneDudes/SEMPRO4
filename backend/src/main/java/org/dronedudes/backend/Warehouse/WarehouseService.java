@@ -79,7 +79,7 @@ public class WarehouseService implements IWarehouseService {
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(()-> new WarehouseNotFoundException(warehouseId));
         if(!warehouse.getItems().isEmpty()){
-            throw new NonEmptyWarehouseException(warehouseId, warehouse.getItems());
+            throw new NonEmptyWarehouseException(warehouseId);
         }
         warehouseRepository.delete(warehouse);
         warehouses.remove(warehouse.getId());
