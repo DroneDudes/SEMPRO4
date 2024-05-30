@@ -52,11 +52,16 @@ export class ProductionComponent implements OnInit {
     console.log("Selected Blueprint:", this.selectedBlueprint);
     console.log("Production Amount:", this.productionAmount);
     if (this.selectedBlueprint && this.productionAmount > 0) {
+      // Ensure that the parts array contains only objects
+      this.selectedBlueprint.parts = this.selectedBlueprint.parts.map((part: any) => 
+        typeof part === 'number' ? { id: part } : part
+      );
       this.productionService.startProduction(this.productionAmount, this.selectedBlueprint).subscribe(response => {
         console.log("Response from backend:", response);
-        alert(response);
+        alert('Production started successfully.');
       }, error => {
         console.error("Error from backend:", error);
+        alert('Failed to start production.');
       });
     }
   }

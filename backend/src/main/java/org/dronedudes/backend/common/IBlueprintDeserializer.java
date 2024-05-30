@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.dronedudes.backend.Blueprint.Blueprint;
 import org.dronedudes.backend.Part.Part;
-import org.dronedudes.backend.common.IBlueprint;
 
 import java.io.IOException;
 
@@ -23,14 +22,38 @@ public class IBlueprintDeserializer extends JsonDeserializer<IBlueprint> {
         if (partsNode != null && partsNode.isArray()) {
             for (JsonNode partNode : partsNode) {
                 Part part = new Part();
-                part.setId(partNode.get("id").asLong());
-                part.setName(partNode.get("name").asText());
-                part.setDescription(partNode.get("description").asText());
-                part.setSpecifications(partNode.get("specifications").asText());
-                part.setSupplierDetails(partNode.get("supplierDetails").asText());
-                part.setPrice(partNode.get("price").asLong());
+
+                // Check if partNode only contains an ID or other fields as well
+                if (partNode.has("id")) {
+                    part.setId(partNode.get("id").asLong());
+                } else {
+                    throw new IllegalArgumentException("Missing required field: part id");
+                }
+
+                if (partNode.has("name")) {
+                    part.setName(partNode.get("name").asText());
+                }
+
+                if (partNode.has("description")) {
+                    part.setDescription(partNode.get("description").asText());
+                }
+
+                if (partNode.has("specifications")) {
+                    part.setSpecifications(partNode.get("specifications").asText());
+                }
+
+                if (partNode.has("supplierDetails")) {
+                    part.setSupplierDetails(partNode.get("supplierDetails").asText());
+                }
+
+                if (partNode.has("price")) {
+                    part.setPrice(partNode.get("price").asLong());
+                }
+
                 blueprint.addPart(part);
             }
+        } else {
+            throw new IllegalArgumentException("Missing required field: parts");
         }
 
         return blueprint;

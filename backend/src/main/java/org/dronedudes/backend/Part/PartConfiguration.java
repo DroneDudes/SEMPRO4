@@ -17,7 +17,7 @@ public class PartConfiguration {
         this.partService = partService;
     }
 
-    @Bean
+    @Bean(name = "createStandardPart")
     public List<Part> createStandardPart() {
         logger.info("Creating standard parts...");
         List<Part> parts = new ArrayList<>();

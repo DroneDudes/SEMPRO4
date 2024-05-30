@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-@DependsOn("partConfiguration")
 @Configuration
+@DependsOn("createStandardPart")
 public class BlueprintConfiguration {
 
     private static final Logger logger = Logger.getLogger(BlueprintConfiguration.class.getName());
