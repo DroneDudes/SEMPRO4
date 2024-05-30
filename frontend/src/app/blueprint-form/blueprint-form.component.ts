@@ -51,21 +51,14 @@ public jsonResponse: any;
     });
   }
 
-//Creating the form for blueprints
-
   blueprintForm: FormGroup = new FormGroup({
     productTitle: new FormControl('', [
       Validators.required,
-      // Validators.minLength(4),
-      // Validators.maxLength(20),
     ]),
     description: new FormControl('', [
       Validators.required,
-      // Validators.minLength(50),
-      // Validators.maxLength(200),
     ]),
     partsList: new FormControl(this.partsList, [
-      // Validators.required,
     ])
   })
 

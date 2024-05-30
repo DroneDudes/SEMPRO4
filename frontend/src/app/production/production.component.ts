@@ -48,7 +48,6 @@ export class ProductionComponent implements OnInit {
   startProduction(): void {
     this.submitted = true;
     if (this.selectedBlueprint && this.productionAmount > 0) {
-      // Ensure that the parts array contains only objects
       this.selectedBlueprint.parts = this.selectedBlueprint.parts.map((part: any) => 
         typeof part === 'number' ? { id: part } : part
       );

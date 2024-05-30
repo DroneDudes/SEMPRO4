@@ -98,8 +98,6 @@ export class WarehouseComponent implements OnInit{
       }
     )
   }
-
-  //Type can either be 'sucess', 'info', 'warning' or 'error'.
   createAndDisplayNotification(type: string, message: string) {
     this.notification = new Notification(message, type);
     this.showNotification();
@@ -125,7 +123,6 @@ export class WarehouseComponent implements OnInit{
     } else {
       this.warehouseService.addItemToWarehouseWithTrayId(id, trayId, part).subscribe(
         response => {
-            // this.warehouseService.getWarehouses();
             this.createAndDisplayNotification("success","Successfully added part!");
         },
         error => {
