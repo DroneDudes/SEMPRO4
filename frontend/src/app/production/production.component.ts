@@ -14,6 +14,7 @@ export class ProductionComponent implements OnInit {
   selectedBlueprint: any = null;
   productionAmount: number = 1;
   submitted: boolean = false;
+  productionBegun: boolean = false;
 
   constructor(private productionService: ProductionService) { }
 
@@ -56,13 +57,15 @@ export class ProductionComponent implements OnInit {
       this.selectedBlueprint.parts = this.selectedBlueprint.parts.map((part: any) => 
         typeof part === 'number' ? { id: part } : part
       );
+      this.productionBegun = true;
       this.productionService.startProduction(this.productionAmount, this.selectedBlueprint).subscribe(response => {
         console.log("Response from backend:", response);
-        alert('Production started successfully.');
+        //alert('Production started successfully.');
       }, error => {
         console.error("Error from backend:", error);
-        alert('Failed to start production.');
+        //alert('Failed to start production.');
       });
+    
     }
   }
 }

@@ -92,7 +92,7 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
                 assemblyStation.setProcessId(operationId);
                 notifyChange(assemblyStation.getUuid());
                 assemblyLogEntryService.save(new AssemblyLogEntry(assemblyStation.getState().getState(),assemblyStation.getProcessId(), assemblyStation));
-                System.out.println("Change registered in observer");
+
             }
         }
     }
@@ -138,7 +138,6 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
             }
 
             if(checkIfProcessing()) {
-                System.out.println("Assembly stopped");
                 return true;
             }
         //}
@@ -161,7 +160,6 @@ public class AssemblyService implements PublisherInterface, IAssemblyService {
     }
 
     public void startProduction(int processId) {
-        System.out.println("Assembly started");
         assemblyConnection.publish("emulator/operation", new Process(processId));
     }
 

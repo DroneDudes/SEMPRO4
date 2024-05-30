@@ -27,7 +27,6 @@ public class ObserverService {
         List<SubscriberInterface> subscriberList = topicsSubscribersMap.get(machineId);
         for (SubscriberInterface subscriber : subscriberList) {
             subscriber.update(machineId);
-            System.out.println("Subscriber updated" + subscriber.getClass() + " for topic " + machineId);
         }
     }
 

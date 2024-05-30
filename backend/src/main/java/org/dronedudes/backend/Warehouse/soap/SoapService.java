@@ -32,7 +32,6 @@ public class SoapService {
         InsertItemResponse insertItemResponse = (InsertItemResponse)  webServiceTemplate.marshalSendAndReceive(
                 warehouse.getUri(), insertItemRequest
         );
-        System.out.println(insertItemResponse.getInsertItemResult());
         return insertItemResponse;
     }
 
@@ -43,7 +42,6 @@ public class SoapService {
                 warehouse.getUri()
         );
 
-        System.out.println(getInventoryResponse.getInventoryResult);
     }
 
 

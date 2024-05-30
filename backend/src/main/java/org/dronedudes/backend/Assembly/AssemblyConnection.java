@@ -29,18 +29,17 @@ public class AssemblyConnection {
             client.setCallback(new MqttCallback() {
                 @Override
                 public void connectionLost(Throwable cause) {
-                    System.out.println("Connection to MQTT broker lost");
+
                 }
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
-                    System.out.println("Message arrived");
-                    System.out.println("Topic: " + topic + " | Payload: " + message.toString());
+
                 }
 
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {
-                    System.out.println("Delivery complete");
+
                 }
             });
 

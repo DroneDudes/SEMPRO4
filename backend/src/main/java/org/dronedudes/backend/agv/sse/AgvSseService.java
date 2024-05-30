@@ -37,7 +37,6 @@ public class AgvSseService implements SubscriberInterface {
 
     @Override
     public void update(UUID machineId) {
-        System.out.println("AgvSseService.update");
         Agv agv = agvService.getAgvMap().get(machineId);
         for (SseEmitter emitter: emitters) {
             try {

@@ -54,7 +54,6 @@ public class WarehouseService implements IWarehouseService {
             for(int i = 1; i <= warehouse.getModel().getSize(); i++)
                 soapService.pickItem(warehouse,i);
         } catch(Exception e){
-            System.out.println("Could not remove");
         }
         eventPublisher.publishEvent(new SseWarehouseUpdateEvent(this, new ArrayList<>(warehouses.values())));
         return warehouse;

@@ -164,15 +164,12 @@ public class WarehouseServiceTest {
         WarehouseModel model = WarehouseModel.EFFIMAT10;
         Warehouse warehouse = new Warehouse(model, 8081, "W01");
         warehouse.setItems(new HashMap<>());
-
         for (long trayId = 1; trayId <= model.getSize(); trayId++) {
             Part part = new Part();
             part.setName("Part" + trayId);
             warehouse.getItems().put(trayId, part);
         }
-
         when(warehouseRepository.findById(anyLong())).thenReturn(Optional.of(warehouse));
-
         assertThrows(WarehouseFullException.class, () -> warehouseService.addItemToWarehouse(1L, new Part()));
     }
 

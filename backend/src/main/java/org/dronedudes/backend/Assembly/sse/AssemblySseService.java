@@ -39,12 +39,10 @@ public class AssemblySseService implements SubscriberInterface {
 
     @Override
     public void update(UUID machineId) {
-        System.out.println("AssemblySseService.update");
         AssemblyStation assemblyStation = assemblyService.getAssemblyMap().get(machineId);
         for (SseEmitter emitter: emitters) {
             try {
                 SseEmitter.SseEventBuilder event = SseEmitter.event().data(assemblyStation).name("assemblyEvent");
-                System.out.println("SSE Event " + event);
                 emitter.send(event);
             } catch (IOException e) {
                 emitter.complete();

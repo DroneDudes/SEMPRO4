@@ -24,9 +24,7 @@ public class LoggerService {
     }
 
     public List<LogEntry> fetchLast10LogsFromAllInterfaceImplementationsAndSort() {
-        System.out.println("Fetching last 10 logs from " + loggerInterfaceImplementations.size() + " implementations of LoggerInterface");
         for (LoggerInterface loggerImplementation : loggerInterfaceImplementations.values()) {
-            System.out.println("Fetching logs from " + loggerImplementation.getClass().getSimpleName());
             this.newlyFetchedLogs.addAll(loggerImplementation.getLast10Logs());
         }
         this.newestLogsSorted = this.newlyFetchedLogs.stream()
@@ -34,8 +32,6 @@ public class LoggerService {
                 .limit(10)
                 .collect(toList());
         this.newlyFetchedLogs.clear();
-        System.out.println("Size of 10 newest logs sorted: " + newestLogsSorted.size() + " (should be 10 or less)");
-        this.newestLogsSorted.forEach(System.out::println);
         return this.newestLogsSorted;
     }
 }

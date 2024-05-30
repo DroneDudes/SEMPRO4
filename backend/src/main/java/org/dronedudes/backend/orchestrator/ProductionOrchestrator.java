@@ -48,7 +48,6 @@ public class ProductionOrchestrator implements IMachineOrchestrator {
     public void startProduction(int amount, IBlueprint iBlueprint) {
         // creating a new production state with a new uuuid
         UUID productionId = UUID.randomUUID();
-        System.out.println(productionId);
         ProductionState productionState = new ProductionState(productionId);
         // saving it to the map
         productionStates.put(productionId, productionState);
@@ -61,7 +60,6 @@ public class ProductionOrchestrator implements IMachineOrchestrator {
                 //find warehouse that has the part
                 UUID warehouseUuidForWarehouseWithItem = warehouseService.findWarehouseWithItem(part.getId());
                 if(warehouseUuidForWarehouseWithItem == null){
-                    System.out.println("No warehouse contains the item");
                     return;
                 }
                 //find available agv
@@ -126,7 +124,6 @@ public class ProductionOrchestrator implements IMachineOrchestrator {
     public void stopProduction(UUID productionId) {
         ProductionState productionState = productionStates.get(productionId);
         if (productionState == null) {
-            System.out.println("Production not found");
             return;
         }
 

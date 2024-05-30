@@ -47,7 +47,6 @@ public class WarehouseSseController {
         emitters.forEach((id, emitter) -> {
             try {
                 emitter.send(event.getWarehouses());
-                System.out.println("Sending data");
             } catch (Exception e) {
                 deadEmitters.put(id, emitter);
             }

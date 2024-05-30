@@ -91,7 +91,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
                 agv.setAgvState(agvState);
 
                 notifyChange(agv.getUuid());
-                System.out.println("notify called for " + agv.getName() + " with Id: " + agv.getUuid());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,10 +155,9 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
             // Initialize latch for the state change (IDLE -> EXECUTING -> IDLE)
             CountDownLatch stateLatch = new CountDownLatch(1);
             agvLatchMap.put(agv.getUuid(), stateLatch);
-            System.out.println("sending execute command to " + agv.getName() + " with Id: " + agv.getUuid());
 
             // Send the second PUT request
-            System.out.println(restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class));
+            restTemplate.exchange(endpointUrl, HttpMethod.PUT, requestEntity, Void.class);
 
             // Wait for the AGV to become idle again after executing the command
             waitForAgvState(agv.getUuid(), stateLatch);
@@ -174,7 +172,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
     }
 
     private void waitForAgvState(UUID agvUuid, CountDownLatch latch) throws InterruptedException, TimeoutException {
-        System.out.println("Waiting for AGV with Id: " + agvUuid + " to reach the desired state");
         if (!latch.await(10, TimeUnit.SECONDS)) {
 
         }
@@ -188,7 +185,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
         // Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Assembly Station with Id: " + assemblyStationMachineId);
         return true;
     }
 
@@ -200,7 +196,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
         // Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Warehouse with Id: " + warehouseMachineId);
         return true;
     }
 
@@ -213,7 +208,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
         // Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Assembly Station with Id: " + assemblyStationMachineId);
         return true;
     }
 
@@ -227,7 +221,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
         // Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Assembly Station with Id: " + assemblyStationMachineId);
         return true;
     }
 
@@ -240,7 +233,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
         // Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " picked up item " + item.getName() + " with Id: " + item.getId() + " from Warehouse with Id: " + warehouseMachineId);
         return true;
     }
 
@@ -253,8 +245,7 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
 
         // Update the observer
         notifyChange(agv.getUuid());
-
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " put item " + item.getName() + " with Id: " + item.getId() + " into Warehouse with Id: " + warehouseMachineId);
+;
         return true;
     }
 
@@ -266,7 +257,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
         // Update the observer
         notifyChange(agv.getUuid());
 
-        System.out.println(agv.getName() + " with Id: " + agvMachineId + " is moving to Charger with Id: ??");
         return true;
     }
 
@@ -296,7 +286,6 @@ public class AgvService implements PublisherInterface, IAgvService, SubscriberIn
 
     @Override
     public void update(UUID machineId) {
-        System.out.println("AgvService received an update for " + machineId);
         if (agvLatchMap.containsKey(machineId)) {
             if(agvMap.get(machineId).getAgvState() == AgvStateEnum.IDLE_STATE) {
                 agvLatchMap.get(machineId).countDown();
