@@ -48,6 +48,11 @@ public class Blueprint implements IBlueprint {
     }
     */
 
+    public Blueprint(String productTitle, String description, Set<Part> parts) {
+        this.productTitle = productTitle;
+        this.description = description;
+        this.parts = parts;
+    }
     @Override
     public void addPart(IPart IPart) {
         if (this.parts == null) {

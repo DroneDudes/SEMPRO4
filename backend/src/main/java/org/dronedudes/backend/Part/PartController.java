@@ -1,11 +1,9 @@
 package org.dronedudes.backend.Part;
 
-import jakarta.annotation.PostConstruct;
-import org.dronedudes.backend.Blueprint.Blueprint;
-import org.dronedudes.backend.Blueprint.BlueprintCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -35,19 +33,6 @@ public class PartController {
         partService.deletePartById(partId);
         return ResponseEntity.ok().build();
     }
-
-
-
-    @PostConstruct
-    public Part testPart() {
-        Part part = new Part("1","1","1","1",1);
-        partService.createPart(part);
-
-        Part part1 = new Part("2","2","2","2",2);
-        partService.createPart(part1);
-        return part;
-    }
-
 
     @GetMapping("/{partId}")
     public Optional<Part> getPart(@PathVariable("partId") Long partId){
