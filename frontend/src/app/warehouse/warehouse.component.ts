@@ -45,28 +45,22 @@ export class WarehouseComponent implements OnInit{
         this.showWarehouse(0);
       },
       error: (error) => {
-        console.error('No Warehouses', error);
       }
       
     }); 
     this.ssewarehouseService.subsribeToWarehouseSse().subscribe({
       next: (data: Warehouse[]) => {
         this.warehouses = data;
-        console.log('SSE data received:', data);
-        
       },
       error : (error) => {
-        console.error('SSE error:', error);
       }
     });
   }
 
   async showNotification(): Promise<void> {
     document.getElementById("notinoti")?.classList.remove("hidden");
-    console.log("added");
     setTimeout(() => {
       document.getElementById("notinoti")?.classList.add("hidden");
-      console.log("removed");
     }, 2000);
   }
 
@@ -87,7 +81,6 @@ export class WarehouseComponent implements OnInit{
 
   showModalAndGetParts(trayIndex: number): void {
     this.updateParts();
-    console.log(this.parts);
     const modal = document.querySelector<HTMLDialogElement>(`#my_modal_1.modal-modal-${trayIndex}`);
     modal?.showModal();
   }
@@ -99,10 +92,8 @@ export class WarehouseComponent implements OnInit{
           this.selectedWarehouse = updatedWarehouse;
           this.createAndDisplayNotification("success", "Successfully removed part!");
         }
-        console.log("Item removed successfully. UI updated.");
       },
       error: (error) => {
-        console.error("Error removing item:", error);
       }
       }
     )
@@ -112,7 +103,6 @@ export class WarehouseComponent implements OnInit{
   createAndDisplayNotification(type: string, message: string) {
     this.notification = new Notification(message, type);
     this.showNotification();
-    console.log("Showing");
   }
 
   updateParts() {
@@ -121,7 +111,6 @@ export class WarehouseComponent implements OnInit{
         this.parts = parts;
       },
       error: (error) => {
-        console.error('Server error', error);
       }
     }); 
   }
@@ -129,12 +118,10 @@ export class WarehouseComponent implements OnInit{
   selectPart(index: number) {
     this.selectedPart = this.parts[index];
     this.selectedPartIndex = index;
-    console.log(this.selectedPart);
   }
 
   addPart(id: number, trayId: number, part: Part | null) {
     if(part === null){
-      console.error("Item is null");
     } else {
       this.warehouseService.addItemToWarehouseWithTrayId(id, trayId, part).subscribe(
         response => {
@@ -142,7 +129,6 @@ export class WarehouseComponent implements OnInit{
             this.createAndDisplayNotification("success","Successfully added part!");
         },
         error => {
-            console.error('Error:', error);
         }
     );
     }
@@ -155,7 +141,6 @@ export class WarehouseComponent implements OnInit{
         this.warehouseModels = warehouseModels;
       },
       error: (error) => {
-        console.error('Server error for WarehouseModel', error);
       }
     }); 
   }

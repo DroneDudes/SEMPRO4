@@ -26,10 +26,8 @@ export class ProductionComponent implements OnInit {
     this.productionService.getAllBlueprints().subscribe(
       data => {
         this.blueprints = data;
-        console.log("Fetched Blueprints:", this.blueprints);
       },
       error => {
-        console.error("Error fetching blueprints:", error);
       }
     );
   }
@@ -39,7 +37,6 @@ export class ProductionComponent implements OnInit {
     const selectedIndex = selectElement.selectedIndex;
     if (selectedIndex >= 0) {
       this.selectedBlueprint = this.blueprints[selectedIndex];
-      console.log("Selected Blueprint:", this.selectedBlueprint);
     }
   }
 
@@ -50,8 +47,6 @@ export class ProductionComponent implements OnInit {
 
   startProduction(): void {
     this.submitted = true;
-    console.log("Selected Blueprint:", this.selectedBlueprint);
-    console.log("Production Amount:", this.productionAmount);
     if (this.selectedBlueprint && this.productionAmount > 0) {
       // Ensure that the parts array contains only objects
       this.selectedBlueprint.parts = this.selectedBlueprint.parts.map((part: any) => 
@@ -59,11 +54,7 @@ export class ProductionComponent implements OnInit {
       );
       this.productionBegun = true;
       this.productionService.startProduction(this.productionAmount, this.selectedBlueprint).subscribe(response => {
-        console.log("Response from backend:", response);
-        //alert('Production started successfully.');
       }, error => {
-        console.error("Error from backend:", error);
-        //alert('Failed to start production.');
       });
     
     }

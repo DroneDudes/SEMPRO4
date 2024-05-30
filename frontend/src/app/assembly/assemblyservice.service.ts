@@ -10,10 +10,8 @@ private assemblyInfo$: WritableSignal<AssemblyStation|undefined> = signal(undefi
   }
 
   private subscribeToAssemblyInfo() {
-    console.log('Subscribing to assembly info');
     const eventSource = new EventSource('http://localhost:8080/api/v1/assembly/assemblysse');
     eventSource.addEventListener("assemblyEvent", (e) => {
-      console.log("New assembly info: ", JSON.parse(e.data));
       this.assemblyInfo$.set(JSON.parse(e.data));
     });
   }

@@ -32,7 +32,6 @@ export class BluePrintListComponent implements OnInit {
   }
 
   public getParts(blueprintId: string) {
-    console.log(blueprintId);
     this.http.get(`http://localhost:8080/api/v1/blueprints/${blueprintId}`).subscribe({
       next: (response: any) => {
         this.partsResponse = response.parts;

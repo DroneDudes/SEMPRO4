@@ -23,7 +23,6 @@ export class SseWarehouseService {
       this.sseDataSubject.next(event.data);
     };
     this.eventSource.onerror = (error) => {
-      console.error('EventSource failed:', error);
       this.eventSource?.close();
     };
   }

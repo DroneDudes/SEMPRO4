@@ -32,14 +32,11 @@ export class PartFormComponent {
   constructor(private http: HttpClient) { }
 
   onSubmit() {
-    console.log(this.partForm);
     if (this.partForm.valid) {
       const partData = this.partForm.value;
-      console.log(partData);
       this.http.post<any>('http://localhost:8080/api/v1/parts/createPart', partData)
         .subscribe(
           response => {
-            console.log("Success! Response:", response);
 
             const confirmationMessageDiv = document.getElementById("successAlertParts");
             const message = document.createElement("h2");
@@ -55,8 +52,6 @@ export class PartFormComponent {
 
           },
           error => {
-            console.log(partData)
-            console.log("Mahiba!", error);
             if(error.status === 409){
             const successDiv = document.getElementById('successAlertParts');
             const successNotification = document.createElement('span');

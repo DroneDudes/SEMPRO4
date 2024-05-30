@@ -75,13 +75,10 @@ public jsonResponse: any;
   onSubmit() {
     if (this.blueprintForm.valid) {
       const blueprintData = this.blueprintForm.value;
-      console.log(blueprintData);
 
       this.http.post<any>('http://localhost:8080/api/v1/blueprints/create', blueprintData)
         .subscribe(
           response => {
-            console.log("Inshallah!")
-            console.log("Success! Response:", response);
             const confirmationMessageDiv = document.getElementById("successAlertBlueprints");
             const message = document.createElement("h2");
             confirmationMessageDiv?.appendChild(message);
@@ -95,7 +92,6 @@ public jsonResponse: any;
             }, 1000);
           },
           error => {
-            console.log("Mahiba!")
             if(error.status === 409){
               const successDiv = document.getElementById('successAlertBlueprints');
               const successNotification = document.createElement('span');

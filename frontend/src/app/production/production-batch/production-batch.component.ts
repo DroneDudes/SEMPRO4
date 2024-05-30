@@ -23,7 +23,6 @@ export class ProductionBatchComponent implements OnInit {
         this.productionBatches = productionBatches;
       },
       error: (error) => {
-        console.error('No Production Batches', error);
       }
     });
   }

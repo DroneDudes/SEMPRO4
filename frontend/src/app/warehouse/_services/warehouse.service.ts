@@ -25,7 +25,6 @@ export class WarehouseService {
   }
 
   removeItemFromWarehouseWithTrayId(id: number, trayId: number): Observable<Warehouse> {
-    console.log("Service delete");
     return this.httpClient.delete<Warehouse>(this.warehouseUrl + "/" + id + "/items/" + trayId, {});
   }
 

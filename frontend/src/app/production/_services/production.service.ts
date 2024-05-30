@@ -26,7 +26,6 @@ export class ProductionService {
       'Content-Type': 'application/json'
     });
     const body = JSON.stringify(blueprint);
-    console.log('Sending blueprint:', body);
     return this.httpClient.post<any>(`${this.orchestratorApiUrl}/startProduction?amount=${amount}`, body, { headers });
   }
 
