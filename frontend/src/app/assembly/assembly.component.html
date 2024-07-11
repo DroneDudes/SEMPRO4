@@ -1,0 +1,21 @@
+<div class="h-full mt-13 bg-stone-200 rounded-lg min-w-56 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_2px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
+  <div class="h-16 flex justify-center items-center font-bold">
+    <h2>Assembly information</h2>
+  </div>
+  <table class="table break-all">
+      <tbody>
+        <tr>
+          <th scope="row">Name</th>
+          <td>{{assemblyInfo$()?.name}}</td>
+        </tr>
+        <tr>
+          <th scope="row">State</th>
+          <td>{{assemblyInfo$()?.state}}</td>
+        </tr>
+        <tr>
+          <th scope="row">Program</th>
+          <td>{{assemblyInfo$()?.blueprintName}}</td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>
